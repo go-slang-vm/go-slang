@@ -1,8 +1,8 @@
-import { CharStreams, CommonTokenStream } from 'antlr4ts';
+import { CharStreams, CommonTokenStream } from 'antlr4ts'
 
-import { Cst_To_Json } from './Cst_To_Json';
-import { GoLexer }  from '../lang/GoLexer';
-import { SimpleParser }  from '../lang/SimpleParser';
+import { GoLexer } from '../lang/GoLexer'
+import { SimpleParser } from '../lang/SimpleParser'
+import { Cst_To_Json } from './Cst_To_Json'
 
 // import { CharStreams, CommonTokenStream } from 'antlr4';
 // import  GoLexer   from './lang2/GoLexer';
@@ -55,21 +55,19 @@ const inputStream3 = CharStreams.fromString(`
         z = x + y * p - 2
         return x, y
     }
-`);
+`)
 
-
-const lexer = new GoLexer(inputStream3);
+const lexer = new GoLexer(inputStream3)
 //console.log(lexer);
-const tokenStream = new CommonTokenStream(lexer);
+const tokenStream = new CommonTokenStream(lexer)
 //console.log(tokenStream);
-const parser = new SimpleParser(tokenStream);
+const parser = new SimpleParser(tokenStream)
 //console.log(parser);
 // Parse the input, where `compilationUnit` is whatever entry point you defined
-const tree = parser.global_scope();
-console.log(tree);
+const tree = parser.global_scope()
+console.log(tree)
 //console.log(tree.toStringTree(parser.ruleNames));
-const visitor = new Cst_To_Json();
-const res = visitor.visit(tree);
+const visitor = new Cst_To_Json()
+const res = visitor.visit(tree)
 //console.log(res);
-console.dir(res,{depth: 100});
-
+console.dir(res, { depth: 100 })
