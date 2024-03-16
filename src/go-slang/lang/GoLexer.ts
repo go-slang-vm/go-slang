@@ -1,13 +1,16 @@
-// Generated from lang/GoLexer.g4 by ANTLR 4.9.0-SNAPSHOT
+/* eslint-disable simple-import-sort/imports */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+// Generated from src/go-slang/lang/GoLexer.g4 by ANTLR 4.9.0-SNAPSHOT
 
 import { ATN } from 'antlr4ts/atn/ATN'
 import { ATNDeserializer } from 'antlr4ts/atn/ATNDeserializer'
-import { LexerATNSimulator } from 'antlr4ts/atn/LexerATNSimulator'
 import { CharStream } from 'antlr4ts/CharStream'
 import { Lexer } from 'antlr4ts/Lexer'
-import * as Utils from 'antlr4ts/misc/Utils'
+import { LexerATNSimulator } from 'antlr4ts/atn/LexerATNSimulator'
 import { Vocabulary } from 'antlr4ts/Vocabulary'
 import { VocabularyImpl } from 'antlr4ts/VocabularyImpl'
+
+import * as Utils from 'antlr4ts/misc/Utils'
 
 export class GoLexer extends Lexer {
   public static readonly BREAK = 1

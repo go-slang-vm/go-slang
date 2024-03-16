@@ -1,6 +1,6 @@
 import { IOptions } from '..'
+import { BlockNode } from '../go-slang/ast/AST'
 import { parse } from '../go-slang/parser/parser'
-import { Program } from '../go-slang/parser/types'
 import { Context, SourceError, Variant } from '../types'
 import { resolvedErrorPromise } from './utils'
 
@@ -28,7 +28,7 @@ export function goRunner(code: string, context: Context, options: Partial<IOptio
   context.errors = []
 
   try {
-    const program: Program | undefined = parse(code, context)
+    const program: BlockNode | undefined = parse(code, context)
     if (!program) {
       return resolvedErrorPromise
     }
