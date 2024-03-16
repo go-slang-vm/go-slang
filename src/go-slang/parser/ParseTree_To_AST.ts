@@ -40,7 +40,6 @@ import {
   VarDeclContext
 } from '../lang/SimpleParser'
 import { SimpleParserVisitor } from '../lang/SimpleParserVisitor'
-import exp from 'constants'
 
 export class ParseTree_To_AST implements SimpleParserVisitor<ASTNode> {
   visitGlobal_scope(ctx: Global_scopeContext): BlockNode {
@@ -224,8 +223,8 @@ export class ParseTree_To_AST implements SimpleParserVisitor<ASTNode> {
     for (let i = 0; i < variables.IDENTS.length; ++i) {
       nodes.push({
         tag: Tag.VAR,
-        sym: variables[i],
-        expr: assignments[i]
+        sym: variables.IDENTS[i],
+        expr: assignments.list[i]
       });
     }
 
@@ -241,8 +240,8 @@ export class ParseTree_To_AST implements SimpleParserVisitor<ASTNode> {
     for (let i = 0; i < variables.IDENTS.length; ++i) {
       nodes.push({
         tag: Tag.ASSMT,
-        sym: variables[i],
-        expr: assignments[i]
+        sym: variables.IDENTS[i],
+        expr: assignments.list[i]
       });
     }
 
@@ -422,16 +421,22 @@ export class ParseTree_To_AST implements SimpleParserVisitor<ASTNode> {
     return tree.accept(this);
   }
 
-  visitChildren(node: RuleNode): any {
-    const nodes = []
+  // should only be used by visitGlobalScope
+  visitChildren(node: RuleNode): SequenceNode {
+    const nodes: StmtNode[] = [];
     for (let i = 0; i < node.childCount; i++) {
       const res = node.getChild(i).accept(this)
       if (res) {
-        if (Array.isArray(res)) nodes.push(...res)
-        else nodes.push(res)
+        if(res.tag == Tag.VAR) {
+          nodes.push(res);
+        } else if(res.tag == Tag.MULTIVAR) {
+          nodes.push(...(res as MultiVarDeclNode).list);
+        } else if(res.tag == Tag.FUNC){
+          nodes.push(res);
+        }
       }
     }
-    return nodes
+    return { tag:Tag.SEQ, body: nodes };
   }
 
   visitTerminal(node: TerminalNode): any {
