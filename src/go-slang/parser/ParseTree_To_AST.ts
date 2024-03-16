@@ -51,7 +51,7 @@ export class ParseTree_To_AST implements SimpleParserVisitor<ASTNode> {
         args: [],
         _arity: 0
       };
-    nodes.body.push(mainCall);
+    nodes.stmts.push(mainCall);
 
     return {
       tag: Tag.BLOCK,
@@ -85,7 +85,7 @@ export class ParseTree_To_AST implements SimpleParserVisitor<ASTNode> {
 
   visitIfStmt(ctx: IfStmtContext): IfStmtNode {
     // empty block by default
-    let alt: BlockNode | IfStmtNode = { tag: Tag.BLOCK, body: { tag: Tag.SEQ, body: [] } };
+    let alt: BlockNode | IfStmtNode = { tag: Tag.BLOCK, body: { tag: Tag.SEQ, stmts: [] } };
 
     if (ctx.ELSE()) {
       let k = undefined;
@@ -170,7 +170,7 @@ export class ParseTree_To_AST implements SimpleParserVisitor<ASTNode> {
       tag: Tag.FUNC,
       sym: this.visitTerminal(ctx.IDENTIFIER()),
       prms: params,
-      body: this.visitBlock(ctx.block()),
+      body: this.visitBlock(ctx.block()).body,
       _arity: params.length
     };
   }
@@ -203,7 +203,7 @@ export class ParseTree_To_AST implements SimpleParserVisitor<ASTNode> {
 
     return {
       tag: Tag.BLOCK,
-      body: stmts == undefined ? { tag: Tag.SEQ, body: [] } : this.visitStatementList(stmts)
+      body: stmts == undefined ? { tag: Tag.SEQ, stmts: [] } : this.visitStatementList(stmts)
     };
   }
   visitVarDecl(ctx: VarDeclContext): VarDeclNode {
@@ -363,7 +363,7 @@ export class ParseTree_To_AST implements SimpleParserVisitor<ASTNode> {
 
     return {
       tag: Tag.SEQ,
-      body: stmts
+      stmts: stmts
     }
   }
 
@@ -436,7 +436,7 @@ export class ParseTree_To_AST implements SimpleParserVisitor<ASTNode> {
         }
       }
     }
-    return { tag:Tag.SEQ, body: nodes };
+    return { tag:Tag.SEQ, stmts: nodes };
   }
 
   visitTerminal(node: TerminalNode): any {

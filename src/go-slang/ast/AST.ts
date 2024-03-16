@@ -13,7 +13,7 @@ export enum Tag {
     LIT = "lit",
     BINOP = "binop",
     UNOP = "unop",
-    LOGOP = "LOG",
+    LOGOP = "log",
     PARAMS = "params",
     IDENTS = "idents",
     MULTIVAR = "multivar",
@@ -28,7 +28,7 @@ export enum LOGOP {
 }
 
 export enum UNOP {
-    INT_NEGATE = '-',
+    INT_NEGATE = '-unary',
     BOOL_NEGATE = '!',
 }
 
@@ -87,7 +87,7 @@ export interface StmtNode extends ASTNode {}
 
 export interface SequenceNode extends ASTNode {
     tag: Tag.SEQ;
-    body: StmtNode[];
+    stmts: StmtNode[];
 }
 
 export interface BlockNode extends StmtNode {
@@ -119,7 +119,7 @@ export interface FuncDeclNode extends StmtNode {
     tag: Tag.FUNC;
     sym: string;
     prms: string[];
-    body: BlockNode;
+    body: SequenceNode | StmtNode;
     _arity: Number;
 }
 
