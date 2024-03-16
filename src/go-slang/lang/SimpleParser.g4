@@ -114,6 +114,7 @@ statement
     | ifStmt
     | returnStmt
     | simpleStmt
+    | block
     ;
 
 simpleStmt
