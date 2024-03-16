@@ -3,7 +3,7 @@ import { ParseTree } from 'antlr4ts/tree/ParseTree'
 import { RuleNode } from 'antlr4ts/tree/RuleNode'
 import { TerminalNode } from 'antlr4ts/tree/TerminalNode'
 
-import { ASTNode, AssignNode, BINOP, BinOpNode, BlockNode, ExprNode, ExpressionListNode, ForStmtNode, FuncAppNode, FuncDeclNode, IdListNode, IfStmtNode, LOGOP, LiteralNode, LogicalNode, MultiAssmtNode, MultiVarDeclNode, NameNode, ParamListNode, ReturnStmtNode, SequenceNode, StmtListNode, StmtNode, Tag, UNOP, UnOpNode, VarDeclNode } from '../ast/ast'
+import { AssignNode, ASTNode, BINOP, BinOpNode, BlockNode, ExpressionListNode, ExprNode, ForStmtNode, FuncAppNode, FuncDeclNode, IdListNode, IfStmtNode, LiteralNode, LogicalNode, LOGOP, MultiAssmtNode, MultiVarDeclNode, NameNode, ParamListNode, ReturnStmtNode, SequenceNode, StmtListNode, StmtNode, Tag, UNOP, UnOpNode, VarDeclNode } from '../ast/AST'
 import {
   ArgumentsContext,
   Assign_opContext,
