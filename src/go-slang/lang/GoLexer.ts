@@ -4,11 +4,8 @@ import { ATN } from 'antlr4ts/atn/ATN'
 import { ATNDeserializer } from 'antlr4ts/atn/ATNDeserializer'
 import { LexerATNSimulator } from 'antlr4ts/atn/LexerATNSimulator'
 import { CharStream } from 'antlr4ts/CharStream'
-import { NotNull } from 'antlr4ts/Decorators'
-import { Override } from 'antlr4ts/Decorators'
 import { Lexer } from 'antlr4ts/Lexer'
 import * as Utils from 'antlr4ts/misc/Utils'
-import { RuleContext } from 'antlr4ts/RuleContext'
 import { Vocabulary } from 'antlr4ts/Vocabulary'
 import { VocabularyImpl } from 'antlr4ts/VocabularyImpl'
 
@@ -417,7 +414,6 @@ export class GoLexer extends Lexer {
     return GoLexer.modeNames
   }
 
-  private static readonly _serializedATNSegments: number = 3
   private static readonly _serializedATNSegment0: string =
     '\x03\uC91D\uCABA\u058D\uAFBA\u4F53\u0607\uEA8B\uC241\x02[\u034D\b\x01' +
     '\b\x01\x04\x02\t\x02\x04\x03\t\x03\x04\x04\t\x04\x04\x05\t\x05\x04\x06' +
