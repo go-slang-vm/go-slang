@@ -4,19 +4,14 @@
 import { ATN } from 'antlr4ts/atn/ATN'
 import { ATNDeserializer } from 'antlr4ts/atn/ATNDeserializer'
 import { ParserATNSimulator } from 'antlr4ts/atn/ParserATNSimulator'
-import { NotNull } from 'antlr4ts/Decorators'
-import { Override } from 'antlr4ts/Decorators'
 import { FailedPredicateException } from 'antlr4ts/FailedPredicateException'
 import * as Utils from 'antlr4ts/misc/Utils'
 import { NoViableAltException } from 'antlr4ts/NoViableAltException'
-import { Parser } from 'antlr4ts/Parser'
 import { ParserRuleContext } from 'antlr4ts/ParserRuleContext'
 import { RecognitionException } from 'antlr4ts/RecognitionException'
 import { RuleContext } from 'antlr4ts/RuleContext'
 import { Token } from 'antlr4ts/Token'
 import { TokenStream } from 'antlr4ts/TokenStream'
-import { ParseTreeListener } from 'antlr4ts/tree/ParseTreeListener'
-import { ParseTreeVisitor } from 'antlr4ts/tree/ParseTreeVisitor'
 //import { RuleVersion } from "antlr4ts/RuleVersion";
 import { TerminalNode } from 'antlr4ts/tree/TerminalNode'
 import { Vocabulary } from 'antlr4ts/Vocabulary'
@@ -906,7 +901,6 @@ export class SimpleParser extends GoParserBase {
     let _parentctx: ParserRuleContext = this._ctx
     let _parentState: number = this.state
     let _localctx: ExpressionContext = new ExpressionContext(this._ctx, _parentState)
-    let _prevctx: ExpressionContext = _localctx
     let _startState: number = 28
     this.enterRecursionRule(_localctx, 28, SimpleParser.RULE_expression, _p)
     let _la: number
@@ -921,7 +915,6 @@ export class SimpleParser extends GoParserBase {
             {
               _localctx = new FUNCAPPContext(_localctx)
               this._ctx = _localctx
-              _prevctx = _localctx
 
               this.state = 141
               this.funcApp()
@@ -932,7 +925,6 @@ export class SimpleParser extends GoParserBase {
             {
               _localctx = new UNARYOPContext(_localctx)
               this._ctx = _localctx
-              _prevctx = _localctx
               this.state = 142
               ;(_localctx as UNARYOPContext)._unary_op = this._input.LT(1)
               _la = this._input.LA(1)
@@ -955,7 +947,6 @@ export class SimpleParser extends GoParserBase {
             {
               _localctx = new PRIMARYContext(_localctx)
               this._ctx = _localctx
-              _prevctx = _localctx
               this.state = 144
               this.primaryExpr()
             }
@@ -970,7 +961,6 @@ export class SimpleParser extends GoParserBase {
             if (this._parseListeners != null) {
               this.triggerExitRuleEvent()
             }
-            _prevctx = _localctx
             {
               this.state = 162
               this._errHandler.sync(this)
