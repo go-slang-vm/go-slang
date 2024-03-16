@@ -46,6 +46,7 @@
     "lodash": "^4.17.21",
     "node-getopt": "^0.3.2",
     "source-map": "0.7.3",
+    "ts-node": "^10.9.2",
     "xmlhttprequest-ts": "^1.0.1"
   },
   "resolutions": {

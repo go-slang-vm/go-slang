@@ -1,6 +1,27 @@
-import { is_number, is_boolean, is_string, is_undefined } from '../stdlib/misc'
-import { tail, head, is_null, is_pair } from '../stdlib/list'
-import { List } from '../stdlib/list'
+function is_number(v: any) {
+  return typeof v === 'number'
+}
+
+function is_undefined(xs: any) {
+  return typeof xs === 'undefined'
+}
+
+function is_string(xs: any) {
+  return typeof xs === 'string'
+}
+
+function is_boolean(xs: any) {
+  return typeof xs === 'boolean'
+}
+// Translated to TypeScript by Evan Sebastian
+type Pair<H, T> = [H, T]
+type List = null | NonEmptyList
+type NonEmptyList = Pair<any, any>
+// is_null returns true if arg is exactly null
+// LOW-LEVEL FUNCTION, NOT SOURCE
+function is_null(xs: List): xs is null {
+  return xs === null
+}
 
 const pop = (array: number[]): number => {
   if (array.length === 0) {
@@ -26,9 +47,6 @@ const peek = <T>(array: T[], address: number): T => array.slice(-1 - address)[0]
 // *************
 // parse to JSON
 // *************/
-
-const list_to_array = (xs: List): any[] =>
-  is_null(xs) ? [] : [head(xs)].concat(list_to_array(tail(xs)))
 
 // *************************
 // HEAP
@@ -445,8 +463,6 @@ const TS_value_to_address = (x: any): string | number =>
     ? Undefined
     : is_null(x)
     ? Null
-    : is_pair(x)
-    ? heap_allocate_Pair(Number(TS_value_to_address(head(x))), Number(TS_value_to_address(tail(x))))
     : 'unknown word tag: ' + word_to_string(x)
 
 // in this machine, the builtins take their
@@ -563,7 +579,7 @@ const microcode: { [key: string]: (instr: Instruction) => void } = {
   LDC: instr => push(OS, TS_value_to_address(instr.val)),
   UNOP: instr => push(OS, apply_unop(instr.sym, pop(OS))),
   BINOP: instr => push(OS, apply_binop(instr.sym, pop(OS), pop(OS))),
-  POP: instr => pop(OS),
+  POP: _ => pop(OS),
   JOF: instr => (PC = is_True(pop(OS)) ? PC : instr.addr),
   GOTO: instr => (PC = instr.addr),
   ENTER_SCOPE: instr => {
@@ -574,7 +590,7 @@ const microcode: { [key: string]: (instr: Instruction) => void } = {
       heap_set_child(frame_address, i, Unassigned)
     }
   },
-  EXIT_SCOPE: instr => (E = heap_get_Blockframe_environment(RTS.pop()!)),
+  EXIT_SCOPE: _ => (E = heap_get_Blockframe_environment(RTS.pop()!)),
   LD: instr => {
     const val = heap_get_Environment_value(E, instr.pos)
     if (is_Unassigned(val)) {
@@ -681,3 +697,47 @@ export function run(heapsize_words: number): any {
   //print_OS()
   return address_to_TS_value(peek(OS, 0))
 }
+
+instrs = [
+  { tag: 'ENTER_SCOPE', num: 2 },
+  { tag: 'LDF', arity: undefined, addr: 3 },
+  { tag: 'GOTO', addr: 10 },
+  { tag: 'LD', sym: 'fact_iter', pos: [2, 1] },
+  { tag: 'LD', sym: 'n', pos: [3, 0] },
+  { tag: 'LDC', val: 1 },
+  { tag: 'LDC', val: 1 },
+  { tag: 'TAIL_CALL', arity: 3 },
+  { tag: 'LDC', val: undefined },
+  { tag: 'RESET' },
+  { tag: 'ASSIGN', pos: [2, 0] },
+  { tag: 'POP' },
+  { tag: 'LDF', arity: undefined, addr: 14 },
+  { tag: 'GOTO', addr: 32 },
+  { tag: 'LD', sym: 'i', pos: [3, 1] },
+  { tag: 'LD', sym: 'n', pos: [3, 0] },
+  { tag: 'BINOP', sym: '>' },
+  { tag: 'JOF', addr: 21 },
+  { tag: 'LD', sym: 'acc', pos: [3, 2] },
+  { tag: 'RESET' },
+  { tag: 'GOTO', addr: 30 },
+  { tag: 'LD', sym: 'fact_iter', pos: [2, 1] },
+  { tag: 'LD', sym: 'n', pos: [3, 0] },
+  { tag: 'LD', sym: 'i', pos: [3, 1] },
+  { tag: 'LDC', val: 1 },
+  { tag: 'BINOP', sym: '+' },
+  { tag: 'LD', sym: 'acc', pos: [3, 2] },
+  { tag: 'LD', sym: 'i', pos: [3, 1] },
+  { tag: 'BINOP', sym: '*' },
+  { tag: 'TAIL_CALL', arity: 3 },
+  { tag: 'LDC', val: undefined },
+  { tag: 'RESET' },
+  { tag: 'ASSIGN', pos: [2, 1] },
+  { tag: 'POP' },
+  { tag: 'LD', sym: 'fact', pos: [2, 0] },
+  { tag: 'LDC', val: 5 },
+  { tag: 'CALL', arity: 1 },
+  { tag: 'EXIT_SCOPE' },
+  { tag: 'DONE' }
+]
+
+console.log(run(1000))
