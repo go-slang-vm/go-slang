@@ -23,7 +23,7 @@
     "strictNullChecks": true,
     "suppressImplicitAnyIndexErrors": true,
     "resolveJsonModule": true,
-    "noUnusedLocals": true,
+    "noUnusedLocals": false,
     "incremental": true
   },
   "exclude": [
