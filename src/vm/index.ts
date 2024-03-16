@@ -54,8 +54,6 @@ let heap_size: number
 
 // free is the next free index in the free list
 let free: number
-// wc: write counter
-let wc: number
 // instrs: instruction array
 let instrs: Instruction[]
 
@@ -287,8 +285,6 @@ const heap_allocate_Closure = (arity: number, pc: number, env: number): number =
   heap_set(address + 1, env)
   return address
 }
-
-const heap_get_Closure_arity = (address: number): number => heap_get_byte_at_offset(address, 1)
 
 const heap_get_Closure_pc = (address: number): number => heap_get_2_bytes_at_offset(address, 2)
 
