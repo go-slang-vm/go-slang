@@ -2,7 +2,8 @@ import { CharStreams, CommonTokenStream } from 'antlr4ts'
 
 import { GoLexer } from '../lang/GoLexer'
 import { SimpleParser } from '../lang/SimpleParser'
-//import { Cst_To_Json } from './Cst_To_Json'
+import { Context } from '../../types'
+import { Tag, BlockNode } from '../ast/AST'
 import { ParseTree_To_AST } from './ParseTree_To_AST'
 
 // import { CharStreams, CommonTokenStream } from 'antlr4';
@@ -44,31 +45,47 @@ import { ParseTree_To_AST } from './ParseTree_To_AST'
 // }
 // `);
 
-const inputStream3 = CharStreams.fromString(`
-    var x = 2
-    var y, z = 4, 5
-    k := 999
+// const inputStream3 = CharStreams.fromString(`
+//     var x = 2
+//     var y, z = 4, 5
+//     k := 999
 
-    func main() {
-        x = x + 1
-        x = x || y
-        y = -y
-        z = x + y * p - 2
-        return x, y
-    }
-`)
+//     func main() {
+//         x = x + 1
+//         x = x || y
+//         y = -y
+//         z = x + y * p - 2
+//         return x, y
+//     }
+// `)
 
-const lexer = new GoLexer(inputStream3)
-//console.log(lexer);
-const tokenStream = new CommonTokenStream(lexer)
-//console.log(tokenStream);
-const parser = new SimpleParser(tokenStream)
-//console.log(parser);
-// Parse the input, where `compilationUnit` is whatever entry point you defined
-const tree = parser.global_scope()
-console.log(tree)
-//console.log(tree.toStringTree(parser.ruleNames));
-const visitor = new ParseTree_To_AST()
-const res = visitor.visit(tree)
-//console.log(res);
-console.dir(res, { depth: 100 })
+// const lexer = new GoLexer(inputStream3)
+// //console.log(lexer);
+// const tokenStream = new CommonTokenStream(lexer)
+// //console.log(tokenStream);
+// const parser = new SimpleParser(tokenStream)
+// //console.log(parser);
+// // Parse the input, where `compilationUnit` is whatever entry point you defined
+// const tree = parser.global_scope()
+// console.log(tree)
+// //console.log(tree.toStringTree(parser.ruleNames));
+// const visitor = new ParseTree_To_AST()
+// const res = visitor.visit(tree)
+// //console.log(res);
+// console.dir(res, { depth: 100 })
+
+export function parse(source: string, _context: Context): BlockNode | undefined {
+  const inputStream = CharStreams.fromString(source)
+  const lexer = new GoLexer(inputStream)
+  const tokenStream = new CommonTokenStream(lexer)
+  const parser = new SimpleParser(tokenStream)
+  parser.buildParseTree = true
+  const tree = parser.global_scope()
+  const visitor = new ParseTree_To_AST()
+  const content = visitor.visit(tree)
+
+  return {
+    tag: Tag.BLOCK,
+    body: content
+  }
+}

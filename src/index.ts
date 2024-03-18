@@ -39,6 +39,7 @@ import {
   hasVerboseErrors,
   htmlRunner,
   resolvedErrorPromise,
+  goRunner,
   sourceFilesRunner
 } from './runner'
 
@@ -79,11 +80,11 @@ export function parseError(errors: SourceError[], verbose: boolean = verboseErro
       // TODO currently elaboration is just tagged on to a new line after the error message itself. find a better
       // way to display it.
       const elaboration = error.elaborate()
-      return line < 1
+      return Number(line) < 1
         ? `${filePath}${explanation}\n${elaboration}\n`
         : `${filePath}Line ${line}, Column ${column}: ${explanation}\n${elaboration}\n`
     } else {
-      return line < 1 ? explanation : `${filePath}Line ${line}: ${explanation}`
+      return Number(line) < 1 ? explanation : `${filePath}Line ${line}: ${explanation}`
     }
   })
   return errorMessagesArr.join('\n')
@@ -248,6 +249,10 @@ export async function runFilesInContext(
 
   if (context.chapter === Chapter.HTML) {
     return htmlRunner(code, context, options)
+  }
+
+  if (context.chapter === Chapter.GOLANG) {
+    return goRunner(code, context)
   }
 
   if (context.chapter <= +Chapter.SCHEME_1 && context.chapter >= +Chapter.FULL_SCHEME) {
