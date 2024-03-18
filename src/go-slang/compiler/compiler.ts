@@ -228,12 +228,19 @@ blk:
         //console.log("compiling block");
         const locals: Frame = scan_for_locals(comp.body);
         //console.log("locals: " + locals);
-        instrs[wc++] = {tag: 'ENTER_SCOPE', num: locals.length};
+        // NOTE TO US, this is an optimization to not have a blockframe if there are no declarations, this is inline with what source's parser is doing
+        if(locals.length > 0) {
+            instrs[wc++] = {tag: 'ENTER_SCOPE', num: locals.length};
+        }
+
         compile(comp.body,
                 // extend compile-time environment
 		        compile_time_environment_extend(
 		            locals, ce));     
-        instrs[wc++] = {tag: 'EXIT_SCOPE'};
+
+        if(locals.length > 0) {
+            instrs[wc++] = {tag: 'EXIT_SCOPE'};
+        }
     },
 let: 
     (comp: VarDeclNode, ce: CompileTimeEnvironment) => {
@@ -289,8 +296,8 @@ fun:
 // compile component into instruction array instrs, 
 // starting at wc (write counter)
 const compile = (comp: ASTNode, ce: CompileTimeEnvironment) => {
-    //console.log("compiling: " , comp.tag);
-    //console.dir(comp, {depth: 1});
+    // console.log("compiling: " , comp.tag);
+    // console.dir(comp, {depth: 1});
     compile_comp[comp.tag](comp, ce)
 } 
 

@@ -166,6 +166,7 @@ export class ParseTree_To_AST implements SimpleParserVisitor<ASTNode> {
 
   visitFuncDecl(ctx: FuncDeclContext): FuncDeclNode {
     const params: string[] = this.visitSignature(ctx.signature()).params;
+    
     return {
       tag: Tag.FUNC,
       sym: this.visitTerminal(ctx.IDENTIFIER()),
@@ -178,16 +179,17 @@ export class ParseTree_To_AST implements SimpleParserVisitor<ASTNode> {
   visitSignature(ctx: SignatureContext): ParamListNode {
     const k = ctx.parameters();
     if (k) {
-      return this.visitParameters(k)
+      const ret = this.visitParameters(k);
+      return ret;
     }
     return { tag: Tag.PARAMS, params: [] };
   }
 
   visitParameters(ctx: ParametersContext): ParamListNode {
-    const list = ctx.parameterDecl()
-    const params: string[] = []
+    const list = ctx.parameterDecl();
+    const params: string[] = [];
     for (let i = 0; i < list.length; ++i) {
-      params.concat(this.visitParameterDecl(list[i]).IDENTS);
+      params.push(...this.visitParameterDecl(list[i]).IDENTS);
     }
     return { tag: Tag.PARAMS, params: params };
   }
@@ -195,7 +197,7 @@ export class ParseTree_To_AST implements SimpleParserVisitor<ASTNode> {
   visitParameterDecl(ctx: ParameterDeclContext): IdListNode {
     const k = ctx.identifierList()
     if (k === undefined) return { tag: Tag.IDENTS, IDENTS: [] };
-    return this.visitIdentifierList(k)
+    return this.visitIdentifierList(k);
   }
 
   visitBlock(ctx: BlockContext): BlockNode {
@@ -299,7 +301,7 @@ export class ParseTree_To_AST implements SimpleParserVisitor<ASTNode> {
     const argList: ExprNode[] = this.visitArguments(ctx.arguments()).list;
     return {
       tag: Tag.APP,
-      fun: this.visitTerminal(ctx.IDENTIFIER()),
+      fun: {tag: Tag.NAME, sym: this.visitTerminal(ctx.IDENTIFIER())},
       args: argList,
       _arity: argList.length
     };
