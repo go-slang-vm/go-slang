@@ -72,8 +72,6 @@ let heap_size: number
 
 // free is the next free index in the free list
 let free: number
-// instrs: instruction array
-let instrs: Instruction[]
 
 // heap_allocate allocates a given number of words
 // on the heap and marks the first word with a 1-byte tag.
@@ -679,7 +677,7 @@ function initialize_machine(heapsize_words: number) {
   HEAP_BOTTOM = free
 }
 
-export function run(heapsize_words: number): any {
+export function run(heapsize_words: number, instrs: Instruction[]): any {
   initialize_machine(heapsize_words)
   //print_code()
   while (!(instrs[PC].tag === 'DONE')) {
@@ -700,46 +698,46 @@ export function run(heapsize_words: number): any {
 
 // UNCOMMENT TO TEST
 // expected result: 120
-// instrs = [
-//   { tag: 'ENTER_SCOPE', num: 2 },
-//   { tag: 'LDF', arity: undefined, addr: 3 },
-//   { tag: 'GOTO', addr: 10 },
-//   { tag: 'LD', sym: 'fact_iter', pos: [2, 1] },
-//   { tag: 'LD', sym: 'n', pos: [3, 0] },
-//   { tag: 'LDC', val: 1 },
-//   { tag: 'LDC', val: 1 },
-//   { tag: 'TAIL_CALL', arity: 3 },
-//   { tag: 'LDC', val: undefined },
-//   { tag: 'RESET' },
-//   { tag: 'ASSIGN', pos: [2, 0] },
-//   { tag: 'POP' },
-//   { tag: 'LDF', arity: undefined, addr: 14 },
-//   { tag: 'GOTO', addr: 32 },
-//   { tag: 'LD', sym: 'i', pos: [3, 1] },
-//   { tag: 'LD', sym: 'n', pos: [3, 0] },
-//   { tag: 'BINOP', sym: '>' },
-//   { tag: 'JOF', addr: 21 },
-//   { tag: 'LD', sym: 'acc', pos: [3, 2] },
-//   { tag: 'RESET' },
-//   { tag: 'GOTO', addr: 30 },
-//   { tag: 'LD', sym: 'fact_iter', pos: [2, 1] },
-//   { tag: 'LD', sym: 'n', pos: [3, 0] },
-//   { tag: 'LD', sym: 'i', pos: [3, 1] },
-//   { tag: 'LDC', val: 1 },
-//   { tag: 'BINOP', sym: '+' },
-//   { tag: 'LD', sym: 'acc', pos: [3, 2] },
-//   { tag: 'LD', sym: 'i', pos: [3, 1] },
-//   { tag: 'BINOP', sym: '*' },
-//   { tag: 'TAIL_CALL', arity: 3 },
-//   { tag: 'LDC', val: undefined },
-//   { tag: 'RESET' },
-//   { tag: 'ASSIGN', pos: [2, 1] },
-//   { tag: 'POP' },
-//   { tag: 'LD', sym: 'fact', pos: [2, 0] },
-//   { tag: 'LDC', val: 5 },
-//   { tag: 'CALL', arity: 1 },
-//   { tag: 'EXIT_SCOPE' },
-//   { tag: 'DONE' }
-// ]
+const instrs: Instruction[] = [
+  { tag: 'ENTER_SCOPE', num: 2 },
+  { tag: 'LDF', arity: undefined, addr: 3 },
+  { tag: 'GOTO', addr: 10 },
+  { tag: 'LD', sym: 'fact_iter', pos: [2, 1] },
+  { tag: 'LD', sym: 'n', pos: [3, 0] },
+  { tag: 'LDC', val: 1 },
+  { tag: 'LDC', val: 1 },
+  { tag: 'TAIL_CALL', arity: 3 },
+  { tag: 'LDC', val: undefined },
+  { tag: 'RESET' },
+  { tag: 'ASSIGN', pos: [2, 0] },
+  { tag: 'POP' },
+  { tag: 'LDF', arity: undefined, addr: 14 },
+  { tag: 'GOTO', addr: 32 },
+  { tag: 'LD', sym: 'i', pos: [3, 1] },
+  { tag: 'LD', sym: 'n', pos: [3, 0] },
+  { tag: 'BINOP', sym: '>' },
+  { tag: 'JOF', addr: 21 },
+  { tag: 'LD', sym: 'acc', pos: [3, 2] },
+  { tag: 'RESET' },
+  { tag: 'GOTO', addr: 30 },
+  { tag: 'LD', sym: 'fact_iter', pos: [2, 1] },
+  { tag: 'LD', sym: 'n', pos: [3, 0] },
+  { tag: 'LD', sym: 'i', pos: [3, 1] },
+  { tag: 'LDC', val: 1 },
+  { tag: 'BINOP', sym: '+' },
+  { tag: 'LD', sym: 'acc', pos: [3, 2] },
+  { tag: 'LD', sym: 'i', pos: [3, 1] },
+  { tag: 'BINOP', sym: '*' },
+  { tag: 'TAIL_CALL', arity: 3 },
+  { tag: 'LDC', val: undefined },
+  { tag: 'RESET' },
+  { tag: 'ASSIGN', pos: [2, 1] },
+  { tag: 'POP' },
+  { tag: 'LD', sym: 'fact', pos: [2, 0] },
+  { tag: 'LDC', val: 5 },
+  { tag: 'CALL', arity: 1 },
+  { tag: 'EXIT_SCOPE' },
+  { tag: 'DONE' }
+]
 
-// console.log(run(1000))
+console.log(run(1000, instrs))
