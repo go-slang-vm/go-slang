@@ -20,6 +20,8 @@ export enum Tag {
     MULTIASSMT = "multiassmt",
     EXPRLIST = "exprlist",
     STMTLIST = "stmtlist",
+    LAM = "lam",
+    CONST = "const",
 }
 
 export enum LOGOP {
@@ -103,7 +105,7 @@ export interface VarDeclNode extends StmtNode {
 }
 
 export interface ConstDeclNode extends StmtNode {
-    tag: Tag.VAR;
+    tag: Tag.CONST;
     sym: string;
     expr: ExprNode;
     //const isConst = false;
@@ -119,7 +121,7 @@ export interface FuncDeclNode extends StmtNode {
     tag: Tag.FUNC;
     sym: string;
     prms: string[];
-    body: SequenceNode | StmtNode;
+    body: BlockNode;
     _arity: Number;
 }
 
@@ -140,6 +142,13 @@ export interface ForStmtNode extends StmtNode {
     tag: Tag.FOR;
     pred: ExprNode;
     body: BlockNode;
+}
+
+export interface LambdaStmtNode extends StmtNode {
+    tag: Tag.LAM;
+    prms: string[];
+    body: BlockNode;
+    _arity: Number;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface

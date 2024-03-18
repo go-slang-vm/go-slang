@@ -1,5 +1,6 @@
 /* eslint-disable simple-import-sort/imports */
 /* eslint-disable @typescript-eslint/no-unused-vars */
+// @ts-nocheck
 // Generated from src/go-slang/lang/GoLexer.g4 by ANTLR 4.9.0-SNAPSHOT
 
 

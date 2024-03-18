@@ -170,7 +170,7 @@ export class ParseTree_To_AST implements SimpleParserVisitor<ASTNode> {
       tag: Tag.FUNC,
       sym: this.visitTerminal(ctx.IDENTIFIER()),
       prms: params,
-      body: this.visitBlock(ctx.block()).body,
+      body: this.visitBlock(ctx.block()),
       _arity: params.length
     };
   }
@@ -356,6 +356,8 @@ export class ParseTree_To_AST implements SimpleParserVisitor<ASTNode> {
         stmts.push(res)
       } else if (stmtContextes[i].forStmt()) {
         stmts.push(res)
+      } else if(stmtContextes[i].block()) {
+        stmts.push(res);
       } else {
         stmts.push(...(res as MultiAssmtNode).list);
       }
@@ -379,10 +381,12 @@ export class ParseTree_To_AST implements SimpleParserVisitor<ASTNode> {
       return this.visitIfStmt(k)
     } else if ((k = ctx.returnStmt())) {
       return this.visitReturnStmt(k)
+    } else if ((k = ctx.forStmt())) {
+        return this.visitForStmt(k);
     } else {
-        k = ctx.forStmt();
-        // should be safe cast
-        return this.visitForStmt(k as ForStmtContext);
+      k = ctx.block();
+      // should be safe cast
+      return this.visitBlock(k as BlockContext);
     }
   }
 
