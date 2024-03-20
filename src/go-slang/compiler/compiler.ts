@@ -85,7 +85,7 @@ const scan_for_locals = (comp: ASTNode): string[] => {
                         acc.concat(scan_for_locals(x)),
                         [])
     : ['let', 'const'].includes(comp.tag)
-    ? [(comp as VarDeclNode).sym]
+    ? [...(comp as VarDeclNode).syms.IDENTS]
     : comp.tag === 'fun'
     ? [(comp as FuncDeclNode).sym]
     : [];
@@ -199,10 +199,24 @@ app:
 assmt:
     // store precomputed position info in ASSIGN instruction
     (comp: AssignNode, ce: CompileTimeEnvironment) => {
-        compile(comp.expr, ce);
-        instrs[wc++] = {tag: 'ASSIGN', 
+        // we compile all variable declarations 1 at a time
+        // Note that this means that the last assignment will be at the top of the OS
+        const assignmentLen = comp.exprs.list.length;
+        for(let i = 0; i <assignmentLen; ++i) {
+            compile(comp.exprs.list[i], ce);
+        }
+
+        // assign in reverse order since the results will be in reverse order on the OS
+        const symsLen = comp.syms.IDENTS.length;
+        let first = true;
+        for(let i = symsLen-1; i >=0; --i) {
+            // POP the value after each assignment
+            first ? first = false
+              : instrs[wc++] = {tag: 'POP'};
+            instrs[wc++] = {tag: 'ASSIGN', 
                         pos: compile_time_environment_position(
-                                 ce, comp.sym)};
+                                 ce, comp.syms.IDENTS[i])};
+        }
     },
 // NOTE to us, lambda statement is not actually implemented yet, only used for func decl to lambda conversion
 lam:
@@ -244,18 +258,46 @@ blk:
     },
 let: 
     (comp: VarDeclNode, ce: CompileTimeEnvironment) => {
-        compile(comp.expr, ce);
-        instrs[wc++] = {tag: 'ASSIGN', 
+        // we compile all variable declarations 1 at a time
+        // Note that this means that the last assignment will be at the top of the OS
+        const assignmentLen = comp.assignments.list.length;
+        for(let i = 0; i <assignmentLen; ++i) {
+            compile(comp.assignments.list[i], ce);
+        }
+
+        // assign in reverse order since the results will be in reverse order on the OS
+        const symsLen = comp.syms.IDENTS.length;
+        let first = true;
+        for(let i = symsLen-1; i >=0; --i) {
+            // POP the value after each assignment
+            first ? first = false
+              : instrs[wc++] = {tag: 'POP'};
+            instrs[wc++] = {tag: 'ASSIGN', 
                         pos: compile_time_environment_position(
-                                 ce, comp.sym)};
+                                 ce, comp.syms.IDENTS[i])};
+        }
     },
 // NOTE to us, const is not actually implemented yet, only used for func decl to lambda conversion
 const:
     (comp: ConstDeclNode, ce: CompileTimeEnvironment) => {
-        compile(comp.expr, ce);
-        instrs[wc++] = {tag: 'ASSIGN', 
+        // we compile all variable declarations 1 at a time
+        // Note that this means that the last assignment will be at the top of the OS
+        const assignmentLen = comp.assignments.list.length;
+        for(let i = 0; i <assignmentLen; ++i) {
+            compile(comp.assignments.list[i], ce);
+        }
+
+        // assign in reverse order since the results will be in reverse order on the OS
+        const symsLen = comp.syms.IDENTS.length;
+        let first = true;
+        for(let i = symsLen-1; i >=0; --i) {
+            // POP the value after each assignment
+            first ? first = false
+              : instrs[wc++] = {tag: 'POP'};
+            instrs[wc++] = {tag: 'ASSIGN', 
                         pos: compile_time_environment_position(
-                                 ce, comp.sym)}
+                                 ce, comp.syms.IDENTS[i])};
+        }
     },
 ret:
     (comp: ReturnStmtNode, ce: CompileTimeEnvironment) => {
@@ -283,8 +325,8 @@ fun:
 
         const funcDeclToConstDecl: ConstDeclNode = 
         {   tag:  Tag.CONST,
-            sym:  comp.sym,
-            expr: funcBodyToLambda,
+            syms:  { tag:Tag.IDENTS, IDENTS: [comp.sym] },
+            assignments: { tag: Tag.EXPRLIST, list:[funcBodyToLambda] }, 
         };
 
         compile(

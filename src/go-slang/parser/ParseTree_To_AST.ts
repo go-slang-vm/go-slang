@@ -3,7 +3,7 @@ import { ParseTree } from 'antlr4ts/tree/ParseTree'
 import { RuleNode } from 'antlr4ts/tree/RuleNode'
 import { TerminalNode } from 'antlr4ts/tree/TerminalNode'
 
-import { AssignNode, ASTNode, BINOP, BinOpNode, BlockNode, ExpressionListNode, ExprNode, ForStmtNode, FuncAppNode, FuncDeclNode, IdListNode, IfStmtNode, LiteralNode, LogicalNode, LOGOP, MultiAssmtNode, MultiVarDeclNode, NameNode, ParamListNode, ReturnStmtNode, SequenceNode,  StmtNode, Tag, UNOP, UnOpNode, VarDeclNode } from '../ast/AST'
+import { AssignNode, ASTNode, BINOP, BinOpNode, BlockNode, ExpressionListNode, ExprNode, ForStmtNode, FuncAppNode, FuncDeclNode, IdListNode, IfStmtNode, LiteralNode, LogicalNode, LOGOP, NameNode, ParamListNode, ReturnStmtNode, SequenceNode,  StmtNode, Tag, UNOP, UnOpNode, VarDeclNode } from '../ast/AST'
 import {
   ArgumentsContext,
   Assign_opContext,
@@ -22,8 +22,6 @@ import {
   IfStmtContext,
   LiteralContext,
   LOGOPContext,
-  MultiAssignmentContext,
-  MultiVarDeclContext,
   OperandContext,
   OperandNameContext,
   ParameterDeclContext,
@@ -179,8 +177,7 @@ export class ParseTree_To_AST implements SimpleParserVisitor<ASTNode> {
   visitSignature(ctx: SignatureContext): ParamListNode {
     const k = ctx.parameters();
     if (k) {
-      const ret = this.visitParameters(k);
-      return ret;
+      return this.visitParameters(k)
     }
     return { tag: Tag.PARAMS, params: [] };
   }
@@ -208,29 +205,14 @@ export class ParseTree_To_AST implements SimpleParserVisitor<ASTNode> {
       body: stmts == undefined ? { tag: Tag.SEQ, stmts: [] } : this.visitStatementList(stmts)
     };
   }
+
+  /* old version keeping for fall back reasons
   visitVarDecl(ctx: VarDeclContext): VarDeclNode {
     return {
       tag: Tag.VAR,
       sym: this.visitTerminal(ctx.IDENTIFIER()),
       expr: this.visitExpression(ctx.expression())
     };
-  }
-
-  visitMultiVarDecl(ctx: MultiVarDeclContext): MultiVarDeclNode {
-    const variables = this.visitIdentifierList(ctx.identifierList());
-    const assignments = this.visitExpressionList(ctx.expressionList());
-
-    const nodes: VarDeclNode[] = [];
-
-    for (let i = 0; i < variables.IDENTS.length; ++i) {
-      nodes.push({
-        tag: Tag.VAR,
-        sym: variables.IDENTS[i],
-        expr: assignments.list[i]
-      });
-    }
-
-    return {tag: Tag.MULTIVAR, list: nodes };
   }
 
   visitMultiAssignment(ctx: MultiAssignmentContext): MultiAssmtNode {
@@ -250,6 +232,34 @@ export class ParseTree_To_AST implements SimpleParserVisitor<ASTNode> {
     return {tag: Tag.MULTIASSMT, list: nodes };
   }
 
+  visitAssignment(ctx: AssignmentContext): AssignNode {
+    return {
+      tag: Tag.ASSMT,
+      sym: this.visitTerminal(ctx.IDENTIFIER()),
+      expr: this.visitExpression(ctx.expression())
+    };
+  }
+  */
+
+  visitVarDecl(ctx: VarDeclContext): VarDeclNode {
+    const variables = this.visitIdentifierList(ctx.identifierList());
+    const assignments = this.visitExpressionList(ctx.expressionList());
+
+    return {tag: Tag.VAR, syms: variables, assignments: assignments };
+  }
+
+visitAssignment(ctx: AssignmentContext): AssignNode {
+  const variables = this.visitIdentifierList(ctx.identifierList());
+  const exprs = this.visitExpressionList(ctx.expressionList());
+
+  return {
+    tag: Tag.ASSMT,
+    syms: variables,
+    exprs: exprs
+  };
+}
+  
+
   visitIdentifierList(list: IdentifierListContext): IdListNode {
     const id: IdListNode = { tag: Tag.IDENTS, IDENTS: [] };
     const nList = list.IDENTIFIER()
@@ -264,14 +274,6 @@ export class ParseTree_To_AST implements SimpleParserVisitor<ASTNode> {
     }
 
     return id
-  }
-
-  visitAssignment(ctx: AssignmentContext): AssignNode {
-    return {
-      tag: Tag.ASSMT,
-      sym: this.visitTerminal(ctx.IDENTIFIER()),
-      expr: this.visitExpression(ctx.expression())
-    };
   }
 
   // unused function for now. we're only allowing = . can consider -=, +=, etc in the future
@@ -350,19 +352,7 @@ export class ParseTree_To_AST implements SimpleParserVisitor<ASTNode> {
 
     for (let i = 0; i < stmtContextes.length; ++i) {
       const res = this.visitStatement(stmtContextes[i]);
-      if (stmtContextes[i].simpleStmt()) {
-        stmts.push(res)
-      } else if (stmtContextes[i].ifStmt()) {
-        stmts.push(res)
-      } else if (stmtContextes[i].returnStmt()) {
-        stmts.push(res)
-      } else if (stmtContextes[i].forStmt()) {
-        stmts.push(res)
-      } else if(stmtContextes[i].block()) {
-        stmts.push(res);
-      } else {
-        stmts.push(...(res as MultiAssmtNode).list);
-      }
+      stmts.push(res);
     }
 
     return {
@@ -375,10 +365,6 @@ export class ParseTree_To_AST implements SimpleParserVisitor<ASTNode> {
     let k = undefined;
     if ((k = ctx.simpleStmt())) {
       return this.visitSimpleStmt(k)
-    } else if ((k = ctx.multiAssignment())) {
-      return this.visitMultiAssignment(k)
-    } else if ((k = ctx.multiVarDecl())) {
-      return this.visitMultiVarDecl(k)
     } else if ((k = ctx.ifStmt())) {
       return this.visitIfStmt(k)
     } else if ((k = ctx.returnStmt())) {
@@ -427,8 +413,8 @@ export class ParseTree_To_AST implements SimpleParserVisitor<ASTNode> {
     return tree.accept(this);
   }
 
-  // should only be used by visitGlobalScope
-  visitChildren(node: RuleNode): SequenceNode {
+  /* old ver
+visitChildren(node: RuleNode): SequenceNode {
     const nodes: StmtNode[] = [];
     for (let i = 0; i < node.childCount; i++) {
       const res = node.getChild(i).accept(this)
@@ -437,6 +423,23 @@ export class ParseTree_To_AST implements SimpleParserVisitor<ASTNode> {
           nodes.push(res);
         } else if(res.tag == Tag.MULTIVAR) {
           nodes.push(...(res as MultiVarDeclNode).list);
+        } else if(res.tag == Tag.FUNC){
+          nodes.push(res);
+        }
+      }
+    }
+    return { tag:Tag.SEQ, stmts: nodes };
+  }
+  */
+
+  // should only be used by visitGlobalScope
+  visitChildren(node: RuleNode): SequenceNode {
+    const nodes: StmtNode[] = [];
+    for (let i = 0; i < node.childCount; i++) {
+      const res = node.getChild(i).accept(this)
+      if (res) {
+        if(res.tag == Tag.VAR) {
+          nodes.push(res);
         } else if(res.tag == Tag.FUNC){
           nodes.push(res);
         }
