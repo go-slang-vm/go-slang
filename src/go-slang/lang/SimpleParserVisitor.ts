@@ -18,9 +18,7 @@ import { ParametersContext } from "./SimpleParser";
 import { ParameterDeclContext } from "./SimpleParser";
 import { BlockContext } from "./SimpleParser";
 import { VarDeclContext } from "./SimpleParser";
-import { MultiVarDeclContext } from "./SimpleParser";
 import { AssignmentContext } from "./SimpleParser";
-import { MultiAssignmentContext } from "./SimpleParser";
 import { Assign_opContext } from "./SimpleParser";
 import { ExpressionStmtContext } from "./SimpleParser";
 import { ExpressionContext } from "./SimpleParser";
@@ -159,25 +157,11 @@ export interface SimpleParserVisitor<Result> extends ParseTreeVisitor<Result> {
 	visitVarDecl?: (ctx: VarDeclContext) => Result;
 
 	/**
-	 * Visit a parse tree produced by `SimpleParser.multiVarDecl`.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	visitMultiVarDecl?: (ctx: MultiVarDeclContext) => Result;
-
-	/**
 	 * Visit a parse tree produced by `SimpleParser.assignment`.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	visitAssignment?: (ctx: AssignmentContext) => Result;
-
-	/**
-	 * Visit a parse tree produced by `SimpleParser.multiAssignment`.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	visitMultiAssignment?: (ctx: MultiAssignmentContext) => Result;
 
 	/**
 	 * Visit a parse tree produced by `SimpleParser.assign_op`.

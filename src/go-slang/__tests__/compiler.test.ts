@@ -3,14 +3,14 @@ import { compile_program } from '../compiler/compiler'
 import { parse } from '../parser/parser'
 
 describe('Basic compiler test', () => {
-  test('basic', async () => {
+  test('basic variable declaration in a new block scope', async () => {
     const program = `
       func main() {
-        var x = 5
+        var y = 1
         {
-          x := 10
+          y := 2
         }
-        return x
+        return y
       }`
 
     const expectedInstr = [
@@ -18,15 +18,15 @@ describe('Basic compiler test', () => {
       { tag: 'LDF', arity: 0, addr: 3 },
       { tag: 'GOTO', addr: 17 },
       { tag: 'ENTER_SCOPE', num: 1 },
-      { tag: 'LDC', val: 5 },
+      { tag: 'LDC', val: 1 },
       { tag: 'ASSIGN', pos: [4, 0] },
       { tag: 'POP' },
       { tag: 'ENTER_SCOPE', num: 1 },
-      { tag: 'LDC', val: 10 },
+      { tag: 'LDC', val: 2 },
       { tag: 'ASSIGN', pos: [5, 0] },
       { tag: 'EXIT_SCOPE' },
       { tag: 'POP' },
-      { tag: 'LD', sym: 'x', pos: [4, 0] },
+      { tag: 'LD', sym: 'y', pos: [4, 0] },
       { tag: 'RESET' },
       { tag: 'EXIT_SCOPE' },
       { tag: 'LDC', val: undefined },
@@ -118,6 +118,142 @@ describe('Basic compiler test', () => {
 
     const inputAst: ASTNode = parse(program)
     const outputInstr: any[] = compile_program(inputAst)
+    expect(outputInstr).toStrictEqual(expectedInstr)
+  })
+
+  test('basic multiple variable declaration', async () => {
+    const program = `
+      var x,y,z = 1, 2, 3
+      func main() {
+        sx, sy, sz := 11, 22, 33
+      }`
+
+    const expectedInstr = [
+      { tag: 'ENTER_SCOPE', num: 4 },
+      { tag: 'LDC', val: 1 },
+      { tag: 'LDC', val: 2 },
+      { tag: 'LDC', val: 3 },
+      { tag: 'ASSIGN', pos: [2, 2] },
+      { tag: 'POP' },
+      { tag: 'ASSIGN', pos: [2, 1] },
+      { tag: 'POP' },
+      { tag: 'ASSIGN', pos: [2, 0] },
+      { tag: 'POP' },
+      { tag: 'LDF', arity: 0, addr: 12 },
+      { tag: 'GOTO', addr: 24 },
+      { tag: 'ENTER_SCOPE', num: 3 },
+      { tag: 'LDC', val: 11 },
+      { tag: 'LDC', val: 22 },
+      { tag: 'LDC', val: 33 },
+      { tag: 'ASSIGN', pos: [4, 2] },
+      { tag: 'POP' },
+      { tag: 'ASSIGN', pos: [4, 1] },
+      { tag: 'POP' },
+      { tag: 'ASSIGN', pos: [4, 0] },
+      { tag: 'EXIT_SCOPE' },
+      { tag: 'LDC', val: undefined },
+      { tag: 'RESET' },
+      { tag: 'ASSIGN', pos: [2, 3] },
+      { tag: 'POP' },
+      { tag: 'LD', sym: 'main', pos: [2, 3] },
+      { tag: 'CALL', arity: 0 },
+      { tag: 'EXIT_SCOPE' },
+      { tag: 'DONE' }
+    ]
+
+    const inputAst: ASTNode = parse(program)
+    const outputInstr: any[] = compile_program(inputAst)
+    //console.log(JSON.stringify(outputInstr));
+    expect(outputInstr).toStrictEqual(expectedInstr)
+  })
+
+  test('basic multiple assignment', async () => {
+    const program = `
+      var x,y,z = 1, 2, 3
+      func main() {
+        x, y, z = 11, 22, 33
+      }`
+
+    const expectedInstr = [
+      { tag: 'ENTER_SCOPE', num: 4 },
+      { tag: 'LDC', val: 1 },
+      { tag: 'LDC', val: 2 },
+      { tag: 'LDC', val: 3 },
+      { tag: 'ASSIGN', pos: [2, 2] },
+      { tag: 'POP' },
+      { tag: 'ASSIGN', pos: [2, 1] },
+      { tag: 'POP' },
+      { tag: 'ASSIGN', pos: [2, 0] },
+      { tag: 'POP' },
+      { tag: 'LDF', arity: 0, addr: 12 },
+      { tag: 'GOTO', addr: 22 },
+      { tag: 'LDC', val: 11 },
+      { tag: 'LDC', val: 22 },
+      { tag: 'LDC', val: 33 },
+      { tag: 'ASSIGN', pos: [2, 2] },
+      { tag: 'POP' },
+      { tag: 'ASSIGN', pos: [2, 1] },
+      { tag: 'POP' },
+      { tag: 'ASSIGN', pos: [2, 0] },
+      { tag: 'LDC', val: undefined },
+      { tag: 'RESET' },
+      { tag: 'ASSIGN', pos: [2, 3] },
+      { tag: 'POP' },
+      { tag: 'LD', sym: 'main', pos: [2, 3] },
+      { tag: 'CALL', arity: 0 },
+      { tag: 'EXIT_SCOPE' },
+      { tag: 'DONE' }
+    ]
+
+    const inputAst: ASTNode = parse(program)
+    const outputInstr: any[] = compile_program(inputAst)
+    expect(outputInstr).toStrictEqual(expectedInstr)
+  })
+  // NOTE TO US, there is no way to express this in js/source to check with HOMEWORK compiler, but use eye check
+  test('basic multiple variable declaration multiple return from function', async () => {
+    const program = `
+      func inc() {
+        return 1, 2, 3
+      }
+      var x,y,z = inc()
+      func main() {}`
+
+    const expectedInstr = [
+      { tag: 'ENTER_SCOPE', num: 5 },
+      { tag: 'LDF', arity: 0, addr: 3 },
+      { tag: 'GOTO', addr: 9 },
+      { tag: 'LDC', val: 1 },
+      { tag: 'LDC', val: 2 },
+      { tag: 'LDC', val: 3 },
+      { tag: 'RESET' },
+      { tag: 'LDC', val: undefined },
+      { tag: 'RESET' },
+      { tag: 'ASSIGN', pos: [2, 0] },
+      { tag: 'POP' },
+      { tag: 'LD', sym: 'inc', pos: [2, 0] },
+      { tag: 'CALL', arity: 0 },
+      { tag: 'ASSIGN', pos: [2, 3] },
+      { tag: 'POP' },
+      { tag: 'ASSIGN', pos: [2, 2] },
+      { tag: 'POP' },
+      { tag: 'ASSIGN', pos: [2, 1] },
+      { tag: 'POP' },
+      { tag: 'LDF', arity: 0, addr: 21 },
+      { tag: 'GOTO', addr: 24 },
+      { tag: 'LDC', val: undefined },
+      { tag: 'LDC', val: undefined },
+      { tag: 'RESET' },
+      { tag: 'ASSIGN', pos: [2, 4] },
+      { tag: 'POP' },
+      { tag: 'LD', sym: 'main', pos: [2, 4] },
+      { tag: 'CALL', arity: 0 },
+      { tag: 'EXIT_SCOPE' },
+      { tag: 'DONE' }
+    ]
+
+    const inputAst: ASTNode = parse(program)
+    const outputInstr: any[] = compile_program(inputAst)
+    // console.log(JSON.stringify(outputInstr));
     expect(outputInstr).toStrictEqual(expectedInstr)
   })
 })

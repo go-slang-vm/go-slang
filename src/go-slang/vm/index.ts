@@ -175,7 +175,7 @@ export class VM {
     LD: instr => {
       const val = this.heapInstance.heap_get_Environment_value(globalState.E, instr.pos)
       if (this.heapInstance.is_Unassigned(val)) {
-        throw new Error('access of unassigned variable')
+        throw new Error('access of unassigned variable ' + instr.sym)
       }
       push(globalState.OS, val)
     },
