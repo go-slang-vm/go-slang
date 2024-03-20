@@ -255,5 +255,125 @@ describe('Basic compiler test', () => {
     const outputInstr: any[] = compile_program(inputAst)
     // console.log(JSON.stringify(outputInstr));
     expect(outputInstr).toStrictEqual(expectedInstr)
-  })
+  });
+
+  test('basic while loop', async () => {
+    const program = `
+      func main() {
+        var x = 0
+        var y = 0
+        for x < 10 {
+          x = x + 1
+          y = y + x
+        }
+        return y
+      }`
+
+    const expectedInstr = 
+    [ {"tag": "ENTER_SCOPE", "num": 1},
+    {"tag": "LDF", "arity": 0, "addr": 3},
+    {"tag": "GOTO", "addr": 32},
+    {"tag": "ENTER_SCOPE", "num": 2},
+    {"tag": "LDC", "val": 0},
+    {"tag": "ASSIGN", "pos": [4, 0]},
+    {"tag": "POP"},
+    {"tag": "LDC", "val": 0},
+    {"tag": "ASSIGN", "pos": [4, 1]},
+    {"tag": "POP"},
+    {"tag": "LD", "sym": "x", "pos": [4, 0]},
+    {"tag": "LDC", "val": 10},
+    {"tag": "BINOP", "sym": "<"},
+    {"tag": "JOF", "addr": 25},
+    {"tag": "LD", "sym": "x", "pos": [4, 0]},
+    {"tag": "LDC", "val": 1},
+    {"tag": "BINOP", "sym": "+"},
+    {"tag": "ASSIGN", "pos": [4, 0]},
+    {"tag": "POP"},
+    {"tag": "LD", "sym": "y", "pos": [4, 1]},
+    {"tag": "LD", "sym": "x", "pos": [4, 0]},
+    {"tag": "BINOP", "sym": "+"},
+    {"tag": "ASSIGN", "pos": [4, 1]},
+    {"tag": "POP"},
+    {"tag": "GOTO", "addr": 10},
+    {"tag": "LDC", "val": undefined},
+    {"tag": "POP"},
+    {"tag": "LD", "sym": "y", "pos": [4, 1]},
+    {"tag": "RESET"},
+    {"tag": "EXIT_SCOPE"},
+    {"tag": "LDC", "val": undefined},
+    {"tag": "RESET"},
+    {"tag": "ASSIGN", "pos": [2, 0]},
+    {"tag": "POP"},
+    {"tag": "LD", "sym": "main", "pos": [2, 0]},
+    {"tag": "CALL", "arity": 0},
+    {"tag": "EXIT_SCOPE"},
+    {"tag": "DONE"}];
+
+    const inputAst: ASTNode = parse(program)
+    const outputInstr: any[] = compile_program(inputAst)
+    // console.log(JSON.stringify(outputInstr));
+    expect(outputInstr).toStrictEqual(expectedInstr)
+  });
+
+  test('basic if statment with nesting and empty else', async () => {
+    const program = `
+      func main() {
+        x := 1
+        if(false) {
+          x = 10
+        } else if(true) {
+          if(x < 10) {
+            x = 20;
+          }
+        } else {
+          x = 30
+        }
+        return x
+      }`
+
+    const expectedInstr = 
+    [ {"tag": "ENTER_SCOPE", "num": 1},
+  {"tag": "LDF", "arity": 0, "addr": 3},
+  {"tag": "GOTO", "addr": 31},
+  {"tag": "ENTER_SCOPE", "num": 1},
+  {"tag": "LDC", "val": 1},
+  {"tag": "ASSIGN", "pos": [4, 0]},
+  {"tag": "POP"},
+  {"tag": "LDC", "val": false},
+  {"tag": "JOF", "addr": 12},
+  {"tag": "LDC", "val": 10},
+  {"tag": "ASSIGN", "pos": [4, 0]},
+  {"tag": "GOTO", "addr": 25},
+  {"tag": "LDC", "val": true},
+  {"tag": "JOF", "addr": 23},
+  {"tag": "LD", "sym": "x", "pos": [4, 0]},
+  {"tag": "LDC", "val": 10},
+  {"tag": "BINOP", "sym": "<"},
+  {"tag": "JOF", "addr": 21},
+  {"tag": "LDC", "val": 20},
+  {"tag": "ASSIGN", "pos": [4, 0]},
+  {"tag": "GOTO", "addr": 22},
+  {"tag": "LDC", "val": undefined},
+  {"tag": "GOTO", "addr": 25},
+  {"tag": "LDC", "val": 30},
+  {"tag": "ASSIGN", "pos": [4, 0]},
+  {"tag": "POP"},
+  {"tag": "LD", "sym": "x", "pos": [4, 0]},
+  {"tag": "RESET"},
+  {"tag": "EXIT_SCOPE"},
+  {"tag": "LDC", "val": undefined},
+  {"tag": "RESET"},
+  {"tag": "ASSIGN", "pos": [2, 0]},
+  {"tag": "POP"},
+  {"tag": "LD", "sym": "main", "pos": [2, 0]},
+  {"tag": "CALL", "arity": 0},
+  {"tag": "EXIT_SCOPE"},
+  {"tag": "DONE"}];
+
+    const inputAst: ASTNode = parse(program)
+   // console.dir(inputAst, {depth : 100});
+    const outputInstr: any[] = compile_program(inputAst)
+    // console.log(JSON.stringify(outputInstr));
+    expect(outputInstr).toStrictEqual(expectedInstr)
+  });
 })
