@@ -18,9 +18,7 @@ import { ParametersContext } from "./SimpleParser";
 import { ParameterDeclContext } from "./SimpleParser";
 import { BlockContext } from "./SimpleParser";
 import { VarDeclContext } from "./SimpleParser";
-import { MultiVarDeclContext } from "./SimpleParser";
 import { AssignmentContext } from "./SimpleParser";
-import { MultiAssignmentContext } from "./SimpleParser";
 import { Assign_opContext } from "./SimpleParser";
 import { ExpressionStmtContext } from "./SimpleParser";
 import { ExpressionContext } from "./SimpleParser";
@@ -222,17 +220,6 @@ export interface SimpleParserListener extends ParseTreeListener {
 	exitVarDecl?: (ctx: VarDeclContext) => void;
 
 	/**
-	 * Enter a parse tree produced by `SimpleParser.multiVarDecl`.
-	 * @param ctx the parse tree
-	 */
-	enterMultiVarDecl?: (ctx: MultiVarDeclContext) => void;
-	/**
-	 * Exit a parse tree produced by `SimpleParser.multiVarDecl`.
-	 * @param ctx the parse tree
-	 */
-	exitMultiVarDecl?: (ctx: MultiVarDeclContext) => void;
-
-	/**
 	 * Enter a parse tree produced by `SimpleParser.assignment`.
 	 * @param ctx the parse tree
 	 */
@@ -242,17 +229,6 @@ export interface SimpleParserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	exitAssignment?: (ctx: AssignmentContext) => void;
-
-	/**
-	 * Enter a parse tree produced by `SimpleParser.multiAssignment`.
-	 * @param ctx the parse tree
-	 */
-	enterMultiAssignment?: (ctx: MultiAssignmentContext) => void;
-	/**
-	 * Exit a parse tree produced by `SimpleParser.multiAssignment`.
-	 * @param ctx the parse tree
-	 */
-	exitMultiAssignment?: (ctx: MultiAssignmentContext) => void;
 
 	/**
 	 * Enter a parse tree produced by `SimpleParser.assign_op`.

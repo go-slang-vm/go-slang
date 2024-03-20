@@ -8,7 +8,7 @@ options {
 }
 
 global_scope
-    :  ((varDecl | multiVarDecl | funcDecl) eos)* 
+    :  ((varDecl | funcDecl) eos)* 
     ;
 
 arguments
@@ -39,21 +39,21 @@ block
     : L_CURLY statementList? R_CURLY
     ;
 
-varDecl
-    : VAR IDENTIFIER ASSIGN expression
-    | IDENTIFIER DECLARE_ASSIGN expression
-    ;
+// varDecl
+//    : VAR IDENTIFIER ASSIGN expression
+//    | IDENTIFIER DECLARE_ASSIGN expression
+//    ;
 
-multiVarDecl
+varDecl
     : VAR identifierList ASSIGN expressionList
     | identifierList DECLARE_ASSIGN expressionList
     ;
 
-assignment
-    :  IDENTIFIER ASSIGN expression
-    ;
+//assignment
+//    :  IDENTIFIER ASSIGN expression
+//    ;
 
-multiAssignment
+assignment
     : identifierList assign_op expressionList
     ;
 
@@ -109,8 +109,8 @@ statementList
 
 statement
     : forStmt
-    | multiAssignment
-    | multiVarDecl
+//    | multiAssignment
+//    | multiVarDecl
     | ifStmt
     | returnStmt
     | simpleStmt

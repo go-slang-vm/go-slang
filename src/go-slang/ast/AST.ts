@@ -96,7 +96,7 @@ export interface BlockNode extends StmtNode {
     tag: Tag.BLOCK;
     body: SequenceNode | StmtNode;
 }
-
+/* old version
 export interface VarDeclNode extends StmtNode {
     tag: Tag.VAR;
     sym: string;
@@ -115,6 +115,27 @@ export interface AssignNode extends StmtNode {
     tag: Tag.ASSMT;
     sym: string
     expr: ExprNode;
+}
+*/
+
+export interface VarDeclNode extends StmtNode {
+    tag: Tag.VAR;
+    syms: IdListNode;
+    assignments: ExpressionListNode;
+    //const isConst = false;
+}
+
+export interface ConstDeclNode extends StmtNode {
+    tag: Tag.CONST;
+    syms: IdListNode;
+    assignments: ExpressionListNode;
+    //const isConst = false;
+}
+
+export interface AssignNode extends StmtNode {
+    tag: Tag.ASSMT;
+    syms: IdListNode;
+    exprs: ExpressionListNode;
 }
 
 export interface FuncDeclNode extends StmtNode {
