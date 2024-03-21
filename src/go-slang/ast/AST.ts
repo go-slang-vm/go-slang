@@ -192,7 +192,7 @@ export interface ExprNode extends ASTNode {}
 
 export interface LiteralNode extends ExprNode {
     tag: Tag.LIT;
-    val: Number | boolean;
+    val: Number | boolean | string;
 }
 
 export interface NameNode extends ExprNode {

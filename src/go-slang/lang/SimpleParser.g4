@@ -120,6 +120,7 @@ literal
     | FLOAT_LIT
     | TRUE
     | FALSE
+    | string_
     ;
 
 statementList
@@ -168,4 +169,9 @@ returnStmt
 
 forStmt
     : FOR expression block
+    ;
+
+string_
+    : RAW_STRING_LIT
+    | INTERPRETED_STRING_LIT
     ;

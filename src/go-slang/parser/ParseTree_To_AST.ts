@@ -378,6 +378,16 @@ visitAssignment(ctx: AssignmentContext): AssignNode {
       ret.val = true;
     } else if ((k = ctx.FALSE())) {
       ret.val = false;
+    } else if ((k = ctx.string_())) {
+      let str = k.RAW_STRING_LIT()
+      if(str) {
+        ret.val = this.visitTerminal(str);
+      } else if(str = k.INTERPRETED_STRING_LIT()) {
+        ret.val = this.visitTerminal(str);
+      } else {
+        throw Error("parser found string that is not one of the string types");
+      }
+      ret.val = (ret.val as string).slice(1, -1)
     } else {
         k = ctx.DECIMAL_LIT();
         // should be safe cast

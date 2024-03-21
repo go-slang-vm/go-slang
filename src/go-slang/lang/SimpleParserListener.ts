@@ -38,6 +38,7 @@ import { IdentifierListContext } from "./SimpleParser";
 import { IfStmtContext } from "./SimpleParser";
 import { ReturnStmtContext } from "./SimpleParser";
 import { ForStmtContext } from "./SimpleParser";
+import { String_Context } from "./SimpleParser";
 
 
 /**
@@ -441,5 +442,16 @@ export interface SimpleParserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	exitForStmt?: (ctx: ForStmtContext) => void;
+
+	/**
+	 * Enter a parse tree produced by `SimpleParser.string_`.
+	 * @param ctx the parse tree
+	 */
+	enterString_?: (ctx: String_Context) => void;
+	/**
+	 * Exit a parse tree produced by `SimpleParser.string_`.
+	 * @param ctx the parse tree
+	 */
+	exitString_?: (ctx: String_Context) => void;
 }
 

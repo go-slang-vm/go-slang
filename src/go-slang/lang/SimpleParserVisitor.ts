@@ -38,6 +38,7 @@ import { IdentifierListContext } from "./SimpleParser";
 import { IfStmtContext } from "./SimpleParser";
 import { ReturnStmtContext } from "./SimpleParser";
 import { ForStmtContext } from "./SimpleParser";
+import { String_Context } from "./SimpleParser";
 
 
 /**
@@ -298,5 +299,12 @@ export interface SimpleParserVisitor<Result> extends ParseTreeVisitor<Result> {
 	 * @return the visitor result
 	 */
 	visitForStmt?: (ctx: ForStmtContext) => Result;
+
+	/**
+	 * Visit a parse tree produced by `SimpleParser.string_`.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	visitString_?: (ctx: String_Context) => Result;
 }
 

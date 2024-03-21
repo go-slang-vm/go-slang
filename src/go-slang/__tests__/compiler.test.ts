@@ -434,4 +434,37 @@ describe('Basic compiler test', () => {
     // console.log(JSON.stringify(outputInstr));
     expect(outputInstr).toStrictEqual(expectedInstr)
   });
+  test('basic string', async () => {
+    const program = `
+      func main() {
+        x string := "this is a string"
+        return x
+      }`
+
+    const expectedInstr = 
+    [ {"tag": "ENTER_SCOPE", "num": 1},
+  {"tag": "LDF", "arity": 0, "addr": 3},
+  {"tag": "GOTO", "addr": 12},
+  {"tag": "ENTER_SCOPE", "num": 1},
+  {"tag": "LDC", "val": "this is a string"},
+  {"tag": "ASSIGN", "pos": [4, 0]},
+  {"tag": "POP"},
+  {"tag": "LD", "sym": "x", "pos": [4, 0]},
+  {"tag": "RESET"},
+  {"tag": "EXIT_SCOPE"},
+  {"tag": "LDC", "val": undefined},
+  {"tag": "RESET"},
+  {"tag": "ASSIGN", "pos": [2, 0]},
+  {"tag": "POP"},
+  {"tag": "LD", "sym": "main", "pos": [2, 0]},
+  {"tag": "CALL", "arity": 0},
+  {"tag": "EXIT_SCOPE"},
+  {"tag": "DONE"}];
+
+    const inputAst: ASTNode = parse(program)
+   // console.dir(inputAst, {depth : 100});
+    const outputInstr: any[] = compile_program(inputAst)
+    // console.log(JSON.stringify(outputInstr));
+    expect(outputInstr).toStrictEqual(expectedInstr)
+  });
 })
