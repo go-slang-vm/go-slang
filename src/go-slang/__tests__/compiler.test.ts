@@ -5,10 +5,10 @@ import { parse } from '../parser/parser'
 describe('Basic compiler test', () => {
   test('basic variable declaration in a new block scope', async () => {
     const program = `
-      func main() {
-        var y = 1
+      func main() (int) {
+        var y int = 1
         {
-          y := 2
+          y int := 2
         }
         return y
       }`
@@ -52,17 +52,17 @@ describe('Basic compiler test', () => {
 
   test('basic fact', async () => {
     const program = `
-      func fact(n) {
+      func fact(n int) (int) {
         return fact_iter(n,1,1)
       }
-      func fact_iter(n, i, acc) {
+      func fact_iter(n, i, acc int) (int) {
         if i > n {
           return acc
         } else {
           return fact_iter(n,i+1,acc*i)
         }
       }
-      func main() {
+      func main() (int) {
         return fact(5)
       }`
 
@@ -123,9 +123,9 @@ describe('Basic compiler test', () => {
 
   test('basic multiple variable declaration', async () => {
     const program = `
-      var x,y,z = 1, 2, 3
-      func main() {
-        sx, sy, sz := 11, 22, 33
+      var x,y,z int = 1, 2, 3
+      func main() (int) {
+        sx, sy, sz int := 11, 22, 33
       }`
 
     const expectedInstr = [
@@ -169,8 +169,8 @@ describe('Basic compiler test', () => {
 
   test('basic multiple assignment', async () => {
     const program = `
-      var x,y,z = 1, 2, 3
-      func main() {
+      var x,y,z int = 1, 2, 3
+      func main() (int) {
         x, y, z = 11, 22, 33
       }`
 
@@ -212,11 +212,11 @@ describe('Basic compiler test', () => {
   // NOTE TO US, there is no way to express this in js/source to check with HOMEWORK compiler, but use eye check
   test('basic multiple variable declaration multiple return from function', async () => {
     const program = `
-      func inc() {
+      func inc() (int, int, int) {
         return 1, 2, 3
       }
-      var x,y,z = inc()
-      func main() {}`
+      var x,y,z int = inc()
+      func main() (int) {}`
 
     const expectedInstr = [
       { tag: 'ENTER_SCOPE', num: 5 },
@@ -259,9 +259,9 @@ describe('Basic compiler test', () => {
 
   test('basic while loop', async () => {
     const program = `
-      func main() {
-        var x = 0
-        var y = 0
+      func main() (int) {
+        var x int = 0
+        var y int = 0
         for x < 10 {
           x = x + 1
           y = y + x
@@ -317,8 +317,8 @@ describe('Basic compiler test', () => {
 
   test('basic if statment with nesting and empty else', async () => {
     const program = `
-      func main() {
-        x := 1
+      func main() (int) {
+        x int := 1
         if(false) {
           x = 10
         } else if(true) {
@@ -360,6 +360,64 @@ describe('Basic compiler test', () => {
   {"tag": "POP"},
   {"tag": "LD", "sym": "x", "pos": [4, 0]},
   {"tag": "RESET"},
+  {"tag": "EXIT_SCOPE"},
+  {"tag": "LDC", "val": undefined},
+  {"tag": "RESET"},
+  {"tag": "ASSIGN", "pos": [2, 0]},
+  {"tag": "POP"},
+  {"tag": "LD", "sym": "main", "pos": [2, 0]},
+  {"tag": "CALL", "arity": 0},
+  {"tag": "EXIT_SCOPE"},
+  {"tag": "DONE"}];
+
+    const inputAst: ASTNode = parse(program)
+   // console.dir(inputAst, {depth : 100});
+    const outputInstr: any[] = compile_program(inputAst)
+    // console.log(JSON.stringify(outputInstr));
+    expect(outputInstr).toStrictEqual(expectedInstr)
+  });
+
+  test('basic empty return', async () => {
+    const program = `
+      func main() {
+        x int := 1
+        if(false) {
+          x = 10
+        } else if(true) {
+          if(x < 10) {
+            x = 20;
+          }
+        } else {
+          x = 30
+        }
+      }`
+
+    const expectedInstr = 
+    [ {"tag": "ENTER_SCOPE", "num": 1},
+  {"tag": "LDF", "arity": 0, "addr": 3},
+  {"tag": "GOTO", "addr": 28},
+  {"tag": "ENTER_SCOPE", "num": 1},
+  {"tag": "LDC", "val": 1},
+  {"tag": "ASSIGN", "pos": [4, 0]},
+  {"tag": "POP"},
+  {"tag": "LDC", "val": false},
+  {"tag": "JOF", "addr": 12},
+  {"tag": "LDC", "val": 10},
+  {"tag": "ASSIGN", "pos": [4, 0]},
+  {"tag": "GOTO", "addr": 25},
+  {"tag": "LDC", "val": true},
+  {"tag": "JOF", "addr": 23},
+  {"tag": "LD", "sym": "x", "pos": [4, 0]},
+  {"tag": "LDC", "val": 10},
+  {"tag": "BINOP", "sym": "<"},
+  {"tag": "JOF", "addr": 21},
+  {"tag": "LDC", "val": 20},
+  {"tag": "ASSIGN", "pos": [4, 0]},
+  {"tag": "GOTO", "addr": 22},
+  {"tag": "LDC", "val": undefined},
+  {"tag": "GOTO", "addr": 25},
+  {"tag": "LDC", "val": 30},
+  {"tag": "ASSIGN", "pos": [4, 0]},
   {"tag": "EXIT_SCOPE"},
   {"tag": "LDC", "val": undefined},
   {"tag": "RESET"},

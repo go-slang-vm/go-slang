@@ -24,7 +24,15 @@ funcDecl
     ;
 
 signature
-    : L_PAREN parameters R_PAREN
+    : L_PAREN parameters R_PAREN result?
+    ;
+
+result
+    : L_PAREN typeList R_PAREN
+    ;
+
+typeList
+    : (type_ | NIL_LIT) (COMMA (type_ | NIL_LIT))*
     ;
 
 parameters
@@ -32,7 +40,7 @@ parameters
     ;
 
 parameterDecl
-    : identifierList?
+    : (identifierList type_)?
     ;
 
 block
@@ -45,8 +53,17 @@ block
 //    ;
 
 varDecl
-    : VAR identifierList ASSIGN expressionList
-    | identifierList DECLARE_ASSIGN expressionList
+    : VAR identifierList type_ ASSIGN expressionList
+    | identifierList type_ DECLARE_ASSIGN expressionList
+    ;
+
+// we only allow these types for now
+// note we do not have multiple sizes for ints and floats since JS just defaults to 64 bit floats
+type_
+    : INT
+    | BOOL
+    | STRING
+    | FLOAT
     ;
 
 //assignment

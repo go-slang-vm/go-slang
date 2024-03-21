@@ -54,6 +54,13 @@ export interface ASTNode {
 export interface ParamListNode extends ASTNode {
     tag: Tag.PARAMS;
     params: string[];
+    types: string[];
+}
+
+export interface ParamDeclNode extends ASTNode {
+    tag: Tag.PARAMS;
+    IDENTS: IdListNode;
+    type: string;
 }
 
 export interface IdListNode extends ASTNode {
@@ -122,6 +129,7 @@ export interface VarDeclNode extends StmtNode {
     tag: Tag.VAR;
     syms: IdListNode;
     assignments: ExpressionListNode;
+    type: string;
     //const isConst = false;
 }
 
@@ -129,6 +137,7 @@ export interface ConstDeclNode extends StmtNode {
     tag: Tag.CONST;
     syms: IdListNode;
     assignments: ExpressionListNode;
+    type: string;
     //const isConst = false;
 }
 
@@ -144,6 +153,7 @@ export interface FuncDeclNode extends StmtNode {
     prms: string[];
     body: BlockNode;
     _arity: Number;
+    returnTypes: string[];
 }
 
 export interface IfStmtNode extends StmtNode {
