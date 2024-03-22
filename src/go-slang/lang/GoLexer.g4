@@ -67,6 +67,8 @@ FOR         : 'for';
 IMPORT      : 'import';
 RETURN      : 'return' -> mode(NLSEMI);
 VAR         : 'var';
+TRUE        : 'true';
+FALSE       : 'false';
 
 NIL_LIT: 'nil' -> mode(NLSEMI);
 

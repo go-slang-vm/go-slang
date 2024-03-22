@@ -337,6 +337,10 @@ visitAssignment(ctx: AssignmentContext): AssignNode {
         ret.val = this.visitTerminal(k);
     } else if ((k = ctx.FLOAT_LIT())) {
       ret.val = parseFloat(this.visitTerminal(k));
+    } else if ((k = ctx.TRUE())) {
+      ret.val = true;
+    } else if ((k = ctx.FALSE())) {
+      ret.val = false;
     } else {
         k = ctx.DECIMAL_LIT();
         // should be safe cast

@@ -1,3 +1,5 @@
+/* eslint-disable simple-import-sort/imports */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 // @ts-nocheck
 // Generated from src/go-slang/lang/SimpleParser.g4 by ANTLR 4.9.0-SNAPSHOT
 
@@ -54,70 +56,72 @@ export class SimpleParser extends GoParserBase {
 	public static readonly IMPORT = 23;
 	public static readonly RETURN = 24;
 	public static readonly VAR = 25;
-	public static readonly NIL_LIT = 26;
-	public static readonly IDENTIFIER = 27;
-	public static readonly L_PAREN = 28;
-	public static readonly R_PAREN = 29;
-	public static readonly L_CURLY = 30;
-	public static readonly R_CURLY = 31;
-	public static readonly L_BRACKET = 32;
-	public static readonly R_BRACKET = 33;
-	public static readonly ASSIGN = 34;
-	public static readonly COMMA = 35;
-	public static readonly SEMI = 36;
-	public static readonly COLON = 37;
-	public static readonly DOT = 38;
-	public static readonly PLUS_PLUS = 39;
-	public static readonly MINUS_MINUS = 40;
-	public static readonly DECLARE_ASSIGN = 41;
-	public static readonly ELLIPSIS = 42;
-	public static readonly LOGICAL_OR = 43;
-	public static readonly LOGICAL_AND = 44;
-	public static readonly EQUALS = 45;
-	public static readonly NOT_EQUALS = 46;
-	public static readonly LESS = 47;
-	public static readonly LESS_OR_EQUALS = 48;
-	public static readonly GREATER = 49;
-	public static readonly GREATER_OR_EQUALS = 50;
-	public static readonly OR = 51;
-	public static readonly DIV = 52;
-	public static readonly MOD = 53;
-	public static readonly LSHIFT = 54;
-	public static readonly RSHIFT = 55;
-	public static readonly BIT_CLEAR = 56;
-	public static readonly UNDERLYING = 57;
-	public static readonly EXCLAMATION = 58;
-	public static readonly PLUS = 59;
-	public static readonly MINUS = 60;
-	public static readonly CARET = 61;
-	public static readonly STAR = 62;
-	public static readonly AMPERSAND = 63;
-	public static readonly RECEIVE = 64;
-	public static readonly DECIMAL_LIT = 65;
-	public static readonly BINARY_LIT = 66;
-	public static readonly OCTAL_LIT = 67;
-	public static readonly HEX_LIT = 68;
-	public static readonly FLOAT_LIT = 69;
-	public static readonly DECIMAL_FLOAT_LIT = 70;
-	public static readonly HEX_FLOAT_LIT = 71;
-	public static readonly IMAGINARY_LIT = 72;
-	public static readonly RUNE_LIT = 73;
-	public static readonly BYTE_VALUE = 74;
-	public static readonly OCTAL_BYTE_VALUE = 75;
-	public static readonly HEX_BYTE_VALUE = 76;
-	public static readonly LITTLE_U_VALUE = 77;
-	public static readonly BIG_U_VALUE = 78;
-	public static readonly RAW_STRING_LIT = 79;
-	public static readonly INTERPRETED_STRING_LIT = 80;
-	public static readonly WS = 81;
-	public static readonly COMMENT = 82;
-	public static readonly TERMINATOR = 83;
-	public static readonly LINE_COMMENT = 84;
-	public static readonly WS_NLSEMI = 85;
-	public static readonly COMMENT_NLSEMI = 86;
-	public static readonly LINE_COMMENT_NLSEMI = 87;
-	public static readonly EOS = 88;
-	public static readonly OTHER = 89;
+	public static readonly TRUE = 26;
+	public static readonly FALSE = 27;
+	public static readonly NIL_LIT = 28;
+	public static readonly IDENTIFIER = 29;
+	public static readonly L_PAREN = 30;
+	public static readonly R_PAREN = 31;
+	public static readonly L_CURLY = 32;
+	public static readonly R_CURLY = 33;
+	public static readonly L_BRACKET = 34;
+	public static readonly R_BRACKET = 35;
+	public static readonly ASSIGN = 36;
+	public static readonly COMMA = 37;
+	public static readonly SEMI = 38;
+	public static readonly COLON = 39;
+	public static readonly DOT = 40;
+	public static readonly PLUS_PLUS = 41;
+	public static readonly MINUS_MINUS = 42;
+	public static readonly DECLARE_ASSIGN = 43;
+	public static readonly ELLIPSIS = 44;
+	public static readonly LOGICAL_OR = 45;
+	public static readonly LOGICAL_AND = 46;
+	public static readonly EQUALS = 47;
+	public static readonly NOT_EQUALS = 48;
+	public static readonly LESS = 49;
+	public static readonly LESS_OR_EQUALS = 50;
+	public static readonly GREATER = 51;
+	public static readonly GREATER_OR_EQUALS = 52;
+	public static readonly OR = 53;
+	public static readonly DIV = 54;
+	public static readonly MOD = 55;
+	public static readonly LSHIFT = 56;
+	public static readonly RSHIFT = 57;
+	public static readonly BIT_CLEAR = 58;
+	public static readonly UNDERLYING = 59;
+	public static readonly EXCLAMATION = 60;
+	public static readonly PLUS = 61;
+	public static readonly MINUS = 62;
+	public static readonly CARET = 63;
+	public static readonly STAR = 64;
+	public static readonly AMPERSAND = 65;
+	public static readonly RECEIVE = 66;
+	public static readonly DECIMAL_LIT = 67;
+	public static readonly BINARY_LIT = 68;
+	public static readonly OCTAL_LIT = 69;
+	public static readonly HEX_LIT = 70;
+	public static readonly FLOAT_LIT = 71;
+	public static readonly DECIMAL_FLOAT_LIT = 72;
+	public static readonly HEX_FLOAT_LIT = 73;
+	public static readonly IMAGINARY_LIT = 74;
+	public static readonly RUNE_LIT = 75;
+	public static readonly BYTE_VALUE = 76;
+	public static readonly OCTAL_BYTE_VALUE = 77;
+	public static readonly HEX_BYTE_VALUE = 78;
+	public static readonly LITTLE_U_VALUE = 79;
+	public static readonly BIG_U_VALUE = 80;
+	public static readonly RAW_STRING_LIT = 81;
+	public static readonly INTERPRETED_STRING_LIT = 82;
+	public static readonly WS = 83;
+	public static readonly COMMENT = 84;
+	public static readonly TERMINATOR = 85;
+	public static readonly LINE_COMMENT = 86;
+	public static readonly WS_NLSEMI = 87;
+	public static readonly COMMENT_NLSEMI = 88;
+	public static readonly LINE_COMMENT_NLSEMI = 89;
+	public static readonly EOS = 90;
+	public static readonly OTHER = 91;
 	public static readonly RULE_global_scope = 0;
 	public static readonly RULE_arguments = 1;
 	public static readonly RULE_funcApp = 2;
@@ -158,27 +162,28 @@ export class SimpleParser extends GoParserBase {
 		"'case'", "'defer'", "'go'", "'map'", "'struct'", "'chan'", "'else'", 
 		"'goto'", "'package'", "'switch'", "'const'", "'fallthrough'", "'if'", 
 		"'range'", "'type'", "'continue'", "'for'", "'import'", "'return'", "'var'", 
-		"'nil'", undefined, "'('", "')'", "'{'", "'}'", "'['", "']'", "'='", "','", 
-		"';'", "':'", "'.'", "'++'", "'--'", "':='", "'...'", "'||'", "'&&'", 
-		"'=='", "'!='", "'<'", "'<='", "'>'", "'>='", "'|'", "'/'", "'%'", "'<<'", 
-		"'>>'", "'&^'", "'~'", "'!'", "'+'", "'-'", "'^'", "'*'", "'&'", "'<-'",
+		"'true'", "'false'", "'nil'", undefined, "'('", "')'", "'{'", "'}'", "'['", 
+		"']'", "'='", "','", "';'", "':'", "'.'", "'++'", "'--'", "':='", "'...'", 
+		"'||'", "'&&'", "'=='", "'!='", "'<'", "'<='", "'>'", "'>='", "'|'", "'/'", 
+		"'%'", "'<<'", "'>>'", "'&^'", "'~'", "'!'", "'+'", "'-'", "'^'", "'*'", 
+		"'&'", "'<-'",
 	];
 	private static readonly _SYMBOLIC_NAMES: Array<string | undefined> = [
 		undefined, "BREAK", "DEFAULT", "FUNC", "INTERFACE", "SELECT", "CASE", 
 		"DEFER", "GO", "MAP", "STRUCT", "CHAN", "ELSE", "GOTO", "PACKAGE", "SWITCH", 
 		"CONST", "FALLTHROUGH", "IF", "RANGE", "TYPE", "CONTINUE", "FOR", "IMPORT", 
-		"RETURN", "VAR", "NIL_LIT", "IDENTIFIER", "L_PAREN", "R_PAREN", "L_CURLY", 
-		"R_CURLY", "L_BRACKET", "R_BRACKET", "ASSIGN", "COMMA", "SEMI", "COLON", 
-		"DOT", "PLUS_PLUS", "MINUS_MINUS", "DECLARE_ASSIGN", "ELLIPSIS", "LOGICAL_OR", 
-		"LOGICAL_AND", "EQUALS", "NOT_EQUALS", "LESS", "LESS_OR_EQUALS", "GREATER", 
-		"GREATER_OR_EQUALS", "OR", "DIV", "MOD", "LSHIFT", "RSHIFT", "BIT_CLEAR", 
-		"UNDERLYING", "EXCLAMATION", "PLUS", "MINUS", "CARET", "STAR", "AMPERSAND", 
-		"RECEIVE", "DECIMAL_LIT", "BINARY_LIT", "OCTAL_LIT", "HEX_LIT", "FLOAT_LIT", 
-		"DECIMAL_FLOAT_LIT", "HEX_FLOAT_LIT", "IMAGINARY_LIT", "RUNE_LIT", "BYTE_VALUE", 
-		"OCTAL_BYTE_VALUE", "HEX_BYTE_VALUE", "LITTLE_U_VALUE", "BIG_U_VALUE", 
-		"RAW_STRING_LIT", "INTERPRETED_STRING_LIT", "WS", "COMMENT", "TERMINATOR", 
-		"LINE_COMMENT", "WS_NLSEMI", "COMMENT_NLSEMI", "LINE_COMMENT_NLSEMI", 
-		"EOS", "OTHER",
+		"RETURN", "VAR", "TRUE", "FALSE", "NIL_LIT", "IDENTIFIER", "L_PAREN", 
+		"R_PAREN", "L_CURLY", "R_CURLY", "L_BRACKET", "R_BRACKET", "ASSIGN", "COMMA", 
+		"SEMI", "COLON", "DOT", "PLUS_PLUS", "MINUS_MINUS", "DECLARE_ASSIGN", 
+		"ELLIPSIS", "LOGICAL_OR", "LOGICAL_AND", "EQUALS", "NOT_EQUALS", "LESS", 
+		"LESS_OR_EQUALS", "GREATER", "GREATER_OR_EQUALS", "OR", "DIV", "MOD", 
+		"LSHIFT", "RSHIFT", "BIT_CLEAR", "UNDERLYING", "EXCLAMATION", "PLUS", 
+		"MINUS", "CARET", "STAR", "AMPERSAND", "RECEIVE", "DECIMAL_LIT", "BINARY_LIT", 
+		"OCTAL_LIT", "HEX_LIT", "FLOAT_LIT", "DECIMAL_FLOAT_LIT", "HEX_FLOAT_LIT", 
+		"IMAGINARY_LIT", "RUNE_LIT", "BYTE_VALUE", "OCTAL_BYTE_VALUE", "HEX_BYTE_VALUE", 
+		"LITTLE_U_VALUE", "BIG_U_VALUE", "RAW_STRING_LIT", "INTERPRETED_STRING_LIT", 
+		"WS", "COMMENT", "TERMINATOR", "LINE_COMMENT", "WS_NLSEMI", "COMMENT_NLSEMI", 
+		"LINE_COMMENT_NLSEMI", "EOS", "OTHER",
 	];
 	public static readonly VOCABULARY: Vocabulary = new VocabularyImpl(SimpleParser._LITERAL_NAMES, SimpleParser._SYMBOLIC_NAMES, []);
 
@@ -276,7 +281,7 @@ export class SimpleParser extends GoParserBase {
 			this.state = 65;
 			this._errHandler.sync(this);
 			_la = this._input.LA(1);
-			if ((((_la) & ~0x1F) === 0 && ((1 << _la) & ((1 << SimpleParser.NIL_LIT) | (1 << SimpleParser.IDENTIFIER) | (1 << SimpleParser.L_PAREN))) !== 0) || ((((_la - 58)) & ~0x1F) === 0 && ((1 << (_la - 58)) & ((1 << (SimpleParser.EXCLAMATION - 58)) | (1 << (SimpleParser.MINUS - 58)) | (1 << (SimpleParser.DECIMAL_LIT - 58)) | (1 << (SimpleParser.FLOAT_LIT - 58)))) !== 0)) {
+			if ((((_la) & ~0x1F) === 0 && ((1 << _la) & ((1 << SimpleParser.TRUE) | (1 << SimpleParser.FALSE) | (1 << SimpleParser.NIL_LIT) | (1 << SimpleParser.IDENTIFIER) | (1 << SimpleParser.L_PAREN))) !== 0) || ((((_la - 60)) & ~0x1F) === 0 && ((1 << (_la - 60)) & ((1 << (SimpleParser.EXCLAMATION - 60)) | (1 << (SimpleParser.MINUS - 60)) | (1 << (SimpleParser.DECIMAL_LIT - 60)) | (1 << (SimpleParser.FLOAT_LIT - 60)))) !== 0)) {
 				{
 				this.state = 64;
 				this.expressionList();
@@ -795,7 +800,7 @@ export class SimpleParser extends GoParserBase {
 						this.state = 136;
 						(_localctx as RELOPContext)._rel_op = this._input.LT(1);
 						_la = this._input.LA(1);
-						if (!(((((_la - 45)) & ~0x1F) === 0 && ((1 << (_la - 45)) & ((1 << (SimpleParser.EQUALS - 45)) | (1 << (SimpleParser.NOT_EQUALS - 45)) | (1 << (SimpleParser.LESS - 45)) | (1 << (SimpleParser.LESS_OR_EQUALS - 45)) | (1 << (SimpleParser.GREATER - 45)) | (1 << (SimpleParser.GREATER_OR_EQUALS - 45)))) !== 0))) {
+						if (!(((((_la - 47)) & ~0x1F) === 0 && ((1 << (_la - 47)) & ((1 << (SimpleParser.EQUALS - 47)) | (1 << (SimpleParser.NOT_EQUALS - 47)) | (1 << (SimpleParser.LESS - 47)) | (1 << (SimpleParser.LESS_OR_EQUALS - 47)) | (1 << (SimpleParser.GREATER - 47)) | (1 << (SimpleParser.GREATER_OR_EQUALS - 47)))) !== 0))) {
 							(_localctx as RELOPContext)._rel_op = this._errHandler.recoverInline(this);
 						} else {
 							if (this._input.LA(1) === Token.EOF) {
@@ -895,6 +900,8 @@ export class SimpleParser extends GoParserBase {
 			this.state = 157;
 			this._errHandler.sync(this);
 			switch (this._input.LA(1)) {
+			case SimpleParser.TRUE:
+			case SimpleParser.FALSE:
 			case SimpleParser.NIL_LIT:
 			case SimpleParser.DECIMAL_LIT:
 			case SimpleParser.FLOAT_LIT:
@@ -975,7 +982,7 @@ export class SimpleParser extends GoParserBase {
 			{
 			this.state = 161;
 			_la = this._input.LA(1);
-			if (!(_la === SimpleParser.NIL_LIT || _la === SimpleParser.DECIMAL_LIT || _la === SimpleParser.FLOAT_LIT)) {
+			if (!((((_la) & ~0x1F) === 0 && ((1 << _la) & ((1 << SimpleParser.TRUE) | (1 << SimpleParser.FALSE) | (1 << SimpleParser.NIL_LIT))) !== 0) || _la === SimpleParser.DECIMAL_LIT || _la === SimpleParser.FLOAT_LIT)) {
 			this._errHandler.recoverInline(this);
 			} else {
 				if (this._input.LA(1) === Token.EOF) {
@@ -1121,6 +1128,8 @@ export class SimpleParser extends GoParserBase {
 				break;
 			case SimpleParser.FUNC:
 			case SimpleParser.VAR:
+			case SimpleParser.TRUE:
+			case SimpleParser.FALSE:
 			case SimpleParser.NIL_LIT:
 			case SimpleParser.IDENTIFIER:
 			case SimpleParser.L_PAREN:
@@ -1529,7 +1538,7 @@ export class SimpleParser extends GoParserBase {
 	}
 
 	public static readonly _serializedATN: string =
-		"\x03\uC91D\uCABA\u058D\uAFBA\u4F53\u0607\uEA8B\uC241\x03[\xEB\x04\x02" +
+		"\x03\uC91D\uCABA\u058D\uAFBA\u4F53\u0607\uEA8B\uC241\x03]\xEB\x04\x02" +
 		"\t\x02\x04\x03\t\x03\x04\x04\t\x04\x04\x05\t\x05\x04\x06\t\x06\x04\x07" +
 		"\t\x07\x04\b\t\b\x04\t\t\t\x04\n\t\n\x04\v\t\v\x04\f\t\f\x04\r\t\r\x04" +
 		"\x0E\t\x0E\x04\x0F\t\x0F\x04\x10\t\x10\x04\x11\t\x11\x04\x12\t\x12\x04" +
@@ -1557,8 +1566,8 @@ export class SimpleParser extends GoParserBase {
 		"\n\x1A\x03\x1B\x03\x1B\x03\x1B\x03\x1B\x03\x1B\x02\x02\x03\x1A\x1C\x02" +
 		"\x02\x04\x02\x06\x02\b\x02\n\x02\f\x02\x0E\x02\x10\x02\x12\x02\x14\x02" +
 		"\x16\x02\x18\x02\x1A\x02\x1C\x02\x1E\x02 \x02\"\x02$\x02&\x02(\x02*\x02" +
-		",\x02.\x020\x022\x024\x02\x02\x07\x04\x02<<>>\x04\x0266@@\x03\x02=>\x03" +
-		"\x02/4\x05\x02\x1C\x1CCCGG\x02\xF6\x02>\x03\x02\x02\x02\x04A\x03\x02\x02" +
+		",\x02.\x020\x022\x024\x02\x02\x07\x04\x02>>@@\x04\x0288BB\x03\x02?@\x03" +
+		"\x0216\x05\x02\x1C\x1EEEII\x02\xF6\x02>\x03\x02\x02\x02\x04A\x03\x02\x02" +
 		"\x02\x06G\x03\x02\x02\x02\bJ\x03\x02\x02\x02\nO\x03\x02\x02\x02\f^\x03" +
 		"\x02\x02\x02\x0Ea\x03\x02\x02\x02\x10c\x03\x02\x02\x02\x12r\x03\x02\x02" +
 		"\x02\x14t\x03\x02\x02\x02\x16x\x03\x02\x02\x02\x18z\x03\x02\x02\x02\x1A" +
@@ -1569,70 +1578,69 @@ export class SimpleParser extends GoParserBase {
 		"\x03\x02\x02\x0269\x05\x12\n\x0279\x05\b\x05\x0286\x03\x02\x02\x0287\x03" +
 		"\x02\x02\x029:\x03\x02\x02\x02:;\x05,\x17\x02;=\x03\x02\x02\x02<8\x03" +
 		"\x02\x02\x02=@\x03\x02\x02\x02><\x03\x02\x02\x02>?\x03\x02\x02\x02?\x03" +
-		"\x03\x02\x02\x02@>\x03\x02\x02\x02AC\x07\x1E\x02\x02BD\x05*\x16\x02CB" +
-		"\x03\x02\x02\x02CD\x03\x02\x02\x02DE\x03\x02\x02\x02EF\x07\x1F\x02\x02" +
-		"F\x05\x03\x02\x02\x02GH\x07\x1D\x02\x02HI\x05\x04\x03\x02I\x07\x03\x02" +
-		"\x02\x02JK\x07\x05\x02\x02KL\x07\x1D\x02\x02LM\x05\n\x06\x02MN\x05\x10" +
-		"\t\x02N\t\x03\x02\x02\x02OP\x07\x1E\x02\x02PQ\x05\f\x07\x02QR\x07\x1F" +
-		"\x02\x02R\v\x03\x02\x02\x02SX\x05\x0E\b\x02TU\x07%\x02\x02UW\x05\x0E\b" +
-		"\x02VT\x03\x02\x02\x02WZ\x03\x02\x02\x02XV\x03\x02\x02\x02XY\x03\x02\x02" +
-		"\x02Y\\\x03\x02\x02\x02ZX\x03\x02\x02\x02[]\x07%\x02\x02\\[\x03\x02\x02" +
-		"\x02\\]\x03\x02\x02\x02]_\x03\x02\x02\x02^S\x03\x02\x02\x02^_\x03\x02" +
-		"\x02\x02_\r\x03\x02\x02\x02`b\x05.\x18\x02a`\x03\x02\x02\x02ab\x03\x02" +
-		"\x02\x02b\x0F\x03\x02\x02\x02ce\x07 \x02\x02df\x05$\x13\x02ed\x03\x02" +
-		"\x02\x02ef\x03\x02\x02\x02fg\x03\x02\x02\x02gh\x07!\x02\x02h\x11\x03\x02" +
-		"\x02\x02ij\x07\x1B\x02\x02jk\x05.\x18\x02kl\x07$\x02\x02lm\x05*\x16\x02" +
-		"ms\x03\x02\x02\x02no\x05.\x18\x02op\x07+\x02\x02pq\x05*\x16\x02qs\x03" +
-		"\x02\x02\x02ri\x03\x02\x02\x02rn\x03\x02\x02\x02s\x13\x03\x02\x02\x02" +
-		"tu\x05.\x18\x02uv\x05\x16\f\x02vw\x05*\x16\x02w\x15\x03\x02\x02\x02xy" +
-		"\x07$\x02\x02y\x17\x03\x02\x02\x02z{\x05\x1A\x0E\x02{\x19\x03\x02\x02" +
-		"\x02|}\b\x0E\x01\x02}\x82\x05\x06\x04\x02~\x7F\t\x02\x02\x02\x7F\x82\x05" +
-		"\x1A\x0E\t\x80\x82\x05\x1C\x0F\x02\x81|\x03\x02\x02\x02\x81~\x03\x02\x02" +
-		"\x02\x81\x80\x03\x02\x02\x02\x82\x94\x03\x02\x02\x02\x83\x84\f\b\x02\x02" +
-		"\x84\x85\t\x03\x02\x02\x85\x93\x05\x1A\x0E\t\x86\x87\f\x07\x02\x02\x87" +
-		"\x88\t\x04\x02\x02\x88\x93\x05\x1A\x0E\b\x89\x8A\f\x06\x02\x02\x8A\x8B" +
-		"\t\x05\x02\x02\x8B\x93\x05\x1A\x0E\x07\x8C\x8D\f\x05\x02\x02\x8D\x8E\x07" +
-		".\x02\x02\x8E\x93\x05\x1A\x0E\x06\x8F\x90\f\x04\x02\x02\x90\x91\x07-\x02" +
-		"\x02\x91\x93\x05\x1A\x0E\x05\x92\x83\x03\x02\x02\x02\x92\x86\x03\x02\x02" +
-		"\x02\x92\x89\x03\x02\x02\x02\x92\x8C\x03\x02\x02\x02\x92\x8F\x03\x02\x02" +
-		"\x02\x93\x96\x03\x02\x02\x02\x94\x92\x03\x02\x02\x02\x94\x95\x03\x02\x02" +
-		"\x02\x95\x1B\x03\x02\x02\x02\x96\x94\x03\x02\x02\x02\x97\x98\x05\x1E\x10" +
-		"\x02\x98\x1D\x03\x02\x02\x02\x99\xA0\x05\"\x12\x02\x9A\xA0\x05 \x11\x02" +
-		"\x9B\x9C\x07\x1E\x02\x02\x9C\x9D\x05\x1A\x0E\x02\x9D\x9E\x07\x1F\x02\x02" +
-		"\x9E\xA0\x03\x02\x02\x02\x9F\x99\x03\x02\x02\x02\x9F\x9A\x03\x02\x02\x02" +
-		"\x9F\x9B\x03\x02\x02\x02\xA0\x1F\x03\x02\x02\x02\xA1\xA2\x07\x1D\x02\x02" +
-		"\xA2!\x03\x02\x02\x02\xA3\xA4\t\x06\x02\x02\xA4#\x03\x02\x02\x02\xA5\xA7" +
-		"\x07&\x02\x02\xA6\xA5\x03\x02\x02\x02\xA6\xA7\x03\x02\x02\x02\xA7\xAD" +
-		"\x03\x02\x02\x02\xA8\xAA\x07Z\x02\x02\xA9\xA8\x03\x02\x02\x02\xA9\xAA" +
-		"\x03\x02\x02\x02\xAA\xAD\x03\x02\x02\x02\xAB\xAD\x06\x13\x07\x02\xAC\xA6" +
-		"\x03\x02\x02\x02\xAC\xA9\x03\x02\x02\x02\xAC\xAB\x03\x02\x02\x02\xAD\xAE" +
-		"\x03\x02\x02\x02\xAE\xAF\x05&\x14\x02\xAF\xB0\x05,\x17\x02\xB0\xB2\x03" +
-		"\x02\x02\x02\xB1\xAC\x03\x02\x02\x02\xB2\xB3\x03\x02\x02\x02\xB3\xB1\x03" +
-		"\x02\x02\x02\xB3\xB4\x03\x02\x02\x02\xB4%\x03\x02\x02\x02\xB5\xBB\x05" +
-		"4\x1B\x02\xB6\xBB\x050\x19\x02\xB7\xBB\x052\x1A\x02\xB8\xBB\x05(\x15\x02" +
-		"\xB9\xBB\x05\x10\t\x02\xBA\xB5\x03\x02\x02\x02\xBA\xB6\x03\x02\x02\x02" +
-		"\xBA\xB7\x03\x02\x02\x02\xBA\xB8\x03\x02\x02\x02\xBA\xB9\x03\x02\x02\x02" +
-		"\xBB\'\x03\x02\x02\x02\xBC\xC1\x05\x14\v\x02\xBD\xC1\x05\x12\n\x02\xBE" +
-		"\xC1\x05\b\x05\x02\xBF\xC1\x05\x18\r\x02\xC0\xBC\x03\x02\x02\x02\xC0\xBD" +
-		"\x03\x02\x02\x02\xC0\xBE\x03\x02\x02\x02\xC0\xBF\x03\x02\x02\x02\xC1)" +
-		"\x03\x02\x02\x02\xC2\xC7\x05\x1A\x0E\x02\xC3\xC4\x07%\x02\x02\xC4\xC6" +
-		"\x05\x1A\x0E\x02\xC5\xC3\x03\x02\x02\x02\xC6\xC9\x03\x02\x02\x02\xC7\xC5" +
-		"\x03\x02\x02\x02\xC7\xC8\x03\x02\x02\x02\xC8+\x03\x02\x02\x02\xC9\xC7" +
-		"\x03\x02\x02\x02\xCA\xCF\x07&\x02\x02\xCB\xCF\x07\x02\x02\x03\xCC\xCF" +
-		"\x07Z\x02\x02\xCD\xCF\x06\x17\b\x02\xCE\xCA\x03\x02\x02\x02\xCE\xCB\x03" +
-		"\x02\x02\x02\xCE\xCC\x03\x02\x02\x02\xCE\xCD\x03\x02\x02\x02\xCF-\x03" +
-		"\x02\x02\x02\xD0\xD5\x07\x1D\x02\x02\xD1\xD2\x07%\x02\x02\xD2\xD4\x07" +
-		"\x1D\x02\x02\xD3\xD1\x03\x02\x02\x02\xD4\xD7\x03\x02\x02\x02\xD5\xD3\x03" +
-		"\x02\x02\x02\xD5\xD6\x03\x02\x02\x02\xD6/\x03\x02\x02\x02\xD7\xD5\x03" +
-		"\x02\x02\x02\xD8\xD9\x07\x14\x02\x02\xD9\xDA\x05\x1A\x0E\x02\xDA\xE0\x05" +
-		"\x10\t\x02\xDB\xDE\x07\x0E\x02\x02\xDC\xDF\x050\x19\x02\xDD\xDF\x05\x10" +
-		"\t\x02\xDE\xDC\x03\x02\x02\x02\xDE\xDD\x03\x02\x02\x02\xDF\xE1\x03\x02" +
-		"\x02\x02\xE0\xDB\x03\x02\x02\x02\xE0\xE1\x03\x02\x02\x02\xE11\x03\x02" +
-		"\x02\x02\xE2\xE4\x07\x1A\x02\x02\xE3\xE5\x05*\x16\x02\xE4\xE3\x03\x02" +
-		"\x02\x02\xE4\xE5\x03\x02\x02\x02\xE53\x03\x02\x02\x02\xE6\xE7\x07\x18" +
-		"\x02\x02\xE7\xE8\x05\x1A\x0E\x02\xE8\xE9\x05\x10\t\x02\xE95\x03\x02\x02" +
-		"\x02\x1B8>CX\\^aer\x81\x92\x94\x9F\xA6\xA9\xAC\xB3\xBA\xC0\xC7\xCE\xD5" +
-		"\xDE\xE0\xE4";
+		"\x03\x02\x02\x02@>\x03\x02\x02\x02AC\x07 \x02\x02BD\x05*\x16\x02CB\x03" +
+		"\x02\x02\x02CD\x03\x02\x02\x02DE\x03\x02\x02\x02EF\x07!\x02\x02F\x05\x03" +
+		"\x02\x02\x02GH\x07\x1F\x02\x02HI\x05\x04\x03\x02I\x07\x03\x02\x02\x02" +
+		"JK\x07\x05\x02\x02KL\x07\x1F\x02\x02LM\x05\n\x06\x02MN\x05\x10\t\x02N" +
+		"\t\x03\x02\x02\x02OP\x07 \x02\x02PQ\x05\f\x07\x02QR\x07!\x02\x02R\v\x03" +
+		"\x02\x02\x02SX\x05\x0E\b\x02TU\x07\'\x02\x02UW\x05\x0E\b\x02VT\x03\x02" +
+		"\x02\x02WZ\x03\x02\x02\x02XV\x03\x02\x02\x02XY\x03\x02\x02\x02Y\\\x03" +
+		"\x02\x02\x02ZX\x03\x02\x02\x02[]\x07\'\x02\x02\\[\x03\x02\x02\x02\\]\x03" +
+		"\x02\x02\x02]_\x03\x02\x02\x02^S\x03\x02\x02\x02^_\x03\x02\x02\x02_\r" +
+		"\x03\x02\x02\x02`b\x05.\x18\x02a`\x03\x02\x02\x02ab\x03\x02\x02\x02b\x0F" +
+		"\x03\x02\x02\x02ce\x07\"\x02\x02df\x05$\x13\x02ed\x03\x02\x02\x02ef\x03" +
+		"\x02\x02\x02fg\x03\x02\x02\x02gh\x07#\x02\x02h\x11\x03\x02\x02\x02ij\x07" +
+		"\x1B\x02\x02jk\x05.\x18\x02kl\x07&\x02\x02lm\x05*\x16\x02ms\x03\x02\x02" +
+		"\x02no\x05.\x18\x02op\x07-\x02\x02pq\x05*\x16\x02qs\x03\x02\x02\x02ri" +
+		"\x03\x02\x02\x02rn\x03\x02\x02\x02s\x13\x03\x02\x02\x02tu\x05.\x18\x02" +
+		"uv\x05\x16\f\x02vw\x05*\x16\x02w\x15\x03\x02\x02\x02xy\x07&\x02\x02y\x17" +
+		"\x03\x02\x02\x02z{\x05\x1A\x0E\x02{\x19\x03\x02\x02\x02|}\b\x0E\x01\x02" +
+		"}\x82\x05\x06\x04\x02~\x7F\t\x02\x02\x02\x7F\x82\x05\x1A\x0E\t\x80\x82" +
+		"\x05\x1C\x0F\x02\x81|\x03\x02\x02\x02\x81~\x03\x02\x02\x02\x81\x80\x03" +
+		"\x02\x02\x02\x82\x94\x03\x02\x02\x02\x83\x84\f\b\x02\x02\x84\x85\t\x03" +
+		"\x02\x02\x85\x93\x05\x1A\x0E\t\x86\x87\f\x07\x02\x02\x87\x88\t\x04\x02" +
+		"\x02\x88\x93\x05\x1A\x0E\b\x89\x8A\f\x06\x02\x02\x8A\x8B\t\x05\x02\x02" +
+		"\x8B\x93\x05\x1A\x0E\x07\x8C\x8D\f\x05\x02\x02\x8D\x8E\x070\x02\x02\x8E" +
+		"\x93\x05\x1A\x0E\x06\x8F\x90\f\x04\x02\x02\x90\x91\x07/\x02\x02\x91\x93" +
+		"\x05\x1A\x0E\x05\x92\x83\x03\x02\x02\x02\x92\x86\x03\x02\x02\x02\x92\x89" +
+		"\x03\x02\x02\x02\x92\x8C\x03\x02\x02\x02\x92\x8F\x03\x02\x02\x02\x93\x96" +
+		"\x03\x02\x02\x02\x94\x92\x03\x02\x02\x02\x94\x95\x03\x02\x02\x02\x95\x1B" +
+		"\x03\x02\x02\x02\x96\x94\x03\x02\x02\x02\x97\x98\x05\x1E\x10\x02\x98\x1D" +
+		"\x03\x02\x02\x02\x99\xA0\x05\"\x12\x02\x9A\xA0\x05 \x11\x02\x9B\x9C\x07" +
+		" \x02\x02\x9C\x9D\x05\x1A\x0E\x02\x9D\x9E\x07!\x02\x02\x9E\xA0\x03\x02" +
+		"\x02\x02\x9F\x99\x03\x02\x02\x02\x9F\x9A\x03\x02\x02\x02\x9F\x9B\x03\x02" +
+		"\x02\x02\xA0\x1F\x03\x02\x02\x02\xA1\xA2\x07\x1F\x02\x02\xA2!\x03\x02" +
+		"\x02\x02\xA3\xA4\t\x06\x02\x02\xA4#\x03\x02\x02\x02\xA5\xA7\x07(\x02\x02" +
+		"\xA6\xA5\x03\x02\x02\x02\xA6\xA7\x03\x02\x02\x02\xA7\xAD\x03\x02\x02\x02" +
+		"\xA8\xAA\x07\\\x02\x02\xA9\xA8\x03\x02\x02\x02\xA9\xAA\x03\x02\x02\x02" +
+		"\xAA\xAD\x03\x02\x02\x02\xAB\xAD\x06\x13\x07\x02\xAC\xA6\x03\x02\x02\x02" +
+		"\xAC\xA9\x03\x02\x02\x02\xAC\xAB\x03\x02\x02\x02\xAD\xAE\x03\x02\x02\x02" +
+		"\xAE\xAF\x05&\x14\x02\xAF\xB0\x05,\x17\x02\xB0\xB2\x03\x02\x02\x02\xB1" +
+		"\xAC\x03\x02\x02\x02\xB2\xB3\x03\x02\x02\x02\xB3\xB1\x03\x02\x02\x02\xB3" +
+		"\xB4\x03\x02\x02\x02\xB4%\x03\x02\x02\x02\xB5\xBB\x054\x1B\x02\xB6\xBB" +
+		"\x050\x19\x02\xB7\xBB\x052\x1A\x02\xB8\xBB\x05(\x15\x02\xB9\xBB\x05\x10" +
+		"\t\x02\xBA\xB5\x03\x02\x02\x02\xBA\xB6\x03\x02\x02\x02\xBA\xB7\x03\x02" +
+		"\x02\x02\xBA\xB8\x03\x02\x02\x02\xBA\xB9\x03\x02\x02\x02\xBB\'\x03\x02" +
+		"\x02\x02\xBC\xC1\x05\x14\v\x02\xBD\xC1\x05\x12\n\x02\xBE\xC1\x05\b\x05" +
+		"\x02\xBF\xC1\x05\x18\r\x02\xC0\xBC\x03\x02\x02\x02\xC0\xBD\x03\x02\x02" +
+		"\x02\xC0\xBE\x03\x02\x02\x02\xC0\xBF\x03\x02\x02\x02\xC1)\x03\x02\x02" +
+		"\x02\xC2\xC7\x05\x1A\x0E\x02\xC3\xC4\x07\'\x02\x02\xC4\xC6\x05\x1A\x0E" +
+		"\x02\xC5\xC3\x03\x02\x02\x02\xC6\xC9\x03\x02\x02\x02\xC7\xC5\x03\x02\x02" +
+		"\x02\xC7\xC8\x03\x02\x02\x02\xC8+\x03\x02\x02\x02\xC9\xC7\x03\x02\x02" +
+		"\x02\xCA\xCF\x07(\x02\x02\xCB\xCF\x07\x02\x02\x03\xCC\xCF\x07\\\x02\x02" +
+		"\xCD\xCF\x06\x17\b\x02\xCE\xCA\x03\x02\x02\x02\xCE\xCB\x03\x02\x02\x02" +
+		"\xCE\xCC\x03\x02\x02\x02\xCE\xCD\x03\x02\x02\x02\xCF-\x03\x02\x02\x02" +
+		"\xD0\xD5\x07\x1F\x02\x02\xD1\xD2\x07\'\x02\x02\xD2\xD4\x07\x1F\x02\x02" +
+		"\xD3\xD1\x03\x02\x02\x02\xD4\xD7\x03\x02\x02\x02\xD5\xD3\x03\x02\x02\x02" +
+		"\xD5\xD6\x03\x02\x02\x02\xD6/\x03\x02\x02\x02\xD7\xD5\x03\x02\x02\x02" +
+		"\xD8\xD9\x07\x14\x02\x02\xD9\xDA\x05\x1A\x0E\x02\xDA\xE0\x05\x10\t\x02" +
+		"\xDB\xDE\x07\x0E\x02\x02\xDC\xDF\x050\x19\x02\xDD\xDF\x05\x10\t\x02\xDE" +
+		"\xDC\x03\x02\x02\x02\xDE\xDD\x03\x02\x02\x02\xDF\xE1\x03\x02\x02\x02\xE0" +
+		"\xDB\x03\x02\x02\x02\xE0\xE1\x03\x02\x02\x02\xE11\x03\x02\x02\x02\xE2" +
+		"\xE4\x07\x1A\x02\x02\xE3\xE5\x05*\x16\x02\xE4\xE3\x03\x02\x02\x02\xE4" +
+		"\xE5\x03\x02\x02\x02\xE53\x03\x02\x02\x02\xE6\xE7\x07\x18\x02\x02\xE7" +
+		"\xE8\x05\x1A\x0E\x02\xE8\xE9\x05\x10\t\x02\xE95\x03\x02\x02\x02\x1B8>" +
+		"CX\\^aer\x81\x92\x94\x9F\xA6\xA9\xAC\xB3\xBA\xC0\xC7\xCE\xD5\xDE\xE0\xE4";
 	public static __ATN: ATN;
 	public static get _ATN(): ATN {
 		if (!SimpleParser.__ATN) {
@@ -2416,6 +2424,8 @@ export class LiteralContext extends ParserRuleContext {
 	public NIL_LIT(): TerminalNode | undefined { return this.tryGetToken(SimpleParser.NIL_LIT, 0); }
 	public DECIMAL_LIT(): TerminalNode | undefined { return this.tryGetToken(SimpleParser.DECIMAL_LIT, 0); }
 	public FLOAT_LIT(): TerminalNode | undefined { return this.tryGetToken(SimpleParser.FLOAT_LIT, 0); }
+	public TRUE(): TerminalNode | undefined { return this.tryGetToken(SimpleParser.TRUE, 0); }
+	public FALSE(): TerminalNode | undefined { return this.tryGetToken(SimpleParser.FALSE, 0); }
 	constructor(parent: ParserRuleContext | undefined, invokingState: number) {
 		super(parent, invokingState);
 	}

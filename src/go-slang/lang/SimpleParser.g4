@@ -101,6 +101,8 @@ literal
     : NIL_LIT
     | DECIMAL_LIT
     | FLOAT_LIT
+    | TRUE
+    | FALSE
     ;
 
 statementList
