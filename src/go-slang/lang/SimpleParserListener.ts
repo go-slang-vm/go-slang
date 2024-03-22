@@ -14,10 +14,13 @@ import { ArgumentsContext } from "./SimpleParser";
 import { FuncAppContext } from "./SimpleParser";
 import { FuncDeclContext } from "./SimpleParser";
 import { SignatureContext } from "./SimpleParser";
+import { ResultContext } from "./SimpleParser";
+import { TypeListContext } from "./SimpleParser";
 import { ParametersContext } from "./SimpleParser";
 import { ParameterDeclContext } from "./SimpleParser";
 import { BlockContext } from "./SimpleParser";
 import { VarDeclContext } from "./SimpleParser";
+import { Type_Context } from "./SimpleParser";
 import { AssignmentContext } from "./SimpleParser";
 import { Assign_opContext } from "./SimpleParser";
 import { ExpressionStmtContext } from "./SimpleParser";
@@ -35,6 +38,7 @@ import { IdentifierListContext } from "./SimpleParser";
 import { IfStmtContext } from "./SimpleParser";
 import { ReturnStmtContext } from "./SimpleParser";
 import { ForStmtContext } from "./SimpleParser";
+import { String_Context } from "./SimpleParser";
 
 
 /**
@@ -176,6 +180,28 @@ export interface SimpleParserListener extends ParseTreeListener {
 	exitSignature?: (ctx: SignatureContext) => void;
 
 	/**
+	 * Enter a parse tree produced by `SimpleParser.result`.
+	 * @param ctx the parse tree
+	 */
+	enterResult?: (ctx: ResultContext) => void;
+	/**
+	 * Exit a parse tree produced by `SimpleParser.result`.
+	 * @param ctx the parse tree
+	 */
+	exitResult?: (ctx: ResultContext) => void;
+
+	/**
+	 * Enter a parse tree produced by `SimpleParser.typeList`.
+	 * @param ctx the parse tree
+	 */
+	enterTypeList?: (ctx: TypeListContext) => void;
+	/**
+	 * Exit a parse tree produced by `SimpleParser.typeList`.
+	 * @param ctx the parse tree
+	 */
+	exitTypeList?: (ctx: TypeListContext) => void;
+
+	/**
 	 * Enter a parse tree produced by `SimpleParser.parameters`.
 	 * @param ctx the parse tree
 	 */
@@ -218,6 +244,17 @@ export interface SimpleParserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	exitVarDecl?: (ctx: VarDeclContext) => void;
+
+	/**
+	 * Enter a parse tree produced by `SimpleParser.type_`.
+	 * @param ctx the parse tree
+	 */
+	enterType_?: (ctx: Type_Context) => void;
+	/**
+	 * Exit a parse tree produced by `SimpleParser.type_`.
+	 * @param ctx the parse tree
+	 */
+	exitType_?: (ctx: Type_Context) => void;
 
 	/**
 	 * Enter a parse tree produced by `SimpleParser.assignment`.
@@ -405,5 +442,16 @@ export interface SimpleParserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	exitForStmt?: (ctx: ForStmtContext) => void;
+
+	/**
+	 * Enter a parse tree produced by `SimpleParser.string_`.
+	 * @param ctx the parse tree
+	 */
+	enterString_?: (ctx: String_Context) => void;
+	/**
+	 * Exit a parse tree produced by `SimpleParser.string_`.
+	 * @param ctx the parse tree
+	 */
+	exitString_?: (ctx: String_Context) => void;
 }
 
