@@ -1,5 +1,5 @@
-import { VM } from '../vm/index'
-import { Instruction } from '../vm/types'
+import { VM } from '../index'
+import { Instruction } from '../types'
 
 describe('Virtual Machine tests', () => {
   test('variable declaration in a new block scope', async () => {
