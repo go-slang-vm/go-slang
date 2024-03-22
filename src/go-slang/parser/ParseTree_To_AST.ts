@@ -3,7 +3,7 @@ import { ParseTree } from 'antlr4ts/tree/ParseTree'
 import { RuleNode } from 'antlr4ts/tree/RuleNode'
 import { TerminalNode } from 'antlr4ts/tree/TerminalNode'
 
-import { AssignNode, ASTNode, BINOP, BinOpNode, BlockNode, ExpressionListNode, ExprNode, ForStmtNode, FuncAppNode, FuncDeclNode, IdListNode, IfStmtNode, LiteralNode, LogicalNode, LOGOP, NameNode, ParamDeclNode, ParamListNode, ReturnStmtNode, SequenceNode,  StmtNode, Tag, UNOP, UnOpNode, VarDeclNode } from '../ast/AST'
+import { AssignNode, ASTNode, BINOP, BinOpNode, BlockNode, ExpressionListNode, ExpressionStmtNode, ExprNode, ForStmtNode, FuncAppNode, FuncDeclNode, IdListNode, IfStmtNode, LiteralNode, LogicalNode, LOGOP, NameNode, ParamDeclNode, ParamListNode, ReturnStmtNode, SequenceNode,  StmtNode, Tag, UNOP, UnOpNode, VarDeclNode } from '../ast/AST'
 import {
   ArgumentsContext,
   Assign_opContext,
@@ -13,6 +13,7 @@ import {
   EosContext,
   ExpressionContext,
   ExpressionListContext,
+  ExpressionStmtContext,
   ForStmtContext,
   FUNCAPPContext,
   FuncAppContext,
@@ -66,7 +67,10 @@ export class ParseTree_To_AST implements SimpleParserVisitor<ASTNode> {
   }
 
   visitFUNCAPP(ctx: FUNCAPPContext): FuncAppNode {
-    return this.visitFuncApp(ctx.funcApp());
+    //console.log("THIS IS FUNC APP: " + ctx.funcApp().IDENTIFIER().text);
+    const res = this.visitFuncApp(ctx.funcApp());
+    //console.log(res);
+    return res;
   }
 
   //take note that expr here is a list of return expression and not just a singular one like in cs4215 homeworks
@@ -319,7 +323,11 @@ visitAssignment(ctx: AssignmentContext): AssignNode {
   }
 
   visitExpression(ctx: ExpressionContext): ExprNode {
-    return ctx.accept(this);
+    //console.log("THIS IS IN VISIT EXPR " + ctx.ruleIndex);
+    const res = ctx.accept(this);
+    //console.log("in expr: ")
+    //console.log(res);
+    return res;
   }
 
   visitPrimaryExpr(ctx: PrimaryExprContext): ExprNode {
@@ -415,7 +423,8 @@ visitAssignment(ctx: AssignmentContext): AssignNode {
   visitStatement(ctx: StatementContext): StmtNode {
     let k = undefined;
     if ((k = ctx.simpleStmt())) {
-      return this.visitSimpleStmt(k)
+      const res = this.visitSimpleStmt(k)
+      return res;
     } else if ((k = ctx.ifStmt())) {
       return this.visitIfStmt(k)
     } else if ((k = ctx.returnStmt())) {
@@ -429,12 +438,17 @@ visitAssignment(ctx: AssignmentContext): AssignNode {
     }
   }
 
+  visitExpressionStmt(ctx: ExpressionStmtContext): ExpressionStmtNode {
+     return this.visitExpression(ctx.expression());
+  }
+
   visitSimpleStmt(ctx: SimpleStmtContext): StmtNode {
     let k = undefined;
     if ((k = ctx.assignment())) {
       return this.visitAssignment(k)
     } else if ((k = ctx.expressionStmt())) {
-      return this.visitExpression(k)
+      const res = this.visitExpressionStmt(k);
+      return res;
     } else if ((k = ctx.varDecl())) {
       return this.visitVarDecl(k)
     } else {

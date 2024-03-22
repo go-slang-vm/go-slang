@@ -467,4 +467,75 @@ describe('Basic compiler test', () => {
     // console.log(JSON.stringify(outputInstr));
     expect(outputInstr).toStrictEqual(expectedInstr)
   });
+
+  // TODO: DECIDE IF WE WANT NIL TO BE A NAME IN GLOBAL ENV OR A LITERAL
+  /*
+  test('basic nil test should be a name instead of a literal', async () => {
+    const program = `
+      func main() {
+        x int := nil
+        return x;
+      }`
+
+    const expectedInstr = 
+    [ {"tag": "ENTER_SCOPE", "num": 1},
+  {"tag": "LDF", "arity": 0, "addr": 3},
+  {"tag": "GOTO", "addr": 12},
+  {"tag": "ENTER_SCOPE", "num": 1},
+  {"tag": "LD", "sym": "nil", "pos": [1, 0]},
+  {"tag": "ASSIGN", "pos": [4, 0]},
+  {"tag": "POP"},
+  {"tag": "LD", "sym": "x", "pos": [4, 0]},
+  {"tag": "RESET"},
+  {"tag": "EXIT_SCOPE"},
+  {"tag": "LDC", "val": undefined},
+  {"tag": "RESET"},
+  {"tag": "ASSIGN", "pos": [2, 0]},
+  {"tag": "POP"},
+  {"tag": "LD", "sym": "main", "pos": [2, 0]},
+  {"tag": "CALL", "arity": 0},
+  {"tag": "EXIT_SCOPE"},
+  {"tag": "DONE"}];
+
+    const inputAst: ASTNode = parse(program)
+   // console.dir(inputAst, {depth : 100});
+    const outputInstr: any[] = compile_program(inputAst)
+    // console.log(JSON.stringify(outputInstr));
+    expect(outputInstr).toStrictEqual(expectedInstr)
+  });
+  */
+  test('basic Println statement', async () => {
+    const program = `
+      func main() {
+        x string := "this is a string"
+        Println(x)
+      }`
+
+    const expectedInstr = 
+    [ {"tag": "ENTER_SCOPE", "num": 1},
+  {"tag": "LDF", "arity": 0, "addr": 3},
+  {"tag": "GOTO", "addr": 13},
+  {"tag": "ENTER_SCOPE", "num": 1},
+  {"tag": "LDC", "val": "this is a string"},
+  {"tag": "ASSIGN", "pos": [4, 0]},
+  {"tag": "POP"},
+  {"tag": "LD", "sym": "Println", "pos": [0, 0]},
+  {"tag": "LD", "sym": "x", "pos": [4, 0]},
+  {"tag": "CALL", "arity": 1},
+  {"tag": "EXIT_SCOPE"},
+  {"tag": "LDC", "val": undefined},
+  {"tag": "RESET"},
+  {"tag": "ASSIGN", "pos": [2, 0]},
+  {"tag": "POP"},
+  {"tag": "LD", "sym": "main", "pos": [2, 0]},
+  {"tag": "CALL", "arity": 0},
+  {"tag": "EXIT_SCOPE"},
+  {"tag": "DONE"}];
+
+    const inputAst: ASTNode = parse(program)
+    //console.dir(inputAst, {depth : 100});
+    const outputInstr: any[] = compile_program(inputAst)
+    //console.log(JSON.stringify(outputInstr));
+    expect(outputInstr).toStrictEqual(expectedInstr)
+  });
 })
