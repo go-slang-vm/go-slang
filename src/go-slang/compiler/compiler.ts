@@ -75,7 +75,7 @@ const value_index = (frame: Frame, x: string): number => {
 // compile-time frames only need synbols (keys), no values
 
 //TODO: make sure to update this with more builtins for Go
-const builtin_compile_frame: Frame = ['PrintLn']
+const builtin_compile_frame: Frame = ["Println"];c
 
 //TODO: make sure to update this with more constants for Go
 const constant_compile_frame: Frame = ['nil']
