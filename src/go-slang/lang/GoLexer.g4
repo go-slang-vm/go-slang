@@ -70,6 +70,12 @@ VAR         : 'var';
 TRUE        : 'true';
 FALSE       : 'false';
 
+// types
+INT : 'int';
+BOOL : 'bool';
+STRING : 'string';
+FLOAT : 'float';
+
 NIL_LIT: 'nil' -> mode(NLSEMI);
 
 IDENTIFIER: LETTER (LETTER | UNICODE_DIGIT)* -> mode(NLSEMI);

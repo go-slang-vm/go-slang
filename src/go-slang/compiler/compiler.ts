@@ -323,10 +323,12 @@ fun:
             _arity: comp._arity,
         };
 
+        // NOTE the type here is lam
         const funcDeclToConstDecl: ConstDeclNode = 
         {   tag:  Tag.CONST,
             syms:  { tag:Tag.IDENTS, IDENTS: [comp.sym] },
-            assignments: { tag: Tag.EXPRLIST, list:[funcBodyToLambda] }, 
+            assignments: { tag: Tag.EXPRLIST, list:[funcBodyToLambda] },
+            type: "lam" 
         };
 
         compile(

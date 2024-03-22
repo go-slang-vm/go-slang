@@ -3,7 +3,7 @@ import { ParseTree } from 'antlr4ts/tree/ParseTree'
 import { RuleNode } from 'antlr4ts/tree/RuleNode'
 import { TerminalNode } from 'antlr4ts/tree/TerminalNode'
 
-import { AssignNode, ASTNode, BINOP, BinOpNode, BlockNode, ExpressionListNode, ExprNode, ForStmtNode, FuncAppNode, FuncDeclNode, IdListNode, IfStmtNode, LiteralNode, LogicalNode, LOGOP, NameNode, ParamListNode, ReturnStmtNode, SequenceNode,  StmtNode, Tag, UNOP, UnOpNode, VarDeclNode } from '../ast/AST'
+import { AssignNode, ASTNode, BINOP, BinOpNode, BlockNode, ExpressionListNode, ExprNode, ForStmtNode, FuncAppNode, FuncDeclNode, IdListNode, IfStmtNode, LiteralNode, LogicalNode, LOGOP, NameNode, ParamDeclNode, ParamListNode, ReturnStmtNode, SequenceNode,  StmtNode, Tag, UNOP, UnOpNode, VarDeclNode } from '../ast/AST'
 import {
   ArgumentsContext,
   Assign_opContext,
@@ -163,14 +163,15 @@ export class ParseTree_To_AST implements SimpleParserVisitor<ASTNode> {
   }
 
   visitFuncDecl(ctx: FuncDeclContext): FuncDeclNode {
-    const params: string[] = this.visitSignature(ctx.signature()).params;
+    const res  = this.visitSignature(ctx.signature());
     
     return {
       tag: Tag.FUNC,
       sym: this.visitTerminal(ctx.IDENTIFIER()),
-      prms: params,
+      prms: res.params,
       body: this.visitBlock(ctx.block()),
-      _arity: params.length
+      _arity: res.params.length,
+      returnTypes: res.types,
     };
   }
 
@@ -179,22 +180,44 @@ export class ParseTree_To_AST implements SimpleParserVisitor<ASTNode> {
     if (k) {
       return this.visitParameters(k)
     }
-    return { tag: Tag.PARAMS, params: [] };
+    return { tag: Tag.PARAMS, params: [], types: [] };
   }
 
   visitParameters(ctx: ParametersContext): ParamListNode {
     const list = ctx.parameterDecl();
     const params: string[] = [];
+    const types: string[] = [];
     for (let i = 0; i < list.length; ++i) {
-      params.push(...this.visitParameterDecl(list[i]).IDENTS);
+      const res = this.visitParameterDecl(list[i]);
+      for(let j = 0; j < res.IDENTS.IDENTS.length; ++j) {
+        params.push(res.IDENTS.IDENTS[j]);
+        types.push(res.type);
+      }
     }
-    return { tag: Tag.PARAMS, params: params };
+    return { tag: Tag.PARAMS, params: params, types: types };
   }
 
-  visitParameterDecl(ctx: ParameterDeclContext): IdListNode {
+  visitParameterDecl(ctx: ParameterDeclContext): ParamDeclNode {
     const k = ctx.identifierList()
-    if (k === undefined) return { tag: Tag.IDENTS, IDENTS: [] };
-    return this.visitIdentifierList(k);
+    if (k === undefined) return { tag: Tag.PARAMS, IDENTS: { tag: Tag.IDENTS, IDENTS: [] }, type: "nil" };
+
+    const typeContext = ctx.type_();
+    let type = "undefined";
+    if(typeContext) {
+      if(typeContext.BOOL()) {
+        type = "bool";
+      } else if(typeContext.FLOAT()) {
+        type = "float";
+      } else if (typeContext.INT()) {
+        type = "int";
+      } else if (typeContext.STRING()){
+        type = "string";
+      } else {
+        throw Error("unknown or undeclared type");
+      }
+    }
+
+    return { tag: Tag.PARAMS, IDENTS: this.visitIdentifierList(k), type: type };
   }
 
   visitBlock(ctx: BlockContext): BlockNode {
@@ -241,12 +264,26 @@ export class ParseTree_To_AST implements SimpleParserVisitor<ASTNode> {
   }
   */
 
-  visitVarDecl(ctx: VarDeclContext): VarDeclNode {
-    const variables = this.visitIdentifierList(ctx.identifierList());
-    const assignments = this.visitExpressionList(ctx.expressionList());
-
-    return {tag: Tag.VAR, syms: variables, assignments: assignments };
+visitVarDecl(ctx: VarDeclContext): VarDeclNode {
+  const variables = this.visitIdentifierList(ctx.identifierList());
+  const assignments = this.visitExpressionList(ctx.expressionList());
+  
+  const typeContext = ctx.type_();
+  let type = "undefined";
+  if(typeContext.BOOL()) {
+    type = "bool";
+  } else if(typeContext.FLOAT()) {
+    type = "float";
+  } else if (typeContext.INT()) {
+    type = "int";
+  } else if (typeContext.STRING()){
+    type = "string";
+  } else {
+    throw Error("unknown or undeclared type");
   }
+
+  return {tag: Tag.VAR, syms: variables, assignments: assignments , type: type};
+}
 
 visitAssignment(ctx: AssignmentContext): AssignNode {
   const variables = this.visitIdentifierList(ctx.identifierList());
@@ -341,6 +378,16 @@ visitAssignment(ctx: AssignmentContext): AssignNode {
       ret.val = true;
     } else if ((k = ctx.FALSE())) {
       ret.val = false;
+    } else if ((k = ctx.string_())) {
+      let str = k.RAW_STRING_LIT()
+      if(str) {
+        ret.val = this.visitTerminal(str);
+      } else if(str = k.INTERPRETED_STRING_LIT()) {
+        ret.val = this.visitTerminal(str);
+      } else {
+        throw Error("parser found string that is not one of the string types");
+      }
+      ret.val = (ret.val as string).slice(1, -1)
     } else {
         k = ctx.DECIMAL_LIT();
         // should be safe cast
