@@ -22,6 +22,11 @@ export enum Tag {
     STMTLIST = "stmtlist",
     LAM = "lam",
     CONST = "const",
+    SIG = "sig",
+    RES = "res",
+    TYPE = "type",
+    TYPELIST = "typelist",
+    GO = "go",
 }
 
 export enum LOGOP {
@@ -51,6 +56,25 @@ export interface ASTNode {
 }
 
 // To make visitor work
+export interface TypeListNode extends ASTNode {
+    tag: Tag.TYPELIST;
+    types: TypeNode[];
+}
+
+export interface TypeNode extends ASTNode {
+    tag: Tag.TYPE;
+    type: string;
+}
+export interface SignatureNode extends ASTNode {
+    tag: Tag.SIG;
+    params: ParamListNode;
+    result: ResultNode;
+}
+
+export interface ResultNode extends ASTNode {
+    tag: Tag.RES;
+    resultTypes: string[];
+}
 export interface ParamListNode extends ASTNode {
     tag: Tag.PARAMS;
     params: string[];
@@ -153,6 +177,7 @@ export interface FuncDeclNode extends StmtNode {
     prms: string[];
     body: BlockNode;
     _arity: Number;
+    paramTypes: string[];
     returnTypes: string[];
 }
 
@@ -182,6 +207,11 @@ export interface LambdaStmtNode extends StmtNode {
     _arity: Number;
 }
 
+export interface GoStmtNode extends StmtNode {
+    tag: Tag.GO;
+    funcApp: FuncAppNode;
+}
+
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface ExpressionStmtNode extends StmtNode {}
 
@@ -191,8 +221,17 @@ export interface ExpressionStmtNode extends StmtNode {}
 export interface ExprNode extends ASTNode {}
 
 export interface LiteralNode extends ExprNode {
-    tag: Tag.LIT;
+    tag: Tag.LIT | Tag.LAM;
     val: Number | boolean | string;
+}
+
+export interface FunctionLiteralNode extends LiteralNode {
+    tag: Tag.LAM;
+    prms: string[];
+    body: BlockNode;
+    _arity: Number;
+    paramTypes: string[];
+    returnTypes: string[];
 }
 
 export interface NameNode extends ExprNode {
@@ -202,7 +241,7 @@ export interface NameNode extends ExprNode {
 
 export interface FuncAppNode extends ExprNode, ExpressionStmtNode {
     tag: Tag.APP;
-    fun: NameNode;
+    fun: NameNode | LambdaStmtNode;
     args: ExprNode[];
     _arity: Number;
 }
