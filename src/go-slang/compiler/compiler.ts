@@ -8,6 +8,7 @@ import {
   ForStmtNode,
   FuncAppNode,
   FuncDeclNode,
+  GoStmtNode,
   IfStmtNode,
   LambdaStmtNode,
   LiteralNode,
@@ -250,12 +251,12 @@ const compile_comp = {
     // NOTE TO US, this is an optimization to not have a blockframe if there are no declarations, this is inline with what source's parser is doing
     if (locals.length > 0) {
       instrs[wc++] = { tag: 'ENTER_SCOPE', num: locals.length }
+      // extend compile time environment only if there are locals
+      ce = compile_time_environment_extend(locals, ce);
     }
-
     compile(
       comp.body,
-      // extend compile-time environment
-      compile_time_environment_extend(locals, ce)
+      ce
     )
 
     if (locals.length > 0) {
@@ -333,6 +334,14 @@ const compile_comp = {
     }
 
     compile(funcDeclToConstDecl, ce)
+  },
+  go: (comp: GoStmtNode, ce: CompileTimeEnvironment) => {
+    // compile the function application
+    // how to deal with lambdas since not named?
+    compile(comp.funcApp, ce);
+    // based on how funApp is compiled, we know that wc - 1 is the call instruction
+    // we modify the tag of that instruction for our purposes (hacks)
+    instrs[wc-1].tag = "GOCALL"
   }
 }
 

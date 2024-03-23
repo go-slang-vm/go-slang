@@ -224,7 +224,7 @@ export interface LiteralNode extends ExprNode {
     tag: Tag.LIT | Tag.LAM;
     val: Number | boolean | string;
 }
-
+// note that this is a copy of LambdaStmtNode duck typing
 export interface FunctionLiteralNode extends LiteralNode {
     tag: Tag.LAM;
     prms: string[];
