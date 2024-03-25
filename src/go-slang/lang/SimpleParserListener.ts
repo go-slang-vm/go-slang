@@ -39,6 +39,8 @@ import { IfStmtContext } from "./SimpleParser";
 import { ReturnStmtContext } from "./SimpleParser";
 import { ForStmtContext } from "./SimpleParser";
 import { String_Context } from "./SimpleParser";
+import { FunctionLitContext } from "./SimpleParser";
+import { GoStmtContext } from "./SimpleParser";
 
 
 /**
@@ -453,5 +455,27 @@ export interface SimpleParserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	exitString_?: (ctx: String_Context) => void;
+
+	/**
+	 * Enter a parse tree produced by `SimpleParser.functionLit`.
+	 * @param ctx the parse tree
+	 */
+	enterFunctionLit?: (ctx: FunctionLitContext) => void;
+	/**
+	 * Exit a parse tree produced by `SimpleParser.functionLit`.
+	 * @param ctx the parse tree
+	 */
+	exitFunctionLit?: (ctx: FunctionLitContext) => void;
+
+	/**
+	 * Enter a parse tree produced by `SimpleParser.goStmt`.
+	 * @param ctx the parse tree
+	 */
+	enterGoStmt?: (ctx: GoStmtContext) => void;
+	/**
+	 * Exit a parse tree produced by `SimpleParser.goStmt`.
+	 * @param ctx the parse tree
+	 */
+	exitGoStmt?: (ctx: GoStmtContext) => void;
 }
 

@@ -3,7 +3,7 @@ import { ParseTree } from 'antlr4ts/tree/ParseTree'
 import { RuleNode } from 'antlr4ts/tree/RuleNode'
 import { TerminalNode } from 'antlr4ts/tree/TerminalNode'
 
-import { AssignNode, ASTNode, BINOP, BinOpNode, BlockNode, ExpressionListNode, ExpressionStmtNode, ExprNode, ForStmtNode, FuncAppNode, FuncDeclNode, IdListNode, IfStmtNode, LiteralNode, LogicalNode, LOGOP, NameNode, ParamDeclNode, ParamListNode, ReturnStmtNode, SequenceNode,  StmtNode, Tag, UNOP, UnOpNode, VarDeclNode } from '../ast/AST'
+import { AssignNode, ASTNode, BINOP, BinOpNode, BlockNode, ExpressionListNode, ExpressionStmtNode, ExprNode, ForStmtNode, FuncAppNode, FuncDeclNode, FunctionLiteralNode, GoStmtNode, IdListNode, IfStmtNode, LiteralNode, LogicalNode, LOGOP, NameNode, ParamDeclNode, ParamListNode, ResultNode, ReturnStmtNode, SequenceNode,  SignatureNode,  StmtNode, Tag, TypeListNode, TypeNode, UNOP, UnOpNode, VarDeclNode } from '../ast/AST'
 
 import {
   ArgumentsContext,
@@ -19,7 +19,9 @@ import {
   FUNCAPPContext,
   FuncAppContext,
   FuncDeclContext,
+  FunctionLitContext,
   Global_scopeContext,
+  GoStmtContext,
   IdentifierListContext,
   IfStmtContext,
   LiteralContext,
@@ -31,11 +33,14 @@ import {
   PRIMARYContext,
   PrimaryExprContext,
   RELOPContext,
+  ResultContext,
   ReturnStmtContext,
   SignatureContext,
   SimpleStmtContext,
   StatementContext,
   StatementListContext,
+  Type_Context,
+  TypeListContext,
   UNARYOPContext,
   VarDeclContext
 } from '../lang/SimpleParser'
@@ -169,23 +174,74 @@ export class ParseTree_To_AST implements SimpleParserVisitor<ASTNode> {
 
   visitFuncDecl(ctx: FuncDeclContext): FuncDeclNode {
     const res  = this.visitSignature(ctx.signature());
-    
+
     return {
       tag: Tag.FUNC,
       sym: this.visitTerminal(ctx.IDENTIFIER()),
-      prms: res.params,
+      prms: res.params.params,
       body: this.visitBlock(ctx.block()),
-      _arity: res.params.length,
-      returnTypes: res.types,
+      _arity: res.params.params.length,
+      paramTypes: res.params.types,
+      returnTypes: res.result.resultTypes,
     };
   }
 
-  visitSignature(ctx: SignatureContext): ParamListNode {
+  visitSignature(ctx: SignatureContext): SignatureNode {
     const k = ctx.parameters();
+    let params: ParamListNode = { tag: Tag.PARAMS, params: [], types: [] };
     if (k) {
-      return this.visitParameters(k)
+      params = this.visitParameters(k)
     }
-    return { tag: Tag.PARAMS, params: [], types: [] };
+
+    const ret = ctx.result();
+    let returnTypes: ResultNode = { tag: Tag.RES, resultTypes: []};
+    if(ret) {
+      returnTypes = this.visitResult(ret);
+    }
+    return { tag: Tag.SIG, params: params, result: returnTypes};
+  }
+
+  // result node unboxes the types into string
+  visitResult(ctx: ResultContext): ResultNode {
+    const types: string[] = [];
+    let ret;
+    if((ret = ctx.typeList())) {
+      const r = this.visitTypeList(ret).types;
+      for(let i = 0; i < r.length; ++i) {
+        types.push(r[i].type);
+      }
+    } else if((ret = ctx.type_())) {
+      types.push(this.visitType_(ret).type);
+    } else {
+      throw Error("unknown function result syntax")
+    }
+    return { tag: Tag.RES, resultTypes: types };
+  }
+
+  visitTypeList(ctx: TypeListContext) : TypeListNode {
+    const res: TypeNode[] = [];
+    const typeList = ctx.type_();
+    const len = typeList.length;
+    for(let i = 0; i < len; ++i) {
+      res.push(this.visitType_(typeList[i]));
+    }
+    return { tag: Tag.TYPELIST, types: res };
+  }
+
+  visitType_(ctx: Type_Context): TypeNode {
+    let type = undefined;
+    if(ctx.BOOL()) {
+      type = "bool";
+    } else if(ctx.FLOAT()) {
+      type = "float";
+    } else if (ctx.INT()) {
+      type = "int";
+    } else if (ctx.STRING()){
+      type = "string";
+    } else {
+      throw Error("unknown or undeclared type");
+    }
+    return { tag: Tag.TYPE, type: type };
   }
 
   visitParameters(ctx: ParametersContext): ParamListNode {
@@ -209,17 +265,7 @@ export class ParseTree_To_AST implements SimpleParserVisitor<ASTNode> {
     const typeContext = ctx.type_();
     let type = "undefined";
     if(typeContext) {
-      if(typeContext.BOOL()) {
-        type = "bool";
-      } else if(typeContext.FLOAT()) {
-        type = "float";
-      } else if (typeContext.INT()) {
-        type = "int";
-      } else if (typeContext.STRING()){
-        type = "string";
-      } else {
-        throw Error("unknown or undeclared type");
-      }
+      type = this.visitType_(typeContext).type;
     }
 
     return { tag: Tag.PARAMS, IDENTS: this.visitIdentifierList(k), type: type };
@@ -273,19 +319,7 @@ visitVarDecl(ctx: VarDeclContext): VarDeclNode {
   const variables = this.visitIdentifierList(ctx.identifierList());
   const assignments = this.visitExpressionList(ctx.expressionList());
   
-  const typeContext = ctx.type_();
-  let type = "undefined";
-  if(typeContext.BOOL()) {
-    type = "bool";
-  } else if(typeContext.FLOAT()) {
-    type = "float";
-  } else if (typeContext.INT()) {
-    type = "int";
-  } else if (typeContext.STRING()){
-    type = "string";
-  } else {
-    throw Error("unknown or undeclared type");
-  }
+  const type = this.visitType_(ctx.type_()).type;
 
   return {tag: Tag.VAR, syms: variables, assignments: assignments , type: type};
 }
@@ -347,12 +381,24 @@ visitAssignment(ctx: AssignmentContext): AssignNode {
 
   visitFuncApp(ctx: FuncAppContext): FuncAppNode {
     const argList: ExprNode[] = this.visitArguments(ctx.arguments()).list;
-    return {
-      tag: Tag.APP,
-      fun: {tag: Tag.NAME, sym: this.visitTerminal(ctx.IDENTIFIER())},
-      args: argList,
-      _arity: argList.length
-    };
+    let k;
+    if((k = ctx.IDENTIFIER())) {
+      return {
+        tag: Tag.APP,
+        fun: {tag: Tag.NAME, sym: this.visitTerminal(k)},
+        args: argList,
+        _arity: argList.length
+      };
+    } else if((k = ctx.functionLit())) {
+      return {
+        tag: Tag.APP,
+        fun: this.visitFunctionLit(k),
+        args: argList,
+        _arity: argList.length 
+      }
+    } else {
+      throw Error("unknown function application syntax");
+    }
   }
 
   visitOperand(ctx: OperandContext): ExprNode {
@@ -388,6 +434,7 @@ visitAssignment(ctx: AssignmentContext): AssignNode {
     } else if ((k = ctx.FALSE())) {
       ret.val = false;
     } else if ((k = ctx.string_())) {
+      // string node is strange
       let str = k.RAW_STRING_LIT()
       if(str) {
         ret.val = this.visitTerminal(str);
@@ -397,6 +444,9 @@ visitAssignment(ctx: AssignmentContext): AssignNode {
         throw Error("parser found string that is not one of the string types");
       }
       ret.val = (ret.val as string).slice(1, -1)
+    } else if((k=ctx.functionLit())) {
+      // we return a lam node
+      return this.visitFunctionLit(k);
     } else {
         k = ctx.DECIMAL_LIT();
         // should be safe cast
@@ -404,6 +454,20 @@ visitAssignment(ctx: AssignmentContext): AssignNode {
     }
 
     return ret;
+  }
+
+  visitFunctionLit(ctx: FunctionLitContext): FunctionLiteralNode {
+    const res  = this.visitSignature(ctx.signature());
+
+    return {
+      tag: Tag.LAM,
+      val: "funcLit",
+      prms: res.params.params,
+      body: this.visitBlock(ctx.block()),
+      _arity: res.params.params.length,
+      paramTypes: res.params.types,
+      returnTypes: res.result.resultTypes,
+    };   
   }
 
   visitStatementList(ctx: StatementListContext): SequenceNode {
@@ -432,11 +496,17 @@ visitAssignment(ctx: AssignmentContext): AssignNode {
       return this.visitReturnStmt(k)
     } else if ((k = ctx.forStmt())) {
         return this.visitForStmt(k);
+    } else if ((k = ctx.goStmt())) {
+      return this.visitGoStmt(k);
     } else {
       k = ctx.block();
       // should be safe cast
       return this.visitBlock(k as BlockContext);
     }
+  }
+
+  visitGoStmt(ctx: GoStmtContext): GoStmtNode {
+    return { tag: Tag.GO, funcApp: this.visitFuncApp(ctx.funcApp())}
   }
 
   visitExpressionStmt(ctx: ExpressionStmtContext): ExpressionStmtNode {

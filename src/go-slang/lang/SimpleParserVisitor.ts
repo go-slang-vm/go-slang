@@ -39,6 +39,8 @@ import { IfStmtContext } from "./SimpleParser";
 import { ReturnStmtContext } from "./SimpleParser";
 import { ForStmtContext } from "./SimpleParser";
 import { String_Context } from "./SimpleParser";
+import { FunctionLitContext } from "./SimpleParser";
+import { GoStmtContext } from "./SimpleParser";
 
 
 /**
@@ -306,5 +308,19 @@ export interface SimpleParserVisitor<Result> extends ParseTreeVisitor<Result> {
 	 * @return the visitor result
 	 */
 	visitString_?: (ctx: String_Context) => Result;
+
+	/**
+	 * Visit a parse tree produced by `SimpleParser.functionLit`.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	visitFunctionLit?: (ctx: FunctionLitContext) => Result;
+
+	/**
+	 * Visit a parse tree produced by `SimpleParser.goStmt`.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	visitGoStmt?: (ctx: GoStmtContext) => Result;
 }
 
