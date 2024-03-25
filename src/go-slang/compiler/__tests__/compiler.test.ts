@@ -1,6 +1,6 @@
-import { ASTNode } from '../../ast/AST'
-import { compile_program } from '../compiler'
-import { parse } from '../../parser/parser'
+import { ASTNode } from '../ast/AST'
+import { compile_program } from '../compiler/compiler'
+import { parse } from '../parser/parser'
 
 describe('Basic compiler test', () => {
   test('basic variable declaration in a new block scope', async () => {
@@ -527,6 +527,84 @@ describe('Basic compiler test', () => {
       { tag: 'LD', sym: 'x', pos: [4, 0] },
       { tag: 'CALL', arity: 1 },
       { tag: 'EXIT_SCOPE' },
+      { tag: 'LDC', val: undefined },
+      { tag: 'RESET' },
+      { tag: 'ASSIGN', pos: [2, 0] },
+      { tag: 'POP' },
+      { tag: 'LD', sym: 'main', pos: [2, 0] },
+      { tag: 'CALL', arity: 0 },
+      { tag: 'EXIT_SCOPE' },
+      { tag: 'DONE' }
+    ]
+
+    const inputAst: ASTNode = parse(program)
+    //console.dir(inputAst, {depth : 100});
+    const outputInstr: any[] = compile_program(inputAst)
+    //console.log(JSON.stringify(outputInstr));
+    expect(outputInstr).toStrictEqual(expectedInstr)
+  })
+
+  test('basic go statement', async () => {
+    const program = `
+      func inc(x int) {
+        return x
+      }
+      func main() {
+        go inc(1);
+      }`
+
+    const expectedInstr = [
+      { tag: 'ENTER_SCOPE', num: 2 },
+      { tag: 'LDF', arity: 1, addr: 3 },
+      { tag: 'GOTO', addr: 7 },
+      { tag: 'LD', sym: 'x', pos: [3, 0] },
+      { tag: 'RESET' },
+      { tag: 'LDC', val: undefined },
+      { tag: 'RESET' },
+      { tag: 'ASSIGN', pos: [2, 0] },
+      { tag: 'POP' },
+      { tag: 'LDF', arity: 0, addr: 11 },
+      { tag: 'GOTO', addr: 16 },
+      { tag: 'LD', sym: 'inc', pos: [2, 0] },
+      { tag: 'LDC', val: 1 },
+      { tag: 'GOCALL', arity: 1 },
+      { tag: 'LDC', val: undefined },
+      { tag: 'RESET' },
+      { tag: 'ASSIGN', pos: [2, 1] },
+      { tag: 'POP' },
+      { tag: 'LD', sym: 'main', pos: [2, 1] },
+      { tag: 'CALL', arity: 0 },
+      { tag: 'EXIT_SCOPE' },
+      { tag: 'DONE' }
+    ]
+
+    const inputAst: ASTNode = parse(program)
+    //console.dir(inputAst, {depth : 100});
+    const outputInstr: any[] = compile_program(inputAst)
+    //console.log(JSON.stringify(outputInstr));
+    expect(outputInstr).toStrictEqual(expectedInstr)
+  })
+
+  test('basic go statement with lambda', async () => {
+    const program = `
+      func main() {
+        go func(x int){
+          return x
+        }(1);
+      }`
+
+    const expectedInstr = [
+      { tag: 'ENTER_SCOPE', num: 1 },
+      { tag: 'LDF', arity: 0, addr: 3 },
+      { tag: 'GOTO', addr: 13 },
+      { tag: 'LDF', arity: 1, addr: 5 },
+      { tag: 'GOTO', addr: 9 },
+      { tag: 'LD', sym: 'x', pos: [4, 0] },
+      { tag: 'RESET' },
+      { tag: 'LDC', val: undefined },
+      { tag: 'RESET' },
+      { tag: 'LDC', val: 1 },
+      { tag: 'GOCALL', arity: 1 },
       { tag: 'LDC', val: undefined },
       { tag: 'RESET' },
       { tag: 'ASSIGN', pos: [2, 0] },

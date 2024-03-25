@@ -17,6 +17,7 @@ arguments
 
 funcApp
     : IDENTIFIER arguments
+    | functionLit arguments
     ;
 
 funcDecl
@@ -29,6 +30,7 @@ signature
 
 result
     : L_PAREN typeList R_PAREN
+    | type_
     ;
 
 typeList
@@ -121,6 +123,7 @@ literal
     | TRUE
     | FALSE
     | string_
+    | functionLit
     ;
 
 statementList
@@ -135,6 +138,7 @@ statement
     | returnStmt
     | simpleStmt
     | block
+    | goStmt
     ;
 
 simpleStmt
@@ -174,4 +178,12 @@ forStmt
 string_
     : RAW_STRING_LIT
     | INTERPRETED_STRING_LIT
+    ;
+
+functionLit
+    : FUNC signature block
+    ; // function
+
+goStmt
+    : GO funcApp
     ;
