@@ -1,10 +1,10 @@
-import { parse } from '../go-slang/parser/parser'
-import { resolvedErrorPromise } from './utils'
-import { IOptions, Result } from '..'
-import { ASTNode } from '../go-slang/ast/AST'
-import { Context, RecursivePartial } from '../types'
-import { compile_program } from '../go-slang/compiler/compiler'
-import { VM } from '../go-slang/vm'
+import { parse } from '../parser/parser'
+import { resolvedErrorPromise } from '../../runner/utils'
+import { IOptions, Result } from '../..'
+import { ASTNode } from '../ast/AST'
+import { Context, RecursivePartial } from '../../types'
+import { compile_program } from '../compiler/compiler'
+import { VM } from '../vm'
 
 export async function goRunner(
   code: string,

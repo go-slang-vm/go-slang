@@ -1,5 +1,5 @@
-import { VM } from '../vm/index'
-import { Instruction } from '../vm/types'
+import { VM } from '../index'
+import { Instruction } from '../types'
 
 describe('Virtual Machine tests', () => {
   test('variable declaration in a new block scope', async () => {
@@ -31,6 +31,35 @@ describe('Virtual Machine tests', () => {
     ]
 
     expect(vm.run(instructions)).toStrictEqual(5)
+  })
+  test('variable declaration in a new block scope 2', async () => {
+    const vm = new VM(1500)
+    const instructions: Instruction[] = [
+      { tag: 'ENTER_SCOPE', num: 1 },
+      { tag: 'LDF', arity: 0, addr: 3 },
+      { tag: 'GOTO', addr: 17 },
+      { tag: 'ENTER_SCOPE', num: 1 },
+      { tag: 'LDC', val: 1 },
+      { tag: 'ASSIGN', pos: [4, 0] },
+      { tag: 'POP' },
+      { tag: 'ENTER_SCOPE', num: 1 },
+      { tag: 'LDC', val: 2 },
+      { tag: 'ASSIGN', pos: [5, 0] },
+      { tag: 'POP' },
+      { tag: 'LD', sym: 'y', pos: [5, 0] },
+      { tag: 'RESET' },
+      { tag: 'EXIT_SCOPE' },
+      { tag: 'EXIT_SCOPE' },
+      { tag: 'LDC', val: undefined },
+      { tag: 'RESET' },
+      { tag: 'ASSIGN', pos: [2, 0] },
+      { tag: 'POP' },
+      { tag: 'LD', sym: 'main', pos: [2, 0] },
+      { tag: 'CALL', arity: 0 },
+      { tag: 'EXIT_SCOPE' },
+      { tag: 'DONE' }
+    ]
+    expect(vm.run(instructions)).toStrictEqual(2)
   })
   test('factorial using tail recursion', async () => {
     const vm = new VM(1500)
