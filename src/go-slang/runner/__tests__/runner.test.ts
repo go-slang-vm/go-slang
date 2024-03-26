@@ -132,7 +132,6 @@ describe('Runner tests', () => {
 
     boilerplateAssert(result, undefined)
   })
-  //   TODO: fix VM to handle strings
   test('basic string', async () => {
     const code = `
       func main() {

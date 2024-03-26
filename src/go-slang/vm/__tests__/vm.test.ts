@@ -223,4 +223,28 @@ describe('Virtual Machine tests', () => {
     const output = vm.run(expectedInstr)
     expect(output).toBe(1)
   })
+  test('basic string (add_yall function)', async () => {
+    const vm = new VM(1500)
+    const instructions = [
+      { tag: 'ENTER_SCOPE', num: 1 },
+      { tag: 'LDF', arity: undefined, addr: 3 },
+      { tag: 'GOTO', addr: 9 },
+      { tag: 'LD', sym: 's', pos: [3, 0] },
+      { tag: 'LDC', val: ' yall' },
+      { tag: 'BINOP', sym: '+' },
+      { tag: 'RESET' },
+      { tag: 'LDC', val: undefined },
+      { tag: 'RESET' },
+      { tag: 'ASSIGN', pos: [1, 0] },
+      { tag: 'POP' },
+      { tag: 'LD', sym: 'add_yall', pos: [1, 0] },
+      { tag: 'LDC', val: "what's up" },
+      { tag: 'CALL', arity: 1 },
+      { tag: 'EXIT_SCOPE' },
+      { tag: 'DONE' }
+    ]
+
+    const output = vm.run(instructions)
+    expect(output).toBe("what's up yall")
+  })
 })
