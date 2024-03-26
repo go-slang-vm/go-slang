@@ -1,63 +1,17 @@
 import { Heap } from './heap'
 import { globalState } from './globals'
-import { pop } from './utils'
+import {
+  pop,
+  push,
+  peek,
+  is_boolean,
+  is_null,
+  is_number,
+  is_string,
+  is_undefined,
+  word_to_string
+} from './utils'
 import { Instruction } from './types'
-
-function is_number(v: any) {
-  return typeof v === 'number'
-}
-
-function is_undefined(xs: any) {
-  return typeof xs === 'undefined'
-}
-
-function is_string(xs: any) {
-  return typeof xs === 'string'
-}
-
-function is_boolean(xs: any) {
-  return typeof xs === 'boolean'
-}
-// Translated to TypeScript by Evan Sebastian
-type Pair<H, T> = [H, T]
-type List = null | NonEmptyList
-type NonEmptyList = Pair<any, any>
-// is_null returns true if arg is exactly null
-// LOW-LEVEL FUNCTION, NOT SOURCE
-function is_null(xs: List): xs is null {
-  return xs === null
-}
-
-// add values destructively to the end of
-// given array; return the array
-const push = <T>(array: T[], ...items: T[]): T[] => {
-  // fixed by Liew Zhao Wei, see Discussion 5
-  for (let item of items) {
-    array.push(item)
-  }
-  return array
-}
-
-// return the last element of given array
-// without changing the array
-const peek = <T>(array: T[], address: number): T => array.slice(-1 - address)[0]
-
-// *************
-// parse to JSON
-// *************/
-
-// for debugging: return a string that shows the bits
-// of a given word
-const word_to_string = (word: number): string => {
-  const buf = new ArrayBuffer(8)
-  const view = new DataView(buf)
-  view.setFloat64(0, word)
-  let binStr = ''
-  for (let i = 0; i < 8; i++) {
-    binStr += ('00000000' + view.getUint8(i).toString(2)).slice(-8) + ' '
-  }
-  return binStr
-}
 
 export class VM {
   heapInstance: Heap
