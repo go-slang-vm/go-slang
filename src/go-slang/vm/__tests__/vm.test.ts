@@ -246,5 +246,6 @@ describe('Virtual Machine tests', () => {
 
     const output = vm.run(instructions)
     expect(output).toBe("what's up yall")
+    expect(vm.heapInstance.get_string_pool_size()).toBe(3)
   })
 })

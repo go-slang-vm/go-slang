@@ -53,6 +53,8 @@ export class Heap {
     this.initialise_heap(heapsize_words)
   }
 
+  get_string_pool_size = () => Object.keys(this.stringPool).length
+
   is_String = (address: number) => this.heap_get_tag(address) === String_tag
 
   heap_allocate_String = (str: string) => {
