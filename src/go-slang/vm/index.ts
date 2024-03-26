@@ -12,14 +12,19 @@ import {
   word_to_string
 } from './utils'
 import { Instruction } from './types'
+import { numInstructions } from './constants'
 
 export class VM {
   heapInstance: Heap
   PC: number
+  threadQueue: any[]
+  instructionsRemaining: number
 
   constructor(heapsize_words: number) {
     this.PC = 0
     this.heapInstance = new Heap(heapsize_words)
+    this.threadQueue = []
+    this.instructionsRemaining = numInstructions
   }
 
   address_to_TS_value = (x: number): any =>
@@ -196,7 +201,63 @@ export class VM {
       } else {
         this.PC--
       }
+    },
+    GOCALL: instr => {
+      // these are the same as CALL instruction from homwork
+      const arity = instr.arity
+      const fun = peek(globalState.OS, arity)
+      // this has to change to be called on the new thread -> how to do this?
+      if (this.heapInstance.is_Builtin(fun)) {
+        return this.apply_builtin(this.heapInstance.heap_get_Builtin_id(fun))
+      }
+
+      if (this.heapInstance.is_Closure(fun)) {
+        // store our function in the heap
+        const newFrame = this.heapInstance.heap_allocate_Frame(arity)
+        for (let i = arity - 1; i >= 0; i--) {
+          this.heapInstance.heap_set_child(newFrame, i, pop(globalState.OS))
+        }
+        // remove function from the stack
+        pop(globalState.OS)
+        const newPC = this.heapInstance.heap_get_Closure_pc(fun)
+        const newThread = {
+          OS: [],
+          RTS: [],
+          E: this.heapInstance.heap_Environment_extend(
+            newFrame,
+            this.heapInstance.heap_get_Closure_environment(fun)
+          ),
+          PC: newPC,
+          instructionsRemaining: numInstructions
+        }
+        this.threadQueue.push(newThread)
+        return
+      }
+
+      throw new Error(`GOCALL expects a function, got: ${fun}`)
     }
+  }
+
+  contextSwitch = () => {
+    // save current thread
+    const curThread = {
+      OS: [...globalState.OS],
+      RTS: [...globalState.RTS],
+      E: globalState.E,
+      PC: this.PC,
+      // if context switch happens before expending all instructions, we do not reset the instructions remaining
+      // this is to prevent other threads from getting stuck
+      instructionsRemaining: this.instructionsRemaining > 0 ? this.instructionsRemaining : 5
+    }
+    this.threadQueue.push(curThread)
+
+    // get next thread
+    const nextThread = this.threadQueue.shift()
+    globalState.OS = nextThread.OS
+    globalState.RTS = nextThread.RTS
+    globalState.E = nextThread.E
+    this.PC = nextThread.PC
+    this.instructionsRemaining = nextThread.instructionsRemaining
   }
 
   run(instrs: Instruction[]): any {
@@ -206,6 +267,11 @@ export class VM {
       // this.print_OS('\noperands: ')
       const instr = instrs[this.PC++]
       this.microcode[instr.tag](instr)
+      this.instructionsRemaining -= 1
+      if (this.instructionsRemaining === 0) {
+        this.contextSwitch()
+        this.instructionsRemaining = 5
+      }
     }
     return this.address_to_TS_value(peek(globalState.OS, 0))
   }
