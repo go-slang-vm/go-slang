@@ -39,7 +39,26 @@ describe('Runner tests', () => {
 
     boilerplateAssert(result, 2)
   })
-  test('basic fact', async () => {
+  test('function', async () => {
+    const code = `
+    func g(x, y int) {
+      return x - y
+    }
+    
+    func f(x, y int) {
+      return g(x, y)
+    }
+    
+    func main() {
+      result int := f(33, 22)
+      return result
+    }`
+
+    const result = await goRunner(code, createContext())
+
+    boilerplateAssert(result, 11)
+  })
+  test('factorial function (recursion) with memory management', async () => {
     const code = `
     func fact(n int) (int) {
       return fact_iter(n,1,1)
@@ -55,32 +74,14 @@ describe('Runner tests', () => {
       return fact(5)
     }`
 
-    const result = await goRunner(code, createContext())
-
-    boilerplateAssert(result, 120)
-  })
-  test('basic fact', async () => {
-    const code = `
-    func fact(n int) (int) {
-      return fact_iter(n,1,1)
-    }
-    func fact_iter(n, i, acc int) (int) {
-      if i > n {
-        return acc
-      } else {
-        return fact_iter(n,i+1,acc*i)
-      }
-    }
-    func main() (int) {
-      return fact(5)
-    }`
-
-    const result = await goRunner(code, createContext())
+    // reduce memory to 800
+    // note: while not intentional, garbage collection already occurs in other test cases
+    const result = await goRunner(code, createContext(), 800)
 
     boilerplateAssert(result, 120)
   })
 
-  test('basic while loop', async () => {
+  test('while loop', async () => {
     const code = `
       func main() (int) {
         var x int = 0
@@ -95,7 +96,27 @@ describe('Runner tests', () => {
 
     boilerplateAssert(result, 55)
   })
-  test('basic if statment with nesting and empty else', async () => {
+  test('while loop 2', async () => {
+    const code = `
+      func main() (int) {
+        var x int = 0
+        var i int = 0
+        for i < 100 {
+          j int := 0
+          for j < 100 {
+            x = x + i + j
+            j = j + 1
+          }
+          i = i + 1
+          x = x + 1
+        }
+        return x
+      }`
+    const result = await goRunner(code, createContext())
+
+    boilerplateAssert(result, 990100)
+  })
+  test('if statement with nesting and empty else', async () => {
     const code = `
       func main() (int) {
         x int := 1
@@ -114,7 +135,7 @@ describe('Runner tests', () => {
 
     boilerplateAssert(result, 20)
   })
-  test('basic empty return', async () => {
+  test('empty return', async () => {
     const code = `
       func main() {
         x int := 1
@@ -132,7 +153,7 @@ describe('Runner tests', () => {
 
     boilerplateAssert(result, undefined)
   })
-  test('basic string', async () => {
+  test('string', async () => {
     const code = `
       func main() {
         x string := "this is a string"
@@ -141,5 +162,14 @@ describe('Runner tests', () => {
     const result = await goRunner(code, createContext())
 
     boilerplateAssert(result, 'this is a string')
+  })
+  test('string 2', async () => {
+    const code = `
+      func main() {
+        return "aaa" + "bbb"
+      }`
+    const result = await goRunner(code, createContext())
+
+    boilerplateAssert(result, 'aaabbb')
   })
 })

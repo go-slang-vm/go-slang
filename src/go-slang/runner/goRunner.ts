@@ -9,6 +9,7 @@ import { VM } from '../vm'
 export async function goRunner(
   code: string,
   context: Context,
+  memory: number = 1500,
   options: RecursivePartial<IOptions> = {}
 ): Promise<Result> {
   const program: ASTNode | undefined = parse(code)
@@ -16,7 +17,7 @@ export async function goRunner(
     return resolvedErrorPromise
   }
   const compiledProgram: any[] = compile_program(program)
-  const vm = new VM(1500)
+  const vm = new VM(memory)
 
   return Promise.resolve({
     status: 'finished',
