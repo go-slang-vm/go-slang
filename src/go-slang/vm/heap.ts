@@ -1,5 +1,5 @@
 import { globalState } from './globals'
-import { pop } from './utils'
+import { hashString, pop } from './utils'
 import {
   False_tag,
   True_tag,
@@ -13,7 +13,8 @@ import {
   Frame_tag,
   Environment_tag,
   Pair_tag,
-  Builtin_tag
+  Builtin_tag,
+  String_tag
 } from './constants'
 
 export class Heap {
@@ -23,13 +24,15 @@ export class Heap {
   private mark_bit = 7
   private UNMARKED = 0
   private MARKED = 1
+  private stringPool: { [key: number]: [number, string] }
   False: number
   True: number
   Null: number
   Unassigned: number
   Undefined: number
+  String: number
   heap: DataView
-  node_size = 10
+  node_size = 20
   free: number
   heap_bottom: number
   // builtins: builtin id is encoded in second byte
@@ -40,6 +43,7 @@ export class Heap {
   builtin_array: (() => number | void)[] = []
 
   constructor(heapsize_words: number) {
+    this.stringPool = {}
     let i = 0
     for (const key in this.builtin_implementation) {
       this.builtins[key] = { tag: 'BUILTIN', id: i, arity: this.builtin_implementation[key].length }
@@ -48,6 +52,31 @@ export class Heap {
 
     this.initialise_heap(heapsize_words)
   }
+
+  get_string_pool_size = () => Object.keys(this.stringPool).length
+
+  is_String = (address: number) => this.heap_get_tag(address) === String_tag
+
+  heap_allocate_String = (str: string) => {
+    const hash = hashString(str)
+    const address_or_undefined = this.stringPool[hash]
+
+    if (address_or_undefined !== undefined) {
+      return address_or_undefined[0]
+    }
+
+    const address = this.heap_allocate(String_tag, 1)
+    this.heap_set_4_bytes_at_offset(address, 1, hash)
+
+    // store the string in the string pool
+    this.stringPool[hash] = [address, str]
+
+    return address
+  }
+
+  heap_get_string_hash = (address: number) => this.heap_get_4_bytes_at_offset(address, 1)
+
+  heap_get_string = (address: number) => this.stringPool[this.heap_get_string_hash(address)][1]
 
   is_Builtin = (address: number): boolean => this.heap_get_tag(address) === Builtin_tag
 
@@ -64,6 +93,11 @@ export class Heap {
   // to save the creation of an intermediate
   // argument array
   builtin_implementation: { [key: string]: () => number | void } = {
+    is_number: () => (this.is_Number(pop(globalState.OS)) ? this.True : this.False),
+    is_boolean: () => (this.is_Boolean(pop(globalState.OS)) ? this.True : this.False),
+    is_undefined: () => (this.is_Undefined(pop(globalState.OS)) ? this.True : this.False),
+    is_string: () => (this.is_String(pop(globalState.OS)) ? this.True : this.False),
+    is_function: () => (this.is_Closure(pop(globalState.OS)) ? this.True : this.False),
     pair: () => {
       const tl = pop(globalState.OS)
       const hd = pop(globalState.OS)
@@ -258,6 +292,7 @@ export class Heap {
     this.Null = this.heap_allocate(Null_tag, 1)
     this.Unassigned = this.heap_allocate(Unassigned_tag, 1)
     this.Undefined = this.heap_allocate(Undefined_tag, 1)
+    this.String = this.heap_allocate(String_tag, 1)
   }
 
   is_False(address: number): boolean {
@@ -333,11 +368,18 @@ export class Heap {
     return this.heap.getUint16(address * this.word_size + offset)
   }
 
+  private heap_set_4_bytes_at_offset(address: number, offset: number, value: number): void {
+    this.heap.setUint32(address * this.word_size + offset, value)
+  }
+  private heap_get_4_bytes_at_offset(address: number, offset: number): number {
+    return this.heap.getUint32(address * this.word_size + offset)
+  }
+
   // MEMORY MANAGEMENT
 
   private heap_allocate(tag: number, size: number): number {
     if (size > this.node_size) {
-      throw new Error('limitation: nodes cannot be larger than 10 words')
+      throw new Error('limitation: nodes cannot be larger than 10 words. Current size: ' + size)
     }
 
     if (this.free === -1) {

@@ -61,9 +61,10 @@ const word_to_string = (word: number): string => {
 
 export class VM {
   heapInstance: Heap
-  PC: number = 0
+  PC: number
 
   constructor(heapsize_words: number) {
+    this.PC = 0
     this.heapInstance = new Heap(heapsize_words)
   }
 
@@ -80,6 +81,8 @@ export class VM {
       ? '<unassigned>'
       : this.heapInstance.is_Null(x)
       ? null
+      : this.heapInstance.is_String(x)
+      ? this.heapInstance.heap_get_string(x)
       : this.heapInstance.is_Pair(x)
       ? [
           this.address_to_TS_value(this.heapInstance.heap_get_child(x, 0)),
@@ -102,6 +105,8 @@ export class VM {
       ? this.heapInstance.Undefined
       : is_null(x)
       ? this.heapInstance.Null
+      : is_string(x)
+      ? this.heapInstance.heap_allocate_String(x)
       : 'unknown word tag: ' + word_to_string(x)
 
   // ********
@@ -130,12 +135,8 @@ export class VM {
   // v2 is popped before v1
   apply_binop = (op: string, v2: number, v1: number): string | number =>
     this.TS_value_to_address(
-      this.binop_microcode[op](
-        Number(this.address_to_TS_value(v1)),
-        Number(this.address_to_TS_value(v2))
-      )
+      this.binop_microcode[op](this.address_to_TS_value(v1), this.address_to_TS_value(v2))
     )
-
   unop_microcode: { [key: string]: (x: any) => any } = {
     '-unary': x => -(x as number),
     '!': x => !x
