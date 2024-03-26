@@ -299,4 +299,59 @@ describe('Basic compiler test', () => {
     const postProcessedAst: ASTNode = preprocess(inputAst);
     expect(postProcessedAst).toStrictEqual(expectedAst)
   })
+
+  test("basic init cycle present should throw", async ()=> {
+    const program = `
+      var x int = inc()
+      func inc() {
+        return y
+      }
+      func main() {
+        sz int :=1
+      }
+      var y int = x
+      `;
+    
+    const inputAst: ASTNode = parse(program);
+    expect(()=>preprocess(inputAst)).toThrow("initialization cycle present");
+  })
+
+  test("basic redeclaration should throw", async ()=> {
+    const program = `
+      var x int = 1
+      func main() {
+        sz int :=1
+      }
+      var x int = 1
+      `;
+    
+    const inputAst: ASTNode = parse(program);
+    expect(()=>preprocess(inputAst)).toThrow("redeclaration of x");
+  })
+  test("basic redeclaration in different scope should not throw", async ()=> {
+    const program = `
+      var x int = 1
+      func main() {
+        x int := 1
+      }
+      var y int = 1
+      `;
+    
+    const inputAst: ASTNode = parse(program);
+    expect(()=>preprocess(inputAst)).not.toThrow("redeclaration of x");
+  })
+  test("basic redeclaration of function name should throw", async ()=> {
+    const program = `
+      var x int = 1
+      func main() {
+        x int :=1
+      }
+      func x() {
+
+      }
+      `;
+    
+    const inputAst: ASTNode = parse(program);
+    expect(()=>preprocess(inputAst)).toThrow("redeclaration of x");
+  })
 })

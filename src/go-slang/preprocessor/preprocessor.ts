@@ -20,7 +20,10 @@ const create_graph = {
             const pos = compile_time_environment_position(ce, comp.sym);
             // this statement includes a reference to the following variable in the global blk
             if(pos[0] == 2) {
-                const stmtNumOfSym = varNameToStmtNumber[comp.sym];
+                const stmtNumOfSym = varNameToStmtNumber.get(comp.sym);
+                if(stmtNumOfSym == undefined) {
+                    throw new Error("unbounded symbol: " + comp.sym);
+                }
                 adjList[stmtNumOfSym].add(stmtNum);
             }
         },
@@ -147,17 +150,24 @@ const topoSort = () => {
 
 export const preprocess = (program: ASTNode): ASTNode =>  {
     // invariant that the program passed in should be the global blk node
+    varNameToStmtNumber.clear();
     const seq = (program as BlockNode).body;
     if(seq.tag == "seq") {
         // note that in the global scope, only declarations are allowed, except for the last statment which is a main() function app
         const stmts: StmtNode[] = (seq as SequenceNode).stmts;
         for(let i = 0; i < stmts.length - 1; ++i) {
             if(stmts[i].tag == "fun") {
-                varNameToStmtNumber[(stmts[i] as FuncDeclNode).sym] = i;
+                if(varNameToStmtNumber.has((stmts[i] as FuncDeclNode).sym)) {
+                    throw new Error("redeclaration of " + (stmts[i] as FuncDeclNode).sym);
+                }
+                varNameToStmtNumber.set((stmts[i] as FuncDeclNode).sym, i);
             } else {
                 const node = stmts[i] as VarDeclNode;
                 for(let j = 0; j < node.syms.IDENTS.length; ++j) {
-                    varNameToStmtNumber[node.syms.IDENTS[j]] = i; 
+                    if(varNameToStmtNumber.has(node.syms.IDENTS[j])) {
+                        throw new Error("redeclaration of " + node.syms.IDENTS[j]);
+                    }
+                    varNameToStmtNumber.set(node.syms.IDENTS[j],i);
                 }
             }
         }
@@ -177,7 +187,7 @@ export const preprocess = (program: ASTNode): ASTNode =>  {
 
         const order = topoSort();
         if(order.length !== adjList.length) {
-            throw Error("initialization cycle present");
+            throw new Error("initialization cycle present");
         }
         const newStmts: StmtNode[] = [];
         for(const i of order) {
