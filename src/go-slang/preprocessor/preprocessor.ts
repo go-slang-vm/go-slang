@@ -6,10 +6,11 @@
 // check that main has no arguments or return values
 // use adj list and map to map variable name to stmt number
 
+import { Pair } from "../../stdlib/list";
 import { ASTNode, AssignNode, BinOpNode, BlockNode, ConstDeclNode, ForStmtNode, FuncAppNode, FuncDeclNode, GoStmtNode, IfStmtNode, LambdaStmtNode, LiteralNode, LogicalNode, NameNode, ReturnStmtNode, SequenceNode, StmtNode, UnOpNode, VarDeclNode } from "../ast/AST";
 import { CompileTimeEnvironment, Frame, compile_time_environment_extend, compile_time_environment_position, global_compile_environment, scan_for_locals } from "../utils";
 
-const varNameToStmtNumber: Map<string, number> = new Map(); 
+const varNameToStmtNumber: Map<string, Pair<number, string>> = new Map(); 
 
 let adjList:Set<number>[];
 
@@ -24,7 +25,7 @@ const create_graph = {
                 if(stmtNumOfSym == undefined) {
                     throw new Error("unbounded symbol: " + comp.sym);
                 }
-                adjList[stmtNumOfSym].add(stmtNum);
+                adjList[stmtNumOfSym[0]].add(stmtNum);
             }
         },
       unop: (comp: UnOpNode, ce: CompileTimeEnvironment, stmtNum: number) => {
@@ -160,14 +161,14 @@ export const preprocess = (program: ASTNode): ASTNode =>  {
                 if(varNameToStmtNumber.has((stmts[i] as FuncDeclNode).sym)) {
                     throw new Error("redeclaration of " + (stmts[i] as FuncDeclNode).sym);
                 }
-                varNameToStmtNumber.set((stmts[i] as FuncDeclNode).sym, i);
+                varNameToStmtNumber.set((stmts[i] as FuncDeclNode).sym, [i, "fun"]);
             } else {
                 const node = stmts[i] as VarDeclNode;
                 for(let j = 0; j < node.syms.IDENTS.length; ++j) {
                     if(varNameToStmtNumber.has(node.syms.IDENTS[j])) {
                         throw new Error("redeclaration of " + node.syms.IDENTS[j]);
                     }
-                    varNameToStmtNumber.set(node.syms.IDENTS[j],i);
+                    varNameToStmtNumber.set(node.syms.IDENTS[j],[i, "var"]);
                 }
             }
         }
@@ -182,6 +183,8 @@ export const preprocess = (program: ASTNode): ASTNode =>  {
         const base_compile_env = compile_time_environment_extend(locals, global_compile_environment);
         // NOTE THAT FOR MULTI VAR DECL, WE REQUIRE THAT THEY DO NOT CYCLICALLY REFER TO VARS IN THE SAME STATEMENT FOR NOW
         for(let i = 0; i < stmts.length-1; ++i) {
+            // // dont have to reorder function unless it was referenced in a var declaration
+            // if(stmts[i].tag == "fun") continue;
             createGraph(stmts[i], base_compile_env, i);
         }
 

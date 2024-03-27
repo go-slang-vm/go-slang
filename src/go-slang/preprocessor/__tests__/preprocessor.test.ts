@@ -13,64 +13,64 @@ describe('Basic compiler test', () => {
         return y
       }`
 
-      let expectedAst: any = {
-        tag: 'blk',
-        body: {
-          tag: 'seq',
-          stmts: [
-            {
-              tag: 'fun',
-              sym: 'main',
-              prms: [],
+    let expectedAst: any = {
+      tag: 'blk',
+      body: {
+        tag: 'seq',
+        stmts: [
+          {
+            tag: 'fun',
+            sym: 'main',
+            prms: [],
+            body: {
+              tag: 'blk',
               body: {
-                tag: 'blk',
-                body: {
-                  tag: 'seq',
-                  stmts: [
-                    {
-                      tag: 'let',
-                      syms: { tag: 'idents', IDENTS: [ 'y' ] },
-                      assignments: { tag: 'exprlist', list: [ { tag: 'lit', val: 1 } ] },
-                      type: 'int'
-                    },
-                    {
-                      tag: 'blk',
-                      body: {
-                        tag: 'seq',
-                        stmts: [
-                          {
-                            tag: 'let',
-                            syms: { tag: 'idents', IDENTS: [ 'y' ] },
-                            assignments: {
-                              tag: 'exprlist',
-                              list: [ { tag: 'lit', val: 2 } ]
-                            },
-                            type: 'int'
-                          }
-                        ]
-                      }
-                    },
-                    {
-                      tag: 'ret',
-                      expr: [ { tag: 'nam', sym: 'y' } ],
-                      _arity: 1
+                tag: 'seq',
+                stmts: [
+                  {
+                    tag: 'let',
+                    syms: { tag: 'idents', IDENTS: ['y'] },
+                    assignments: { tag: 'exprlist', list: [{ tag: 'lit', val: 1 }] },
+                    type: 'int'
+                  },
+                  {
+                    tag: 'blk',
+                    body: {
+                      tag: 'seq',
+                      stmts: [
+                        {
+                          tag: 'let',
+                          syms: { tag: 'idents', IDENTS: ['y'] },
+                          assignments: {
+                            tag: 'exprlist',
+                            list: [{ tag: 'lit', val: 2 }]
+                          },
+                          type: 'int'
+                        }
+                      ]
                     }
-                  ]
-                }
-              },
-              _arity: 0,
-              paramTypes: [],
-              returnTypes: [ 'int' ]
+                  },
+                  {
+                    tag: 'ret',
+                    expr: [{ tag: 'nam', sym: 'y' }],
+                    _arity: 1
+                  }
+                ]
+              }
             },
-            {
-              tag: 'app',
-              fun: { tag: 'nam', sym: 'main' },
-              args: [],
-              _arity: 0
-            }
-          ]
-        }
-      };
+            _arity: 0,
+            paramTypes: [],
+            returnTypes: ['int']
+          },
+          {
+            tag: 'app',
+            fun: { tag: 'nam', sym: 'main' },
+            args: [],
+            _arity: 0
+          }
+        ]
+      }
+    };
 
     const inputAst: ASTNode = parse(program);
     const postProcessedAst: ASTNode = preprocess(inputAst);
@@ -93,8 +93,8 @@ describe('Basic compiler test', () => {
         stmts: [
           {
             tag: 'let',
-            syms: { tag: 'idents', IDENTS: [ 'x' ] },
-            assignments: { tag: 'exprlist', list: [ { tag: 'lit', val: 2 } ] },
+            syms: { tag: 'idents', IDENTS: ['x'] },
+            assignments: { tag: 'exprlist', list: [{ tag: 'lit', val: 2 }] },
             type: 'int'
           },
           {
@@ -108,8 +108,8 @@ describe('Basic compiler test', () => {
                 stmts: [
                   {
                     tag: 'let',
-                    syms: { tag: 'idents', IDENTS: [ 'sz' ] },
-                    assignments: { tag: 'exprlist', list: [ { tag: 'lit', val: 1 } ] },
+                    syms: { tag: 'idents', IDENTS: ['sz'] },
+                    assignments: { tag: 'exprlist', list: [{ tag: 'lit', val: 1 }] },
                     type: 'int'
                   }
                 ]
@@ -121,8 +121,8 @@ describe('Basic compiler test', () => {
           },
           {
             tag: 'let',
-            syms: { tag: 'idents', IDENTS: [ 'y' ] },
-            assignments: { tag: 'exprlist', list: [ { tag: 'lit', val: 3 } ] },
+            syms: { tag: 'idents', IDENTS: ['y'] },
+            assignments: { tag: 'exprlist', list: [{ tag: 'lit', val: 3 }] },
             type: 'int'
           },
           {
@@ -165,8 +165,8 @@ describe('Basic compiler test', () => {
                 stmts: [
                   {
                     tag: 'let',
-                    syms: { tag: 'idents', IDENTS: [ 'sz' ] },
-                    assignments: { tag: 'exprlist', list: [ { tag: 'lit', val: 1 } ] },
+                    syms: { tag: 'idents', IDENTS: ['sz'] },
+                    assignments: { tag: 'exprlist', list: [{ tag: 'lit', val: 1 }] },
                     type: 'int'
                   }
                 ]
@@ -178,16 +178,16 @@ describe('Basic compiler test', () => {
           },
           {
             tag: 'let',
-            syms: { tag: 'idents', IDENTS: [ 'y' ] },
-            assignments: { tag: 'exprlist', list: [ { tag: 'lit', val: 3 } ] },
+            syms: { tag: 'idents', IDENTS: ['y'] },
+            assignments: { tag: 'exprlist', list: [{ tag: 'lit', val: 3 }] },
             type: 'int'
           },
           {
             tag: 'let',
-            syms: { tag: 'idents', IDENTS: [ 'x' ] },
-            assignments: { tag: 'exprlist', list: [ { tag: 'nam', sym: 'y' } ] },
+            syms: { tag: 'idents', IDENTS: ['x'] },
+            assignments: { tag: 'exprlist', list: [{ tag: 'nam', sym: 'y' }] },
             type: 'int'
-          }, 
+          },
           {
             tag: 'app',
             fun: { tag: 'nam', sym: 'main' },
@@ -231,8 +231,8 @@ describe('Basic compiler test', () => {
                 stmts: [
                   {
                     tag: 'let',
-                    syms: { tag: 'idents', IDENTS: [ 'sz' ] },
-                    assignments: { tag: 'exprlist', list: [ { tag: 'lit', val: 1 } ] },
+                    syms: { tag: 'idents', IDENTS: ['sz'] },
+                    assignments: { tag: 'exprlist', list: [{ tag: 'lit', val: 1 }] },
                     type: 'int'
                   }
                 ]
@@ -244,8 +244,8 @@ describe('Basic compiler test', () => {
           },
           {
             tag: 'let',
-            syms: { tag: 'idents', IDENTS: [ 'y' ] },
-            assignments: { tag: 'exprlist', list: [ { tag: 'lit', val: 3 } ] },
+            syms: { tag: 'idents', IDENTS: ['y'] },
+            assignments: { tag: 'exprlist', list: [{ tag: 'lit', val: 3 }] },
             type: 'int'
           },
           {
@@ -259,7 +259,7 @@ describe('Basic compiler test', () => {
                 stmts: [
                   {
                     tag: 'ret',
-                    expr: [ { tag: 'nam', sym: 'y' } ],
+                    expr: [{ tag: 'nam', sym: 'y' }],
                     _arity: 1
                   }
                 ]
@@ -271,7 +271,7 @@ describe('Basic compiler test', () => {
           },
           {
             tag: 'let',
-            syms: { tag: 'idents', IDENTS: [ 'x' ] },
+            syms: { tag: 'idents', IDENTS: ['x'] },
             assignments: {
               tag: 'exprlist',
               list: [
@@ -300,7 +300,7 @@ describe('Basic compiler test', () => {
     expect(postProcessedAst).toStrictEqual(expectedAst)
   })
 
-  test("basic init cycle present should throw", async ()=> {
+  test("basic init cycle present should throw", async () => {
     const program = `
       var x int = inc()
       func inc() {
@@ -311,12 +311,12 @@ describe('Basic compiler test', () => {
       }
       var y int = x
       `;
-    
+
     const inputAst: ASTNode = parse(program);
-    expect(()=>preprocess(inputAst)).toThrow("initialization cycle present");
+    expect(() => preprocess(inputAst)).toThrow("initialization cycle present");
   })
 
-  test("basic redeclaration should throw", async ()=> {
+  test("basic redeclaration should throw", async () => {
     const program = `
       var x int = 1
       func main() {
@@ -324,11 +324,11 @@ describe('Basic compiler test', () => {
       }
       var x int = 1
       `;
-    
+
     const inputAst: ASTNode = parse(program);
-    expect(()=>preprocess(inputAst)).toThrow("redeclaration of x");
+    expect(() => preprocess(inputAst)).toThrow("redeclaration of x");
   })
-  test("basic redeclaration in different scope should not throw", async ()=> {
+  test("basic redeclaration in different scope should not throw", async () => {
     const program = `
       var x int = 1
       func main() {
@@ -336,11 +336,11 @@ describe('Basic compiler test', () => {
       }
       var y int = 1
       `;
-    
+
     const inputAst: ASTNode = parse(program);
-    expect(()=>preprocess(inputAst)).not.toThrow("redeclaration of x");
+    expect(() => preprocess(inputAst)).not.toThrow("redeclaration of x");
   })
-  test("basic redeclaration of function name should throw", async ()=> {
+  test("basic redeclaration of function name should throw", async () => {
     const program = `
       var x int = 1
       func main() {
@@ -350,8 +350,34 @@ describe('Basic compiler test', () => {
 
       }
       `;
-    
+
     const inputAst: ASTNode = parse(program);
-    expect(()=>preprocess(inputAst)).toThrow("redeclaration of x");
+    expect(() => preprocess(inputAst)).toThrow("redeclaration of x");
+  })
+
+  // this test is broken for now and needs to be fixed
+  test("basic recursive cycle present should not throw", async () => {
+    const program = `
+    func recurse1(o int) int {
+      if o == 0 {
+        return y
+      }
+      return recurse2(o - 1)
+    }
+    
+    var x int = recurse1(4)
+    
+    func recurse2(t int) int {
+      return recurse1(t - 1)
+    }
+    func main() {
+      Println(x)
+    }
+    
+    var y int = 1
+      `;
+
+    const inputAst: ASTNode = parse(program);
+    expect(() => preprocess(inputAst)).not.toThrow("initialization cycle present");
   })
 })
