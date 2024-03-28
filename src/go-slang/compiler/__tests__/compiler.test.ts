@@ -600,10 +600,11 @@ describe('Basic compiler test', () => {
       { tag: 'ASSIGN', pos: [2, 0] },
       { tag: 'POP' },
       { tag: 'LDF', arity: 0, addr: 11 },
-      { tag: 'GOTO', addr: 16 },
+      { tag: 'GOTO', addr: 17 },
       { tag: 'LD', sym: 'inc', pos: [2, 0] },
       { tag: 'LDC', val: 1 },
       { tag: 'GOCALL', arity: 1 },
+      { tag: 'LDC', val: undefined },
       { tag: 'LDC', val: undefined },
       { tag: 'RESET' },
       { tag: 'ASSIGN', pos: [2, 1] },
@@ -617,7 +618,7 @@ describe('Basic compiler test', () => {
     const inputAst: ASTNode = parse(program)
     //console.dir(inputAst, {depth : 100});
     const outputInstr: any[] = compile_program(inputAst)
-    //console.log(JSON.stringify(outputInstr));
+    //console.log(JSON.stringify(outputInstr)); 
     expect(outputInstr).toStrictEqual(expectedInstr)
   })
 
@@ -632,7 +633,7 @@ describe('Basic compiler test', () => {
     const expectedInstr = [
       { tag: 'ENTER_SCOPE', num: 1 },
       { tag: 'LDF', arity: 0, addr: 3 },
-      { tag: 'GOTO', addr: 13 },
+      { tag: 'GOTO', addr: 14 },
       { tag: 'LDF', arity: 1, addr: 5 },
       { tag: 'GOTO', addr: 9 },
       { tag: 'LD', sym: 'x', pos: [4, 0] },
@@ -641,6 +642,7 @@ describe('Basic compiler test', () => {
       { tag: 'RESET' },
       { tag: 'LDC', val: 1 },
       { tag: 'GOCALL', arity: 1 },
+      { tag: 'LDC', val: undefined },
       { tag: 'LDC', val: undefined },
       { tag: 'RESET' },
       { tag: 'ASSIGN', pos: [2, 0] },
@@ -684,7 +686,7 @@ describe('Basic compiler test', () => {
   {"tag": "ASSIGN", "pos": [2, 0]},
   {"tag": "POP"},
   {"tag": "LDF", "arity": 0, "addr": 13},
-  {"tag": "GOTO", "addr": 30},
+  {"tag": "GOTO", "addr": 31},
   {"tag": "ENTER_SCOPE", "num": 1},
   {"tag": "LDC", "val": 0},
   {"tag": "ASSIGN", "pos": [4, 0]},
@@ -692,6 +694,7 @@ describe('Basic compiler test', () => {
   {"tag": "LD", "sym": "inc", "pos": [2, 0]},
   {"tag": "LD", "sym": "x", "pos": [4, 0]},
   {"tag": "GOCALL", "arity": 1},
+  {"tag": "LDC", "val": undefined},
   {"tag": "POP"},
   {"tag": "LD", "sym": "sleep", "pos": [0, 1]},
   {"tag": "LDC", "val": 20},
