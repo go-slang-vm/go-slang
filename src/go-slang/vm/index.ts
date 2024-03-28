@@ -45,6 +45,9 @@ export class VM {
   builtin_implementation: { [key: string]: () => number | void } = {
     sleep: () => {
       const address = pop(globalState.OS)
+      // before switching threads, we complete the apply_builtin() function by popping fun off the stack and pushing undefined
+      pop(globalState.OS) // pop fun
+      push(globalState.OS, undefined)
       let steps: number = this.address_to_TS_value(address)
       this.curThread.sleepCount += steps
       // if the thread sleeps >= number of instructions allocated to it
@@ -231,8 +234,12 @@ export class VM {
 
   apply_builtin = (builtin_id: number) => {
     const result = this.builtin_array[builtin_id]()
-    pop(globalState.OS) // pop fun
-    push(globalState.OS, result)
+    // workaround: only pop and push if builtin is not sleep
+    // sleep is a special case because threads might be swapped out when it is called
+    if (this.builtins['sleep'].id !== builtin_id) {
+      pop(globalState.OS) // pop fun
+      push(globalState.OS, result)
+    }
   }
 
   // *******
