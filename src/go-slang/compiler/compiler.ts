@@ -339,6 +339,7 @@ const compile_comp = {
     // based on how funApp is compiled, we know that wc - 1 is the call instruction
     // we modify the tag of that instruction for our purposes (hacks)
     instrs[wc - 1].tag = 'GOCALL'
+    instrs[wc++] = { tag: 'LDC', val: undefined }
   }
 }
 
