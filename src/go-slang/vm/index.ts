@@ -353,7 +353,7 @@ export class VM {
           this.heapInstance.heap_set_child(newFrame, i, pop(globalState.OS))
         }
         // remove function from the stack
-        // pop(globalState.OS)
+        pop(globalState.OS)
         const newPC = this.heapInstance.heap_get_Closure_pc(fun)
         const newThread: Thread = new Thread(
           [],
@@ -418,6 +418,7 @@ export class VM {
   }
 
   run(instrs: Instruction[]): any {
+    // console.log({ instrs })
     // only break out of loop if we reach DONE on the main thread
     while (!(instrs[this.curThread.PC].tag === 'DONE' && this.curThread.isMainThread)) {
       // if we reach DONE on a non-main thread, load next thread
