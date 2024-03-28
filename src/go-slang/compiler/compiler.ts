@@ -76,7 +76,7 @@ const value_index = (frame: Frame, x: string): number => {
 // compile-time frames only need synbols (keys), no values
 
 //TODO: make sure to update this with more builtins for Go
-const builtin_compile_frame: Frame = ["Println"];
+const builtin_compile_frame: Frame = ["Println", "sleep"];
 
 //TODO: make sure to update this with more constants for Go
 const constant_compile_frame: Frame = ['nil']
@@ -341,7 +341,8 @@ const compile_comp = {
     compile(comp.funcApp, ce);
     // based on how funApp is compiled, we know that wc - 1 is the call instruction
     // we modify the tag of that instruction for our purposes (hacks)
-    instrs[wc-1].tag = "GOCALL"
+    instrs[wc-1].tag = "GOCALL";
+    instrs[wc++] = { tag: 'LDC', val: undefined };
   }
 }
 
