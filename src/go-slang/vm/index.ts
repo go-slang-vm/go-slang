@@ -12,19 +12,19 @@ import {
   word_to_string
 } from './utils'
 import { Instruction } from './types'
-import { numInstructions } from './constants'
+import { Thread } from './thread'
 
 export class VM {
   heapInstance: Heap
   PC: number
-  threadQueue: any[]
-  instructionsRemaining: number
+  threadQueue: Thread[]
+  curThread: Thread
 
   constructor(heapsize_words: number) {
     this.PC = 0
     this.heapInstance = new Heap(heapsize_words)
-    this.threadQueue = []
-    this.instructionsRemaining = numInstructions
+    this.curThread = new Thread(globalState.OS, globalState.E, globalState.RTS, this.PC, true)
+    this.threadQueue = [this.curThread]
   }
 
   address_to_TS_value = (x: number): any =>
@@ -220,16 +220,15 @@ export class VM {
         // remove function from the stack
         pop(globalState.OS)
         const newPC = this.heapInstance.heap_get_Closure_pc(fun)
-        const newThread = {
-          OS: [],
-          RTS: [],
-          E: this.heapInstance.heap_Environment_extend(
+        const newThread: Thread = new Thread(
+          [],
+          this.heapInstance.heap_Environment_extend(
             newFrame,
             this.heapInstance.heap_get_Closure_environment(fun)
           ),
-          PC: newPC,
-          instructionsRemaining: numInstructions
-        }
+          [],
+          newPC
+        )
         this.threadQueue.push(newThread)
         return
       }
@@ -238,37 +237,49 @@ export class VM {
     }
   }
 
-  contextSwitch = () => {
-    // save current thread
-    const curThread = {
-      OS: [...globalState.OS],
-      RTS: [...globalState.RTS],
-      E: globalState.E,
-      PC: this.PC,
-      instructionsRemaining: 5
-    }
+  saveThread = () => {
+    const curThread: Thread = new Thread(
+      [...globalState.OS],
+      globalState.E,
+      [...globalState.RTS],
+      this.PC
+    )
     this.threadQueue.push(curThread)
+  }
 
-    // get next thread
-    const nextThread = this.threadQueue.shift()
+  loadNextThread = () => {
+    const nextThread: Thread | undefined = this.threadQueue.shift()
+    if (!nextThread) {
+      return undefined
+    }
     globalState.OS = nextThread.OS
     globalState.RTS = nextThread.RTS
     globalState.E = nextThread.E
     this.PC = nextThread.PC
-    this.instructionsRemaining = nextThread.instructionsRemaining
+    return undefined
+  }
+
+  contextSwitch = () => {
+    // save current thread
+    this.saveThread()
+
+    // load next thread
+    this.loadNextThread()
   }
 
   run(instrs: Instruction[]): any {
-    // reset PC to 0 for each set of instructions (i.e. each program)
-    this.PC = 0
-    while (!(instrs[this.PC].tag === 'DONE')) {
+    // only break out of loop if we reach DONE on the main thread
+    while (!(instrs[this.PC].tag === 'DONE' && this.curThread.isMainThread)) {
+      // if we reach DONE on a non-main thread, load next thread
+      if (instrs[this.PC].tag === 'DONE') {
+        this.loadNextThread()
+      }
       // this.print_OS('\noperands: ')
       const instr = instrs[this.PC++]
       this.microcode[instr.tag](instr)
-      this.instructionsRemaining -= 1
-      if (this.instructionsRemaining === 0) {
+      this.curThread.instructionsRemaining -= 1
+      if (this.curThread.instructionsRemaining === 0) {
         this.contextSwitch()
-        this.instructionsRemaining = 5
       }
     }
     return this.address_to_TS_value(peek(globalState.OS, 0))
