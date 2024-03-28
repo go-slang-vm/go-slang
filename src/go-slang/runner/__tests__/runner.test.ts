@@ -213,20 +213,35 @@ describe('Runner tests', () => {
 
     boilerplateAssert(result, undefined)
   })
-  // test('go statement 2', async () => {
-  //   const code = `
-  //     func inc(x int) {
-  //       x = x + 1
-  //       //TODO: [FIXME] adding this return statement causes the error: "pop: empty list"
-  //       return x
-  //     }
-  //     func main() {
-  //       x int := 0
-  //       go inc(x)
-  //       sleep(20)
-  //     }`
-  //   const result = await goRunner(code, createContext())
+  test('go statement 2', async () => {
+    const code = `
+      func inc(x int) {
+        x = x + 1
+        return x
+      }
+      func main() {
+        x int := 0
+        go inc(x)
+        sleep(20)
+      }`
+    const result = await goRunner(code, createContext())
 
-  //   boilerplateAssert(result, 0)
-  // })
+    boilerplateAssert(result, undefined)
+  })
+  test('go statement 3', async () => {
+    const code = `
+      func inc(x int) {
+        x = x + 1
+        return x
+      }
+      func main() {
+        x int := 0
+        go inc(x)
+        sleep(20)
+        return x
+      }`
+    const result = await goRunner(code, createContext())
+
+    boilerplateAssert(result, 0)
+  })
 })
