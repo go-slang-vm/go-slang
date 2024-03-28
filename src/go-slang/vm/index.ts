@@ -13,18 +13,143 @@ import {
 } from './utils'
 import { Instruction } from './types'
 import { Thread } from './thread'
+import { numInstructions } from './constants'
 
 export class VM {
   heapInstance: Heap
-  PC: number
   threadQueue: Thread[]
   curThread: Thread
+  // builtins: builtin id is encoded in second byte
+  // [1 byte tag, 1 byte id, 3 bytes unused,
+  //  2 bytes #children, 1 byte unused]
+  // Note: #children is 0
+  builtins: { [key: string]: { tag: string; id: number; arity: number } } = {}
+  builtin_array: (() => number | void)[] = []
 
   constructor(heapsize_words: number) {
-    this.PC = 0
-    this.heapInstance = new Heap(heapsize_words)
-    this.curThread = new Thread(globalState.OS, globalState.E, globalState.RTS, this.PC, true)
-    this.threadQueue = [this.curThread]
+    this.heapInstance = new Heap()
+    let i = 0
+    for (const key in this.builtin_implementation) {
+      this.builtins[key] = { tag: 'BUILTIN', id: i, arity: this.builtin_implementation[key].length }
+      this.builtin_array[i++] = this.builtin_implementation[key]
+    }
+    this.initialise_machine(heapsize_words)
+    this.curThread = new Thread(globalState.OS, globalState.E, globalState.RTS, 0, true)
+    this.threadQueue = []
+  }
+
+  // in this machine, the builtins take their
+  // arguments directly from the operand stack,
+  // to save the creation of an intermediate
+  // argument array
+  builtin_implementation: { [key: string]: () => number | void } = {
+    sleep: () => {
+      const address = pop(globalState.OS)
+      let steps: number = this.address_to_TS_value(address)
+      this.curThread.sleepCount += steps
+      // if the thread sleeps >= number of instructions allocated to it
+      if (this.curThread.sleepCount >= numInstructions) {
+        this.curThread.sleepCount -= numInstructions
+        // we need to swap out the current thread
+        this.contextSwitch()
+      } else {
+        // otherwise, we can simply decrement the number of instructions remaining
+        this.curThread.instructionsRemaining -= steps
+      }
+    },
+    is_number: () =>
+      this.heapInstance.is_Number(pop(globalState.OS))
+        ? this.heapInstance.True
+        : this.heapInstance.False,
+    is_boolean: () =>
+      this.heapInstance.is_Boolean(pop(globalState.OS))
+        ? this.heapInstance.True
+        : this.heapInstance.False,
+    is_undefined: () =>
+      this.heapInstance.is_Undefined(pop(globalState.OS))
+        ? this.heapInstance.True
+        : this.heapInstance.False,
+    is_string: () =>
+      this.heapInstance.is_String(pop(globalState.OS))
+        ? this.heapInstance.True
+        : this.heapInstance.False,
+    is_function: () =>
+      this.heapInstance.is_Closure(pop(globalState.OS))
+        ? this.heapInstance.True
+        : this.heapInstance.False,
+    pair: () => {
+      const tl = pop(globalState.OS)
+      const hd = pop(globalState.OS)
+      return this.heapInstance.heap_allocate_Pair(hd, tl)
+    },
+    is_pair: () =>
+      this.heapInstance.is_Pair(pop(globalState.OS))
+        ? this.heapInstance.True
+        : this.heapInstance.False,
+    head: () => this.heapInstance.heap_get_child(pop(globalState.OS), 0),
+    tail: () => this.heapInstance.heap_get_child(pop(globalState.OS), 1),
+    is_null: () =>
+      this.heapInstance.is_Null(pop(globalState.OS))
+        ? this.heapInstance.True
+        : this.heapInstance.False,
+    set_head: () => {
+      const val = pop(globalState.OS)
+      const p = pop(globalState.OS)
+      this.heapInstance.heap_set_child(p, 0, val)
+    },
+    set_tail: () => {
+      const val = pop(globalState.OS)
+      const p = pop(globalState.OS)
+      this.heapInstance.heap_set_child(p, 1, val)
+    }
+  }
+
+  allocate_builtin_frame(): number {
+    const builtin_values = Object.values(this.builtins)
+    const frame_address = this.heapInstance.heap_allocate_Frame(builtin_values.length)
+    for (let i = 0; i < builtin_values.length; i++) {
+      const builtin = builtin_values[i]
+      this.heapInstance.heap_set_child(
+        frame_address,
+        i,
+        this.heapInstance.heap_allocate_Builtin(builtin.id)
+      )
+    }
+    return frame_address
+  }
+
+  // set up registers, including free list
+  initialise_machine(heapsize_words: number) {
+    // GLOBAL VARIABLES
+    globalState.OS = []
+    globalState.RTS = []
+    globalState.ALLOCATING = []
+
+    this.heapInstance.heap = this.heapInstance.heap_make(heapsize_words)
+    this.heapInstance.heap_size = heapsize_words
+
+    // initialize free list:
+    // every free node carries the address
+    // of the next free node as its first word
+    let i = 0
+    for (
+      i = 0;
+      i <= heapsize_words - this.heapInstance.node_size;
+      i = i + this.heapInstance.node_size
+    ) {
+      this.heapInstance.heap_set(i, i + this.heapInstance.node_size)
+    }
+    // the empty free list is represented by -1
+    this.heapInstance.heap_set(i - this.heapInstance.node_size, -1)
+    this.heapInstance.free = 0
+    this.heapInstance.allocate_literal_values()
+    const builtins_frame = this.allocate_builtin_frame()
+    const constants_frame = this.heapInstance.allocate_constant_frame()
+    globalState.E = this.heapInstance.heap_allocate_Environment(0)
+    globalState.E = this.heapInstance.heap_Environment_extend(builtins_frame, globalState.E)
+    globalState.E = this.heapInstance.heap_Environment_extend(constants_frame, globalState.E)
+
+    this.heapInstance.heap_bottom = this.heapInstance.free
   }
 
   address_to_TS_value = (x: number): any =>
@@ -105,7 +230,7 @@ export class VM {
     this.TS_value_to_address(this.unop_microcode[op](this.address_to_TS_value(v)))
 
   apply_builtin = (builtin_id: number) => {
-    const result = this.heapInstance.builtin_array[builtin_id]()
+    const result = this.builtin_array[builtin_id]()
     pop(globalState.OS) // pop fun
     push(globalState.OS, result)
   }
@@ -120,8 +245,11 @@ export class VM {
     BINOP: instr =>
       push(globalState.OS, this.apply_binop(instr.sym, pop(globalState.OS), pop(globalState.OS))),
     POP: _ => pop(globalState.OS),
-    JOF: instr => (this.PC = this.heapInstance.is_True(pop(globalState.OS)) ? this.PC : instr.addr),
-    GOTO: instr => (this.PC = instr.addr),
+    JOF: instr =>
+      (this.curThread.PC = this.heapInstance.is_True(pop(globalState.OS))
+        ? this.curThread.PC
+        : instr.addr),
+    GOTO: instr => (this.curThread.PC = instr.addr),
     ENTER_SCOPE: instr => {
       push(globalState.RTS, this.heapInstance.heap_allocate_Blockframe(globalState.E))
       const frame_address = this.heapInstance.heap_allocate_Frame(instr.num)
@@ -164,13 +292,16 @@ export class VM {
       for (let i = arity - 1; i >= 0; i--) {
         this.heapInstance.heap_set_child(new_frame, i, pop(globalState.OS))
       }
-      push(globalState.RTS, this.heapInstance.heap_allocate_Callframe(globalState.E, this.PC))
+      push(
+        globalState.RTS,
+        this.heapInstance.heap_allocate_Callframe(globalState.E, this.curThread.PC)
+      )
       pop(globalState.OS) // pop fun
       globalState.E = this.heapInstance.heap_Environment_extend(
         new_frame,
         this.heapInstance.heap_get_Closure_environment(fun)
       )
-      this.PC = new_PC
+      this.curThread.PC = new_PC
     },
     TAIL_CALL: instr => {
       const arity = instr.arity
@@ -189,17 +320,21 @@ export class VM {
         new_frame,
         this.heapInstance.heap_get_Closure_environment(fun)
       )
-      this.PC = new_PC
+      this.curThread.PC = new_PC
     },
     RESET: instr => {
       // keep popping...
       const top_frame = globalState.RTS.pop()!
+      if (top_frame === undefined) {
+        this.loadNextThread()
+        return
+      }
       if (this.heapInstance.is_Callframe(top_frame)) {
         // ...until top frame is a call frame
-        this.PC = this.heapInstance.heap_get_Callframe_pc(top_frame)
+        this.curThread.PC = this.heapInstance.heap_get_Callframe_pc(top_frame)
         globalState.E = this.heapInstance.heap_get_Callframe_environment(top_frame)
       } else {
-        this.PC--
+        this.curThread.PC--
       }
     },
     GOCALL: instr => {
@@ -218,7 +353,7 @@ export class VM {
           this.heapInstance.heap_set_child(newFrame, i, pop(globalState.OS))
         }
         // remove function from the stack
-        pop(globalState.OS)
+        // pop(globalState.OS)
         const newPC = this.heapInstance.heap_get_Closure_pc(fun)
         const newThread: Thread = new Thread(
           [],
@@ -242,20 +377,35 @@ export class VM {
       [...globalState.OS],
       globalState.E,
       [...globalState.RTS],
-      this.PC
+      this.curThread.PC,
+      this.curThread.isMainThread
     )
     this.threadQueue.push(curThread)
   }
 
   loadNextThread = () => {
-    const nextThread: Thread | undefined = this.threadQueue.shift()
+    let nextThread: Thread | undefined = this.threadQueue.shift()
+    while (nextThread && nextThread.sleepCount > 0) {
+      // if the thread sleeps for more than the number of instructions allocated to it
+      if (nextThread.sleepCount > numInstructions) {
+        nextThread.sleepCount -= numInstructions
+        // put the thread back to the end of the queue
+        this.threadQueue.push(nextThread)
+        nextThread = this.threadQueue.shift()
+      } else {
+        // otherwise, decrement the number of instructions remaining
+        nextThread.instructionsRemaining -= nextThread.sleepCount
+        // reset sleep count to 0
+        nextThread.sleepCount = 0
+      }
+    }
     if (!nextThread) {
       return undefined
     }
     globalState.OS = nextThread.OS
     globalState.RTS = nextThread.RTS
     globalState.E = nextThread.E
-    this.PC = nextThread.PC
+    this.curThread = nextThread
     return undefined
   }
 
@@ -269,13 +419,13 @@ export class VM {
 
   run(instrs: Instruction[]): any {
     // only break out of loop if we reach DONE on the main thread
-    while (!(instrs[this.PC].tag === 'DONE' && this.curThread.isMainThread)) {
+    while (!(instrs[this.curThread.PC].tag === 'DONE' && this.curThread.isMainThread)) {
       // if we reach DONE on a non-main thread, load next thread
-      if (instrs[this.PC].tag === 'DONE') {
+      if (instrs[this.curThread.PC].tag === 'DONE') {
         this.loadNextThread()
       }
       // this.print_OS('\noperands: ')
-      const instr = instrs[this.PC++]
+      const instr = instrs[this.curThread.PC++]
       this.microcode[instr.tag](instr)
       this.curThread.instructionsRemaining -= 1
       if (this.curThread.instructionsRemaining === 0) {
