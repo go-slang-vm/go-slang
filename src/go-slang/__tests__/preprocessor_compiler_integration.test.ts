@@ -242,4 +242,75 @@ describe('Basic preprocessor and compiler integration test', () => {
     const outputInstr: any[] = compile_program(postProcessedAst)
     expect(outputInstr).toStrictEqual(expectedInstr)
   })
+
+  test('basic test with reordering to show sideeffects can be reordered', async () => {
+    const program = `
+    func inc1() int {
+      Println(1)
+      return y
+    }
+    
+    func inc2() int {
+      Println(2)
+      return 2
+    }
+    
+    var x int = inc1()
+    var y int = inc2()
+    
+    func main() {
+
+    }
+          `
+
+    const expectedInstr = [ {"tag": "ENTER_SCOPE", "num": 5},
+  {"tag": "LDF", "arity": 0, "addr": 3},
+  {"tag": "GOTO", "addr": 11},
+  {"tag": "LD", "sym": "Println", "pos": [0, 0]},
+  {"tag": "LDC", "val": 1},
+  {"tag": "CALL", "arity": 1},
+  {"tag": "POP"},
+  {"tag": "LD", "sym": "y", "pos": [2, 3]},
+  {"tag": "RESET"},
+  {"tag": "LDC", "val": undefined},
+  {"tag": "RESET"},
+  {"tag": "ASSIGN", "pos": [2, 0]},
+  {"tag": "POP"},
+  {"tag": "LDF", "arity": 0, "addr": 15},
+  {"tag": "GOTO", "addr": 23},
+  {"tag": "LD", "sym": "Println", "pos": [0, 0]},
+  {"tag": "LDC", "val": 2},
+  {"tag": "CALL", "arity": 1},
+  {"tag": "POP"},
+  {"tag": "LDC", "val": 2},
+  {"tag": "RESET"},
+  {"tag": "LDC", "val": undefined},
+  {"tag": "RESET"},
+  {"tag": "ASSIGN", "pos": [2, 1]},
+  {"tag": "POP"},
+  {"tag": "LDF", "arity": 0, "addr": 27},
+  {"tag": "GOTO", "addr": 30},
+  {"tag": "LDC", "val": undefined},
+  {"tag": "LDC", "val": undefined},
+  {"tag": "RESET"},
+  {"tag": "ASSIGN", "pos": [2, 2]},
+  {"tag": "POP"},
+  {"tag": "LD", "sym": "inc2", "pos": [2, 1]},
+  {"tag": "CALL", "arity": 0},
+  {"tag": "ASSIGN", "pos": [2, 3]},
+  {"tag": "POP"},
+  {"tag": "LD", "sym": "inc1", "pos": [2, 0]},
+  {"tag": "CALL", "arity": 0},
+  {"tag": "ASSIGN", "pos": [2, 4]},
+  {"tag": "POP"},
+  {"tag": "LD", "sym": "main", "pos": [2, 2]},
+  {"tag": "CALL", "arity": 0},
+  {"tag": "EXIT_SCOPE"},
+  {"tag": "DONE"}];
+
+    const inputAst: ASTNode = parse(program);
+    const postProcessedAst: ASTNode = preprocess(inputAst);
+    const outputInstr: any[] = compile_program(postProcessedAst)
+    expect(outputInstr).toStrictEqual(expectedInstr)
+  })
 })

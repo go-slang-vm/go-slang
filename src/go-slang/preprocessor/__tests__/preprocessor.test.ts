@@ -533,4 +533,175 @@ describe('Basic compiler test', () => {
     expect(() => preprocess(inputAst)).not.toThrow("initialization cycle present");
     expect(outputAst).toStrictEqual(expectedAst);
   })
+
+  test("shadowed redeclaraction should not throw", async () => {
+    const program = `
+    func inc1() int {
+      Println(1)
+      return y
+    }
+    
+    func inc2() int {
+      Println(2)
+      var x int = 5
+      return x
+    }
+    
+    var x int = inc1()
+    var y int = inc2()
+    
+    func main() {
+
+    }
+          `;
+
+    const expectedAst ={
+      tag: 'blk',
+      body: {
+        tag: 'seq',
+        stmts: [
+          {
+            tag: 'fun',
+            sym: 'inc1',
+            prms: [],
+            body: {
+              tag: 'blk',
+              body: {
+                tag: 'seq',
+                stmts: [
+                  {
+                    tag: 'app',
+                    fun: { tag: 'nam', sym: 'Println' },
+                    args: [ { tag: 'lit', val: 1 } ],
+                    _arity: 1
+                  },
+                  {
+                    tag: 'ret',
+                    expr: [ { tag: 'nam', sym: 'y' } ],
+                    _arity: 1
+                  }
+                ]
+              }
+            },
+            _arity: 0,
+            paramTypes: [],
+            returnTypes: [ 'int' ]
+          },
+          {
+            tag: 'fun',
+            sym: 'inc2',
+            prms: [],
+            body: {
+              tag: 'blk',
+              body: {
+                tag: 'seq',
+                stmts: [
+                  {
+                    tag: 'app',
+                    fun: { tag: 'nam', sym: 'Println' },
+                    args: [ { tag: 'lit', val: 2 } ],
+                    _arity: 1
+                  },
+                  {
+                    tag: 'let',
+                    syms: { tag: 'idents', IDENTS: [ 'x' ] },
+                    assignments: { tag: 'exprlist', list: [ { tag: 'lit', val: 5 } ] },
+                    type: 'int'
+                  },
+                  {
+                    tag: 'ret',
+                    expr: [ { tag: 'nam', sym: 'x' } ],
+                    _arity: 1
+                  }
+                ]
+              }
+            },
+            _arity: 0,
+            paramTypes: [],
+            returnTypes: [ 'int' ]
+          },
+          {
+            tag: 'fun',
+            sym: 'main',
+            prms: [],
+            body: { tag: 'blk', body: { tag: 'seq', stmts: [] } },
+            _arity: 0,
+            paramTypes: [],
+            returnTypes: []
+          },
+          {
+            tag: 'let',
+            syms: { tag: 'idents', IDENTS: [ 'y' ] },
+            assignments: {
+              tag: 'exprlist',
+              list: [
+                {
+                  tag: 'app',
+                  fun: { tag: 'nam', sym: 'inc2' },
+                  args: [],
+                  _arity: 0
+                }
+              ]
+            },
+            type: 'int'
+          },
+          {
+            tag: 'let',
+            syms: { tag: 'idents', IDENTS: [ 'x' ] },
+            assignments: {
+              tag: 'exprlist',
+              list: [
+                {
+                  tag: 'app',
+                  fun: { tag: 'nam', sym: 'inc1' },
+                  args: [],
+                  _arity: 0
+                }
+              ]
+            },
+            type: 'int'
+          },
+          {
+            tag: 'app',
+            fun: { tag: 'nam', sym: 'main' },
+            args: [],
+            _arity: 0
+          }
+        ]
+      }
+    };
+
+    const inputAst: ASTNode = parse(program);
+    const outputAst: ASTNode = preprocess(inputAst);
+    expect(() => preprocess(inputAst)).not.toThrow("initialization cycle present");
+    expect(outputAst).toStrictEqual(expectedAst);
+  })
+
+  test("basic recursive cycle present with cyclic definition should throw", async () => {
+    const program = `
+    func recurse1(o int) int {
+      if o == 0 {
+        return y
+      }
+      return recurse2(o - 1)
+    }
+    
+    var x int = recurse1(4)
+    
+    func recurse2(t int) int {
+      if t == 0 {
+        return x
+      }
+      return recurse1(t - 1)
+    }
+    func main() {
+      Println(x)
+    }
+    
+    var y int = 1
+      `;
+
+    const inputAst: ASTNode = parse(program);
+    expect(() => preprocess(inputAst)).toThrow("initialization cycle present");
+  })
 })
