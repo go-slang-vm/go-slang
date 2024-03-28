@@ -245,9 +245,7 @@ export class VM {
       RTS: [...globalState.RTS],
       E: globalState.E,
       PC: this.PC,
-      // if context switch happens before expending all instructions, we do not reset the instructions remaining
-      // this is to prevent other threads from getting stuck
-      instructionsRemaining: this.instructionsRemaining > 0 ? this.instructionsRemaining : 5
+      instructionsRemaining: 5
     }
     this.threadQueue.push(curThread)
 
