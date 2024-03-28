@@ -92,12 +92,6 @@ describe('Basic compiler test', () => {
         tag: 'seq',
         stmts: [
           {
-            tag: 'let',
-            syms: { tag: 'idents', IDENTS: ['x'] },
-            assignments: { tag: 'exprlist', list: [{ tag: 'lit', val: 2 }] },
-            type: 'int'
-          },
-          {
             tag: 'fun',
             sym: 'main',
             prms: [],
@@ -118,6 +112,12 @@ describe('Basic compiler test', () => {
             _arity: 0,
             paramTypes: [],
             returnTypes: []
+          },
+          {
+            tag: 'let',
+            syms: { tag: 'idents', IDENTS: ['x'] },
+            assignments: { tag: 'exprlist', list: [{ tag: 'lit', val: 2 }] },
+            type: 'int'
           },
           {
             tag: 'let',
@@ -222,6 +222,27 @@ describe('Basic compiler test', () => {
         stmts: [
           {
             tag: 'fun',
+            sym: 'inc',
+            prms: [],
+            body: {
+              tag: 'blk',
+              body: {
+                tag: 'seq',
+                stmts: [
+                  {
+                    tag: 'ret',
+                    expr: [{ tag: 'nam', sym: 'y' }],
+                    _arity: 1
+                  }
+                ]
+              }
+            },
+            _arity: 0,
+            paramTypes: [],
+            returnTypes: []
+          },
+          {
+            tag: 'fun',
             sym: 'main',
             prms: [],
             body: {
@@ -247,27 +268,6 @@ describe('Basic compiler test', () => {
             syms: { tag: 'idents', IDENTS: ['y'] },
             assignments: { tag: 'exprlist', list: [{ tag: 'lit', val: 3 }] },
             type: 'int'
-          },
-          {
-            tag: 'fun',
-            sym: 'inc',
-            prms: [],
-            body: {
-              tag: 'blk',
-              body: {
-                tag: 'seq',
-                stmts: [
-                  {
-                    tag: 'ret',
-                    expr: [{ tag: 'nam', sym: 'y' }],
-                    _arity: 1
-                  }
-                ]
-              }
-            },
-            _arity: 0,
-            paramTypes: [],
-            returnTypes: []
           },
           {
             tag: 'let',
@@ -355,7 +355,6 @@ describe('Basic compiler test', () => {
     expect(() => preprocess(inputAst)).toThrow("redeclaration of x");
   })
 
-  // this test is broken for now and needs to be fixed
   test("basic recursive cycle present should not throw", async () => {
     const program = `
     func recurse1(o int) int {
@@ -377,7 +376,161 @@ describe('Basic compiler test', () => {
     var y int = 1
       `;
 
+    const expectedAst = {
+      tag: 'blk',
+      body: {
+        tag: 'seq',
+        stmts: [
+          {
+            tag: 'fun',
+            sym: 'recurse1',
+            prms: [ 'o' ],
+            body: {
+              tag: 'blk',
+              body: {
+                tag: 'seq',
+                stmts: [
+                  {
+                    tag: 'cond',
+                    pred: {
+                      tag: 'binop',
+                      sym: '==',
+                      frst: { tag: 'nam', sym: 'o' },
+                      scnd: { tag: 'lit', val: 0 }
+                    },
+                    cons: {
+                      tag: 'blk',
+                      body: {
+                        tag: 'seq',
+                        stmts: [
+                          {
+                            tag: 'ret',
+                            expr: [ { tag: 'nam', sym: 'y' } ],
+                            _arity: 1
+                          }
+                        ]
+                      }
+                    },
+                    alt: { tag: 'blk', body: { tag: 'seq', stmts: [] } }
+                  },
+                  {
+                    tag: 'ret',
+                    expr: [
+                      {
+                        tag: 'app',
+                        fun: { tag: 'nam', sym: 'recurse2' },
+                        args: [
+                          {
+                            tag: 'binop',
+                            sym: '-',
+                            frst: { tag: 'nam', sym: 'o' },
+                            scnd: { tag: 'lit', val: 1 }
+                          }
+                        ],
+                        _arity: 1
+                      }
+                    ],
+                    _arity: 1
+                  }
+                ]
+              }
+            },
+            _arity: 1,
+            paramTypes: [ 'int' ],
+            returnTypes: [ 'int' ]
+          },
+          {
+            tag: 'fun',
+            sym: 'recurse2',
+            prms: [ 't' ],
+            body: {
+              tag: 'blk',
+              body: {
+                tag: 'seq',
+                stmts: [
+                  {
+                    tag: 'ret',
+                    expr: [
+                      {
+                        tag: 'app',
+                        fun: { tag: 'nam', sym: 'recurse1' },
+                        args: [
+                          {
+                            tag: 'binop',
+                            sym: '-',
+                            frst: { tag: 'nam', sym: 't' },
+                            scnd: { tag: 'lit', val: 1 }
+                          }
+                        ],
+                        _arity: 1
+                      }
+                    ],
+                    _arity: 1
+                  }
+                ]
+              }
+            },
+            _arity: 1,
+            paramTypes: [ 'int' ],
+            returnTypes: [ 'int' ]
+          },
+          {
+            tag: 'fun',
+            sym: 'main',
+            prms: [],
+            body: {
+              tag: 'blk',
+              body: {
+                tag: 'seq',
+                stmts: [
+                  {
+                    tag: 'app',
+                    fun: { tag: 'nam', sym: 'Println' },
+                    args: [ { tag: 'nam', sym: 'x' } ],
+                    _arity: 1
+                  }
+                ]
+              }
+            },
+            _arity: 0,
+            paramTypes: [],
+            returnTypes: []
+          },
+          {
+            tag: 'let',
+            syms: { tag: 'idents', IDENTS: [ 'y' ] },
+            assignments: { tag: 'exprlist', list: [ { tag: 'lit', val: 1 } ] },
+            type: 'int'
+          },
+          {
+            tag: 'let',
+            syms: { tag: 'idents', IDENTS: [ 'x' ] },
+            assignments: {
+              tag: 'exprlist',
+              list: [
+                {
+                  tag: 'app',
+                  fun: { tag: 'nam', sym: 'recurse1' },
+                  args: [ { tag: 'lit', val: 4 } ],
+                  _arity: 1
+                }
+              ]
+            },
+            type: 'int'
+          },
+          {
+            tag: 'app',
+            fun: { tag: 'nam', sym: 'main' },
+            args: [],
+            _arity: 0
+          }
+        ]
+      }
+    }
+
     const inputAst: ASTNode = parse(program);
+    const outputAst: ASTNode = preprocess(inputAst);
     expect(() => preprocess(inputAst)).not.toThrow("initialization cycle present");
+    expect(outputAst).toStrictEqual(expectedAst);
   })
 })
