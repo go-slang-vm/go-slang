@@ -27,6 +27,9 @@ export enum Tag {
     TYPE = "type",
     TYPELIST = "typelist",
     GO = "go",
+    RECV = "recv",
+    SEND = "send",
+    MAKE = "make",
 }
 
 export enum LOGOP {
@@ -64,6 +67,10 @@ export interface TypeListNode extends ASTNode {
 export interface TypeNode extends ASTNode {
     tag: Tag.TYPE;
     type: string;
+}
+
+export interface ChanTypeNode extends TypeNode {
+    typeOfChan: string;
 }
 export interface SignatureNode extends ASTNode {
     tag: Tag.SIG;
@@ -212,6 +219,12 @@ export interface GoStmtNode extends StmtNode {
     funcApp: FuncAppNode;
 }
 
+export interface SendStmtNode extends StmtNode {
+    tag: Tag.SEND;
+    frst: ExprNode;
+    scnd: ExprNode;
+}
+
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface ExpressionStmtNode extends StmtNode {}
 
@@ -259,9 +272,22 @@ export interface UnOpNode extends ExprNode, ExpressionStmtNode {
     frst: ExprNode;
 }
 
+export interface RecvExprNode extends ExprNode, ExpressionStmtNode {
+    tag: Tag.RECV;
+    sym: "<-";
+    frst: ExprNode;
+}
+
 export interface LogicalNode extends ExprNode, ExpressionStmtNode {
     tag: Tag.LOGOP;
     sym: LOGOP;
     frst: ExprNode;
     scnd: ExprNode;    
+}
+
+export interface MakeAppNode extends ExprNode, ExpressionStmtNode {
+    tag: Tag.MAKE;
+    chanType: string;
+    buffered: boolean;
+    capacity: number;
 }

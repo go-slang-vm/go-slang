@@ -66,6 +66,11 @@ type_
     | BOOL
     | STRING
     | FLOAT
+    | channelType
+    ;
+
+channelType
+    : CHAN type_
     ;
 
 //assignment
@@ -85,7 +90,8 @@ expressionStmt
     ;
 
 expression
-    : funcApp #FUNCAPP
+    : makeExpr #MAKEOP
+    | funcApp #FUNCAPP
     | unary_op = (MINUS | EXCLAMATION) expression #UNARYOP
     | expression bin_op = (DIV | STAR) expression #BINOP
     | expression bin_op = (PLUS | MINUS) expression #BINOP
@@ -100,6 +106,7 @@ expression
     | expression LOGICAL_AND expression #LOGOP
     | expression LOGICAL_OR expression #LOGOP
     | primaryExpr #PRIMARY
+    | RECEIVE expression #RECVOP
     ;
 
 primaryExpr
@@ -143,9 +150,20 @@ statement
 
 simpleStmt
     : assignment
+    | sendStmt
     | varDecl
     | funcDecl
     | expressionStmt
+    ;
+
+sendStmt
+    : channel = expression RECEIVE expression
+    ;
+
+// we only allow making channels for now so we make this very restrictive
+// if the comma and DECIMAL_LIT is not present, it is an unbuffered channel
+makeExpr
+    : MAKE L_PAREN channelType (COMMA DECIMAL_LIT)? R_PAREN
     ;
 
 expressionList

@@ -3,12 +3,14 @@
 
 import { ParseTreeVisitor } from "antlr4ts/tree/ParseTreeVisitor";
 
+import { MAKEOPContext } from "./SimpleParser";
 import { FUNCAPPContext } from "./SimpleParser";
 import { UNARYOPContext } from "./SimpleParser";
 import { BINOPContext } from "./SimpleParser";
 import { RELOPContext } from "./SimpleParser";
 import { LOGOPContext } from "./SimpleParser";
 import { PRIMARYContext } from "./SimpleParser";
+import { RECVOPContext } from "./SimpleParser";
 import { Global_scopeContext } from "./SimpleParser";
 import { ArgumentsContext } from "./SimpleParser";
 import { FuncAppContext } from "./SimpleParser";
@@ -21,6 +23,7 @@ import { ParameterDeclContext } from "./SimpleParser";
 import { BlockContext } from "./SimpleParser";
 import { VarDeclContext } from "./SimpleParser";
 import { Type_Context } from "./SimpleParser";
+import { ChannelTypeContext } from "./SimpleParser";
 import { AssignmentContext } from "./SimpleParser";
 import { Assign_opContext } from "./SimpleParser";
 import { ExpressionStmtContext } from "./SimpleParser";
@@ -32,6 +35,8 @@ import { LiteralContext } from "./SimpleParser";
 import { StatementListContext } from "./SimpleParser";
 import { StatementContext } from "./SimpleParser";
 import { SimpleStmtContext } from "./SimpleParser";
+import { SendStmtContext } from "./SimpleParser";
+import { MakeExprContext } from "./SimpleParser";
 import { ExpressionListContext } from "./SimpleParser";
 import { EosContext } from "./SimpleParser";
 import { IdentifierListContext } from "./SimpleParser";
@@ -51,6 +56,14 @@ import { GoStmtContext } from "./SimpleParser";
  * operations with no return type.
  */
 export interface SimpleParserVisitor<Result> extends ParseTreeVisitor<Result> {
+	/**
+	 * Visit a parse tree produced by the `MAKEOP`
+	 * labeled alternative in `SimpleParser.expression`.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	visitMAKEOP?: (ctx: MAKEOPContext) => Result;
+
 	/**
 	 * Visit a parse tree produced by the `FUNCAPP`
 	 * labeled alternative in `SimpleParser.expression`.
@@ -98,6 +111,14 @@ export interface SimpleParserVisitor<Result> extends ParseTreeVisitor<Result> {
 	 * @return the visitor result
 	 */
 	visitPRIMARY?: (ctx: PRIMARYContext) => Result;
+
+	/**
+	 * Visit a parse tree produced by the `RECVOP`
+	 * labeled alternative in `SimpleParser.expression`.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	visitRECVOP?: (ctx: RECVOPContext) => Result;
 
 	/**
 	 * Visit a parse tree produced by `SimpleParser.global_scope`.
@@ -184,6 +205,13 @@ export interface SimpleParserVisitor<Result> extends ParseTreeVisitor<Result> {
 	visitType_?: (ctx: Type_Context) => Result;
 
 	/**
+	 * Visit a parse tree produced by `SimpleParser.channelType`.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	visitChannelType?: (ctx: ChannelTypeContext) => Result;
+
+	/**
 	 * Visit a parse tree produced by `SimpleParser.assignment`.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -259,6 +287,20 @@ export interface SimpleParserVisitor<Result> extends ParseTreeVisitor<Result> {
 	 * @return the visitor result
 	 */
 	visitSimpleStmt?: (ctx: SimpleStmtContext) => Result;
+
+	/**
+	 * Visit a parse tree produced by `SimpleParser.sendStmt`.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	visitSendStmt?: (ctx: SendStmtContext) => Result;
+
+	/**
+	 * Visit a parse tree produced by `SimpleParser.makeExpr`.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	visitMakeExpr?: (ctx: MakeExprContext) => Result;
 
 	/**
 	 * Visit a parse tree produced by `SimpleParser.expressionList`.

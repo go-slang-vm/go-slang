@@ -69,6 +69,7 @@ RETURN      : 'return' -> mode(NLSEMI);
 VAR         : 'var';
 TRUE        : 'true';
 FALSE       : 'false';
+MAKE        : 'make';
 
 // types
 INT : 'int';
