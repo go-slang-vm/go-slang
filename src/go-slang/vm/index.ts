@@ -43,6 +43,11 @@ export class VM {
   // to save the creation of an intermediate
   // argument array
   builtin_implementation: { [key: string]: () => number | void } = {
+    Println: () => {
+      const address = pop(globalState.OS)
+      const value = this.address_to_TS_value(address)
+      console.log({ value })
+    },
     sleep: () => {
       const address = pop(globalState.OS)
       // before switching threads, we complete the apply_builtin() function by popping fun off the stack and pushing undefined
