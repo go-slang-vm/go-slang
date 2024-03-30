@@ -13,13 +13,13 @@ import {
 } from './utils'
 import { Instruction } from './types'
 import { Thread } from './thread'
-import { numInstructions } from './constants'
 
 export class VM {
   heapInstance: Heap
   threadQueue: Thread[]
   curThread: Thread
   lastInstructionIndex: number
+  stepsCount: number // a global counter to keep track of number of steps executed by the VM
   // builtins: builtin id is encoded in second byte
   // [1 byte tag, 1 byte id, 3 bytes unused,
   //  2 bytes #children, 1 byte unused]
@@ -56,15 +56,7 @@ export class VM {
       push(globalState.OS, undefined)
       const steps: number = this.address_to_TS_value(address)
       this.curThread.sleepCount += steps
-      // if the thread sleeps >= number of instructions allocated to it
-      if (this.curThread.sleepCount >= numInstructions) {
-        this.curThread.sleepCount -= numInstructions
-        // we need to swap out the current thread
-        this.contextSwitch()
-      } else {
-        // otherwise, we can simply decrement the number of instructions remaining
-        this.curThread.instructionsRemaining -= steps
-      }
+      this.handleSleepingThread()
     },
     is_number: () =>
       this.heapInstance.is_Number(pop(globalState.OS))
@@ -395,27 +387,31 @@ export class VM {
       globalState.E,
       [...globalState.RTS],
       this.curThread.PC,
-      this.curThread.isMainThread
+      this.curThread.isMainThread,
+      this.stepsCount
     )
     this.threadQueue.push(curThread)
   }
 
+  handleSleepingThread = () => {
+    const timeSlept = this.stepsCount - this.curThread.sleptAt
+    // if the thread sleeps for more than the amount of time that has passed
+    if (this.curThread.sleepCount >= timeSlept) {
+      this.curThread.sleepCount -= timeSlept
+      // update the time the thread slept at
+      this.curThread.sleptAt = this.stepsCount
+      // swap out the current thread
+      this.contextSwitch()
+    } else {
+      // otherwise, decrement the number of instructions remaining
+      this.curThread.stepsLeft -= this.curThread.sleepCount
+      // reset sleep count to 0
+      this.curThread.sleepCount = 0
+    }
+  }
+
   loadNextThread = () => {
     let nextThread: Thread | undefined = this.threadQueue.shift()
-    while (nextThread && nextThread.sleepCount > 0) {
-      // if the thread sleeps for more than the number of instructions allocated to it
-      if (nextThread.sleepCount > numInstructions) {
-        nextThread.sleepCount -= numInstructions
-        // put the thread back to the end of the queue
-        this.threadQueue.push(nextThread)
-        nextThread = this.threadQueue.shift()
-      } else {
-        // otherwise, decrement the number of instructions remaining
-        nextThread.instructionsRemaining -= nextThread.sleepCount
-        // reset sleep count to 0
-        nextThread.sleepCount = 0
-      }
-    }
     if (!nextThread) {
       return undefined
     }
@@ -432,6 +428,9 @@ export class VM {
 
     // load next thread
     this.loadNextThread()
+
+    // ensure that the current thread is not sleeping
+    this.handleSleepingThread()
   }
 
   run(instrs: Instruction[]): any {
@@ -448,8 +447,9 @@ export class VM {
       // this.print_OS('\noperands: ')
       const instr = instrs[this.curThread.PC++]
       this.microcode[instr.tag](instr)
-      this.curThread.instructionsRemaining -= 1
-      if (this.curThread.instructionsRemaining === 0) {
+      this.curThread.stepsLeft -= 1
+      this.stepsCount += 1
+      if (this.curThread.stepsLeft === 0) {
         this.contextSwitch()
       }
     }
