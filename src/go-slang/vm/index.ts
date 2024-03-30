@@ -13,7 +13,7 @@ import {
 } from './utils'
 import { Instruction } from './types'
 import { Thread } from './thread'
-import { Channel_tag } from './constants'
+import { Channel_tag, numInstructions } from './constants'
 import { Channel } from './channel'
 
 export class VM {
@@ -22,7 +22,7 @@ export class VM {
   threadQueue: Thread[]
   curThread: Thread
   lastInstructionIndex: number
-  stepsCount: number // a global counter to keep track of number of steps executed by the VM
+  globalTime: number // a global counter to keep track of number of steps executed by the VM
   // builtins: builtin id is encoded in second byte
   // [1 byte tag, 1 byte id, 3 bytes unused,
   //  2 bytes #children, 1 byte unused]
@@ -38,9 +38,18 @@ export class VM {
       this.builtin_array[i++] = this.builtin_implementation[key]
     }
     this.initialise_machine(heapsize_words)
-    this.curThread = new Thread(globalState.OS, globalState.E, globalState.RTS, 0, true)
+    this.curThread = new Thread(
+      globalState.OS,
+      globalState.E,
+      globalState.RTS,
+      0, // PC
+      0, // wakeTime
+      numInstructions, // sleepStartTime
+      true
+    )
     this.threadQueue = []
     this.channelArray = []
+    this.globalTime = 0
   }
 
   // in this machine, the builtins take their
@@ -59,8 +68,19 @@ export class VM {
       pop(globalState.OS) // pop fun
       push(globalState.OS, undefined)
       const steps: number = this.address_to_TS_value(address)
-      this.curThread.sleepCount += steps
-      this.handleSleepingThread()
+      this.curThread.sleepEndTime = this.globalTime + steps
+
+      // if the current thread has slept past the time allocated to it
+      if (this.curThread.sleepEndTime >= this.curThread.sleepStartTime) {
+        // while the current thread is sleeping
+        while (this.curThread.sleepEndTime >= this.curThread.sleepStartTime) {
+          // swap out the current thread
+          this.contextSwitch()
+        }
+      } else {
+        // otherwise, we fast-forward globalTime by the number of steps the current thread is supposed to sleep
+        this.globalTime = this.curThread.sleepEndTime
+      }
     },
     is_number: () =>
       this.heapInstance.is_Number(pop(globalState.OS))
@@ -163,25 +183,25 @@ export class VM {
         ? true
         : false
       : this.heapInstance.is_Number(x)
-        ? this.heapInstance.heap_get(x + 1)
-        : this.heapInstance.is_Undefined(x)
-          ? undefined
-          : this.heapInstance.is_Unassigned(x)
-            ? '<unassigned>'
-            : this.heapInstance.is_Null(x)
-              ? null
-              : this.heapInstance.is_String(x)
-                ? this.heapInstance.heap_get_string(x)
-                : this.heapInstance.is_Pair(x)
-                  ? [
-                    this.address_to_TS_value(this.heapInstance.heap_get_child(x, 0)),
-                    this.address_to_TS_value(this.heapInstance.heap_get_child(x, 1))
-                  ]
-                  : this.heapInstance.is_Closure(x)
-                    ? '<closure>'
-                    : this.heapInstance.is_Builtin(x)
-                      ? '<builtin>'
-                      : 'unknown word tag: ' + word_to_string(x)
+      ? this.heapInstance.heap_get(x + 1)
+      : this.heapInstance.is_Undefined(x)
+      ? undefined
+      : this.heapInstance.is_Unassigned(x)
+      ? '<unassigned>'
+      : this.heapInstance.is_Null(x)
+      ? null
+      : this.heapInstance.is_String(x)
+      ? this.heapInstance.heap_get_string(x)
+      : this.heapInstance.is_Pair(x)
+      ? [
+          this.address_to_TS_value(this.heapInstance.heap_get_child(x, 0)),
+          this.address_to_TS_value(this.heapInstance.heap_get_child(x, 1))
+        ]
+      : this.heapInstance.is_Closure(x)
+      ? '<closure>'
+      : this.heapInstance.is_Builtin(x)
+      ? '<builtin>'
+      : 'unknown word tag: ' + word_to_string(x)
 
   TS_value_to_address = (x: any): string | number =>
     is_boolean(x)
@@ -189,14 +209,14 @@ export class VM {
         ? this.heapInstance.True
         : this.heapInstance.False
       : is_number(x)
-        ? this.heapInstance.heap_allocate_Number(x)
-        : is_undefined(x)
-          ? this.heapInstance.Undefined
-          : is_null(x)
-            ? this.heapInstance.Null
-            : is_string(x)
-              ? this.heapInstance.heap_allocate_String(x)
-              : 'unknown word tag: ' + word_to_string(x)
+      ? this.heapInstance.heap_allocate_Number(x)
+      : is_undefined(x)
+      ? this.heapInstance.Undefined
+      : is_null(x)
+      ? this.heapInstance.Null
+      : is_string(x)
+      ? this.heapInstance.heap_allocate_String(x)
+      : 'unknown word tag: ' + word_to_string(x)
 
   // ********
   // **********************
@@ -236,6 +256,7 @@ export class VM {
 
   apply_builtin = (builtin_id: number) => {
     const result = this.builtin_array[builtin_id]()
+
     // workaround: only pop and push if builtin is not sleep
     // sleep is a special case because threads might be swapped out when it is called
     if (this.builtins['sleep'].id !== builtin_id) {
@@ -255,9 +276,9 @@ export class VM {
       push(globalState.OS, this.apply_binop(instr.sym, pop(globalState.OS), pop(globalState.OS))),
     POP: _ => pop(globalState.OS),
     JOF: instr =>
-    (this.curThread.PC = this.heapInstance.is_True(pop(globalState.OS))
-      ? this.curThread.PC
-      : instr.addr),
+      (this.curThread.PC = this.heapInstance.is_True(pop(globalState.OS))
+        ? this.curThread.PC
+        : instr.addr),
     GOTO: instr => (this.curThread.PC = instr.addr),
     ENTER_SCOPE: instr => {
       push(globalState.RTS, this.heapInstance.heap_allocate_Blockframe(globalState.E))
@@ -375,7 +396,9 @@ export class VM {
             this.heapInstance.heap_get_Closure_environment(fun)
           ),
           newRTS,
-          newPC
+          newPC,
+          -1, // to denote that the thread has never woken up
+          -1 // if the thread has never woken up, it cannot have a sleep start time
         )
         this.threadQueue.push(newThread)
         return
@@ -385,80 +408,85 @@ export class VM {
     },
 
     MAKE: instr => {
-      const idx = this.channelArray.length;
-      this.createNewChannel(instr.capacity, idx);
-      const addr = this.heapInstance.heap_allocate_Channel(instr.capacity, instr.isBuffered, instr.elemType, idx);
-      push(this.curThread.OS, addr);
+      const idx = this.channelArray.length
+      this.createNewChannel(instr.capacity, idx)
+      const addr = this.heapInstance.heap_allocate_Channel(
+        instr.capacity,
+        instr.isBuffered,
+        instr.elemType,
+        idx
+      )
+      push(this.curThread.OS, addr)
     },
 
     SEND: instr => {
       //OS top should have the address of the channel
-      const channel = peek(this.curThread.OS, 0);
+      const channel = peek(this.curThread.OS, 0)
       if (this.heapInstance.heap_get_tag(channel) !== Channel_tag) {
-        throw Error("calling channel operations on non channel");
+        throw Error('calling channel operations on non channel')
       }
 
       // this is for buffered Channels
-      const counter = this.heapInstance.heap_get_channel_counter(channel);
-      const capacity = this.heapInstance.heap_get_channel_capacity(channel);
+      const counter = this.heapInstance.heap_get_channel_counter(channel)
+      const capacity = this.heapInstance.heap_get_channel_capacity(channel)
       if (counter == capacity) {
         // retry
-        this.curThread.PC--;
-        this.contextSwitch();
+        this.curThread.PC--
+        this.contextSwitch()
       } else {
-        this.curThread.OS.pop();
+        this.curThread.OS.pop()
         // put val in the queue
-        const val = this.curThread.OS.pop();
-        const semId = this.heapInstance.heap_get_channel_idx(channel);
-        this.addItemToChannel(semId, val as number);
-        //increment counter  
-        this.heapInstance.heap_set_channel_counter(channel, counter + 1);
+        const val = this.curThread.OS.pop()
+        const semId = this.heapInstance.heap_get_channel_idx(channel)
+        this.addItemToChannel(semId, val as number)
+        //increment counter
+        this.heapInstance.heap_set_channel_counter(channel, counter + 1)
       }
     },
 
     RECV: instr => {
       //OS top should have the address of the channel
-      const channel = peek(this.curThread.OS, 0);
+      const channel = peek(this.curThread.OS, 0)
       if (this.heapInstance.heap_get_tag(channel) !== Channel_tag) {
-        throw Error("calling channel operations on non channel");
+        throw Error('calling channel operations on non channel')
       }
 
       // this is for buffered Channels
-      const counter = this.heapInstance.heap_get_channel_counter(channel);
-      console.log("counter: " + counter);
+      const counter = this.heapInstance.heap_get_channel_counter(channel)
+      console.log('counter: ' + counter)
       if (counter == 0) {
         // retry
-        this.curThread.PC--;
-        this.contextSwitch();
+        this.curThread.PC--
+        this.contextSwitch()
       } else {
-        this.curThread.OS.pop();
+        this.curThread.OS.pop()
         // read val from the channel
-        const semId = this.heapInstance.heap_get_channel_idx(channel);
-        const val = this.getItemFromChannel(semId);
+        const semId = this.heapInstance.heap_get_channel_idx(channel)
+        const val = this.getItemFromChannel(semId)
         // push val onto OS
-        push(this.curThread.OS, val);
+        push(this.curThread.OS, val)
         // decrement counter
-        this.heapInstance.heap_set_channel_counter(channel, counter - 1);
+        this.heapInstance.heap_set_channel_counter(channel, counter - 1)
       }
     }
   }
 
   createNewChannel(capacity: number, idx: number) {
-    this.channelArray.push(new Channel(idx, capacity));
+    this.channelArray.push(new Channel(idx, capacity))
   }
 
   addItemToChannel(idx: number, val: number) {
-    if(idx >= this.channelArray.length) {
-      throw new Error("adding to non existent channel");
+    if (idx >= this.channelArray.length) {
+      throw new Error('adding to non existent channel')
     }
-    this.channelArray[idx].push(val);
+    this.channelArray[idx].push(val)
   }
 
   getItemFromChannel(idx: number): number {
-    if(idx >= this.channelArray.length) {
-      throw new Error("popping from non existent channel");
+    if (idx >= this.channelArray.length) {
+      throw new Error('popping from non existent channel')
     }
-    return this.channelArray[idx].pop();
+    return this.channelArray[idx].pop()
   }
 
   saveThread = () => {
@@ -467,34 +495,20 @@ export class VM {
       globalState.E,
       [...globalState.RTS],
       this.curThread.PC,
-      this.curThread.isMainThread,
-      this.stepsCount
+      this.curThread.wakeTime,
+      this.curThread.sleepStartTime,
+      this.curThread.isMainThread
     )
     this.threadQueue.push(curThread)
   }
 
-  handleSleepingThread = () => {
-    const timeSlept = this.stepsCount - this.curThread.sleptAt
-    // if the thread sleeps for more than the amount of time that has passed
-    if (this.curThread.sleepCount >= timeSlept) {
-      this.curThread.sleepCount -= timeSlept
-      // update the time the thread slept at
-      this.curThread.sleptAt = this.stepsCount
-      // swap out the current thread
-      this.contextSwitch()
-    } else {
-      // otherwise, decrement the number of instructions remaining
-      this.curThread.stepsLeft -= this.curThread.sleepCount
-      // reset sleep count to 0
-      this.curThread.sleepCount = 0
-    }
-  }
-
   loadNextThread = () => {
-    let nextThread: Thread | undefined = this.threadQueue.shift()
+    const nextThread: Thread | undefined = this.threadQueue.shift()
     if (!nextThread) {
       return undefined
     }
+    nextThread.wakeTime = this.globalTime
+    nextThread.sleepStartTime = this.globalTime + numInstructions
     globalState.OS = nextThread.OS
     globalState.RTS = nextThread.RTS
     globalState.E = nextThread.E
@@ -508,9 +522,6 @@ export class VM {
 
     // load next thread
     this.loadNextThread()
-
-    // ensure that the current thread is not sleeping
-    this.handleSleepingThread()
   }
 
   run(instrs: Instruction[]): any {
@@ -527,10 +538,12 @@ export class VM {
       // this.print_OS('\noperands: ')
       const instr = instrs[this.curThread.PC++]
       this.microcode[instr.tag](instr)
-      this.curThread.stepsLeft -= 1
-      this.stepsCount += 1
-      if (this.curThread.stepsLeft === 0) {
+      this.globalTime += 1
+      if (this.globalTime === this.curThread.sleepStartTime) {
         this.contextSwitch()
+      } else if (this.globalTime > this.curThread.sleepStartTime) {
+        console.log({ erroneousThread: this.curThread })
+        throw new Error(`FATAL! This is not possible. Throwing error to prevent infinite loop.`)
       }
     }
     return this.address_to_TS_value(peek(globalState.OS, 0))
