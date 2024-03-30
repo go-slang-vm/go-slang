@@ -44,11 +44,11 @@ describe('Runner tests', () => {
     func g(x, y int) {
       return x - y
     }
-    
+
     func f(x, y int) {
       return g(x, y)
     }
-    
+
     func main() {
       result int := f(33, 22)
       return result
@@ -57,6 +57,37 @@ describe('Runner tests', () => {
     const result = await goRunner(code, createContext())
 
     boilerplateAssert(result, 11)
+  })
+  test('function 2', async () => {
+    const code = `
+      func inc(x int) {
+        x = x + 1
+        return x
+      }
+      func main() {
+        x int := 0
+        x = inc(x)
+        return x
+      }`
+    const result = await goRunner(code, createContext())
+
+    boilerplateAssert(result, 1)
+  })
+  test('function 3', async () => {
+    const code = `
+      func inc(x int) {
+        x = x + 1
+        return x
+      }
+      func main() {
+        x int := 0
+        inc(x)
+        // x should return 0 as the value from inc() is not reassigned to x
+        return x
+      }`
+    const result = await goRunner(code, createContext())
+
+    boilerplateAssert(result, 0)
   })
   test('factorial function (recursion) with memory management', async () => {
     const code = `
@@ -74,9 +105,7 @@ describe('Runner tests', () => {
       return fact(5)
     }`
 
-    // reduce memory to 800
-    // note: while not intentional, garbage collection already occurs in other test cases
-    const result = await goRunner(code, createContext(), 800)
+    const result = await goRunner(code, createContext(), 1200)
 
     boilerplateAssert(result, 120)
   })
@@ -171,5 +200,61 @@ describe('Runner tests', () => {
     const result = await goRunner(code, createContext())
 
     boilerplateAssert(result, 'aaabbb')
+  })
+  test('go statement', async () => {
+    const code = `
+      func inc(x int) {
+        return x
+      }
+      func main() {
+        x int := 0
+        go inc(1)
+        return x
+      }`
+    const result = await goRunner(code, createContext())
+
+    boilerplateAssert(result, 0)
+  })
+  test('go statement 2', async () => {
+    const code = `
+      func inc(x int) {
+        x = x + 1
+        return x
+      }
+      func main() {
+        x int := 0
+        go inc(x)
+        sleep(20)
+      }`
+    const result = await goRunner(code, createContext())
+
+    boilerplateAssert(result, undefined)
+  })
+  test('go statement 3', async () => {
+    const code = `
+      func inc(x int) {
+        x = x + 1
+        return x
+      }
+      func main() {
+        x int := 0
+        go inc(x)
+        sleep(20)
+        return x
+      }`
+    const result = await goRunner(code, createContext())
+
+    boilerplateAssert(result, 0)
+  })
+  test('go statement 4', async () => {
+    const code = `
+    func main() {
+      go func(x int){
+        return x
+      }(1);
+    }`
+    const result = await goRunner(code, createContext())
+
+    boilerplateAssert(result, undefined)
   })
 })

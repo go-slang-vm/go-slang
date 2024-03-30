@@ -1,5 +1,5 @@
 import { globalState } from './globals'
-import { hashString, pop } from './utils'
+import { hashString } from './utils'
 import {
   False_tag,
   True_tag,
@@ -18,7 +18,7 @@ import {
 } from './constants'
 
 export class Heap {
-  private heap_size: number
+  heap_size: number
   private word_size = 8
   private size_offset = 5
   private mark_bit = 7
@@ -35,22 +35,9 @@ export class Heap {
   node_size = 20
   free: number
   heap_bottom: number
-  // builtins: builtin id is encoded in second byte
-  // [1 byte tag, 1 byte id, 3 bytes unused,
-  //  2 bytes #children, 1 byte unused]
-  // Note: #children is 0
-  builtins: { [key: string]: { tag: string; id: number; arity: number } } = {}
-  builtin_array: (() => number | void)[] = []
 
-  constructor(heapsize_words: number) {
+  constructor() {
     this.stringPool = {}
-    let i = 0
-    for (const key in this.builtin_implementation) {
-      this.builtins[key] = { tag: 'BUILTIN', id: i, arity: this.builtin_implementation[key].length }
-      this.builtin_array[i++] = this.builtin_implementation[key]
-    }
-
-    this.initialise_heap(heapsize_words)
   }
 
   get_string_pool_size = () => Object.keys(this.stringPool).length
@@ -87,47 +74,6 @@ export class Heap {
   }
 
   heap_get_Builtin_id = (address: number): number => this.heap_get_byte_at_offset(address, 1)
-
-  // in this machine, the builtins take their
-  // arguments directly from the operand stack,
-  // to save the creation of an intermediate
-  // argument array
-  builtin_implementation: { [key: string]: () => number | void } = {
-    is_number: () => (this.is_Number(pop(globalState.OS)) ? this.True : this.False),
-    is_boolean: () => (this.is_Boolean(pop(globalState.OS)) ? this.True : this.False),
-    is_undefined: () => (this.is_Undefined(pop(globalState.OS)) ? this.True : this.False),
-    is_string: () => (this.is_String(pop(globalState.OS)) ? this.True : this.False),
-    is_function: () => (this.is_Closure(pop(globalState.OS)) ? this.True : this.False),
-    pair: () => {
-      const tl = pop(globalState.OS)
-      const hd = pop(globalState.OS)
-      return this.heap_allocate_Pair(hd, tl)
-    },
-    is_pair: () => (this.is_Pair(pop(globalState.OS)) ? this.True : this.False),
-    head: () => this.heap_get_child(pop(globalState.OS), 0),
-    tail: () => this.heap_get_child(pop(globalState.OS), 1),
-    is_null: () => (this.is_Null(pop(globalState.OS)) ? this.True : this.False),
-    set_head: () => {
-      const val = pop(globalState.OS)
-      const p = pop(globalState.OS)
-      this.heap_set_child(p, 0, val)
-    },
-    set_tail: () => {
-      const val = pop(globalState.OS)
-      const p = pop(globalState.OS)
-      this.heap_set_child(p, 1, val)
-    }
-  }
-
-  allocate_builtin_frame(): number {
-    const builtin_values = Object.values(this.builtins)
-    const frame_address = this.heap_allocate_Frame(builtin_values.length)
-    for (let i = 0; i < builtin_values.length; i++) {
-      const builtin = builtin_values[i]
-      this.heap_set_child(frame_address, i, this.heap_allocate_Builtin(builtin.id))
-    }
-    return frame_address
-  }
 
   allocate_constant_frame(): number {
     const constants = {
@@ -443,35 +389,5 @@ export class Heap {
     // heap set is used for retrieving the next free node
     this.heap_set(node, this.free)
     this.free = node
-  }
-
-  // set up registers, including free list
-  initialise_heap(heapsize_words: number) {
-    // GLOBAL VARIABLES
-    globalState.OS = []
-    globalState.RTS = []
-    globalState.ALLOCATING = []
-
-    this.heap = this.heap_make(heapsize_words)
-    this.heap_size = heapsize_words
-
-    // initialize free list:
-    // every free node carries the address
-    // of the next free node as its first word
-    let i = 0
-    for (i = 0; i <= heapsize_words - this.node_size; i = i + this.node_size) {
-      this.heap_set(i, i + this.node_size)
-    }
-    // the empty free list is represented by -1
-    this.heap_set(i - this.node_size, -1)
-    this.free = 0
-    this.allocate_literal_values()
-    const builtins_frame = this.allocate_builtin_frame()
-    const constants_frame = this.allocate_constant_frame()
-    globalState.E = this.heap_allocate_Environment(0)
-    globalState.E = this.heap_Environment_extend(builtins_frame, globalState.E)
-    globalState.E = this.heap_Environment_extend(constants_frame, globalState.E)
-
-    this.heap_bottom = this.free
   }
 }

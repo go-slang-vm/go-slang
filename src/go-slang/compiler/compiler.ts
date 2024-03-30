@@ -79,7 +79,7 @@ const value_index = (frame: Frame, x: string): number => {
 // compile-time frames only need synbols (keys), no values
 
 //TODO: make sure to update this with more builtins for Go
-const builtin_compile_frame: Frame = ["Println", "sleep"];
+const builtin_compile_frame: Frame = ['Println', 'sleep']
 
 //TODO: make sure to update this with more constants for Go
 const constant_compile_frame: Frame = ['nil']
@@ -255,12 +255,9 @@ const compile_comp = {
     if (locals.length > 0) {
       instrs[wc++] = { tag: 'ENTER_SCOPE', num: locals.length }
       // extend compile time environment only if there are locals
-      ce = compile_time_environment_extend(locals, ce);
+      ce = compile_time_environment_extend(locals, ce)
     }
-    compile(
-      comp.body,
-      ce
-    )
+    compile(comp.body, ce)
 
     if (locals.length > 0) {
       instrs[wc++] = { tag: 'EXIT_SCOPE' }
@@ -341,11 +338,11 @@ const compile_comp = {
   go: (comp: GoStmtNode, ce: CompileTimeEnvironment) => {
     // compile the function application
     // how to deal with lambdas since not named?
-    compile(comp.funcApp, ce);
+    compile(comp.funcApp, ce)
     // based on how funApp is compiled, we know that wc - 1 is the call instruction
     // we modify the tag of that instruction for our purposes (hacks)
-    instrs[wc-1].tag = "GOCALL";
-    instrs[wc++] = { tag: 'LDC', val: undefined };
+    instrs[wc - 1].tag = 'GOCALL'
+    instrs[wc++] = { tag: 'LDC', val: undefined }
   },
   send: (comp: SendStmtNode, ce: CompileTimeEnvironment) => {
     // this is the expr on the right
