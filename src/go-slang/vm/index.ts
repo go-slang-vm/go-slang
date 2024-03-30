@@ -19,7 +19,7 @@ export class VM {
   heapInstance: Heap
   threadQueue: Thread[]
   curThread: Thread
-  instrs: Instruction[]
+  lastInstructionIndex: number
   // builtins: builtin id is encoded in second byte
   // [1 byte tag, 1 byte id, 3 bytes unused,
   //  2 bytes #children, 1 byte unused]
@@ -366,8 +366,11 @@ export class VM {
         pop(globalState.OS)
         const newPC = this.heapInstance.heap_get_Closure_pc(fun)
 
-        const newRTS: any[] = [];
-        push(newRTS, this.heapInstance.heap_allocate_Callframe(globalState.E, this.instrs.length - 1));
+        const newRTS: any[] = []
+        push(
+          newRTS,
+          this.heapInstance.heap_allocate_Callframe(globalState.E, this.lastInstructionIndex)
+        )
 
         const newThread: Thread = new Thread(
           [],
@@ -432,15 +435,15 @@ export class VM {
   }
 
   run(instrs: Instruction[]): any {
-    this.instrs = instrs;
+    this.lastInstructionIndex = instrs.length - 1
     // console.log({ instrs })
     // only break out of loop if we reach DONE on the main thread
     while (!(instrs[this.curThread.PC].tag === 'DONE' && this.curThread.isMainThread)) {
       // if we reach DONE on a non-main thread, load next thread
       if (instrs[this.curThread.PC].tag === 'DONE') {
         this.loadNextThread()
-        // this is important, we want the main loop to check again in case the next thread is at DONE and then you try to do instrs[this.curThread.PC++] below 
-        continue;
+        // this is important, we want the main loop to check again in case the next thread is at DONE and then you try to do instrs[this.curThread.PC++] below
+        continue
       }
       // this.print_OS('\noperands: ')
       const instr = instrs[this.curThread.PC++]
