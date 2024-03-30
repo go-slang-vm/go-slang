@@ -9,6 +9,8 @@
 // in garbage collection: If the (signed) Int32 is
 // non-negative, the node has been forwarded already.
 
+export const numInstructions = 5
+
 export const False_tag = 0
 export const True_tag = 1
 export const Number_tag = 2
