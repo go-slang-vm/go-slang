@@ -207,11 +207,13 @@ describe('Runner tests', () => {
         return x
       }
       func main() {
+        x int := 0
         go inc(1)
+        return x
       }`
     const result = await goRunner(code, createContext())
 
-    boilerplateAssert(result, undefined)
+    boilerplateAssert(result, 0)
   })
   test('go statement 2', async () => {
     const code = `
@@ -243,5 +245,16 @@ describe('Runner tests', () => {
     const result = await goRunner(code, createContext())
 
     boilerplateAssert(result, 0)
+  })
+  test('go statement 4', async () => {
+    const code = `
+    func main() {
+      go func(x int){
+        return x
+      }(1);
+    }`
+    const result = await goRunner(code, createContext())
+
+    boilerplateAssert(result, undefined)
   })
 })
