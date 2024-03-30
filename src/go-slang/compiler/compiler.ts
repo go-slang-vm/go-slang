@@ -111,14 +111,14 @@ const scan_for_locals = (comp: ASTNode): string[] => {
   const ret =
     comp.tag === 'seq'
       ? (comp as SequenceNode).stmts.reduce(
-          (acc: string[], x: ASTNode) => acc.concat(scan_for_locals(x)),
-          []
-        )
+        (acc: string[], x: ASTNode) => acc.concat(scan_for_locals(x)),
+        []
+      )
       : ['let', 'const'].includes(comp.tag)
-      ? [...(comp as VarDeclNode).syms.IDENTS]
-      : comp.tag === 'fun'
-      ? [(comp as FuncDeclNode).sym]
-      : []
+        ? [...(comp as VarDeclNode).syms.IDENTS]
+        : comp.tag === 'fun'
+          ? [(comp as FuncDeclNode).sym]
+          : []
   // console.log(ret);
   return ret
 }
@@ -345,24 +345,23 @@ const compile_comp = {
     instrs[wc++] = { tag: 'LDC', val: undefined }
   },
   send: (comp: SendStmtNode, ce: CompileTimeEnvironment) => {
+    // note that Go specs does not specify the order in which these 2 are evaluated
     // this is the expr on the right
     compile(comp.scnd, ce);
 
     //this should be the channel sym
     compile(comp.frst, ce);
-    // after you wait the channel, push it back on OS for the write to use, to be on the VM side
-    instrs[wc++] = { tag: "WAIT", blocking: true }
-    instrs[wc++] = { tag: "WRITE" }
+
+    instrs[wc++] = { tag: "SIGNAL" }
     // TODO: figure out what value should be the value of a send statement
+    // lets default to undefined for now
+    instrs[wc++] = { tag: "LDC", val: undefined }
   },
   recv: (comp: RecvExprNode, ce: CompileTimeEnvironment) => {
     //this should be the channel sym
     compile(comp.frst, ce);
 
-    // after you signal the channel, push it back on OS for the read to use, to be on the VM side
-    instrs[wc++] = { tag: "SIGNAL", blocking: true}
-    // should read push the value read on the OS? i think so
-    instrs[wc++] = { tag: "READ" }
+    instrs[wc++] = { tag: "WAIT" }
     // the value of a recv statement should be the value read out
   },
   make: (comp: MakeAppNode, ce: CompileTimeEnvironment) => {
@@ -381,8 +380,6 @@ const getChanType = (chanType: string) => {
 // compile component into instruction array instrs,
 // starting at wc (write counter)
 const compile = (comp: ASTNode, ce: CompileTimeEnvironment) => {
-  // console.log("compiling: " , comp.tag);
-  // console.dir(comp, {depth: 1});
   compile_comp[comp.tag](comp, ce)
 }
 

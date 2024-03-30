@@ -13,8 +13,11 @@ import {
 } from './utils'
 import { Instruction } from './types'
 import { Thread } from './thread'
+import { Channel_tag } from './constants'
+import { Channel } from './channel'
 
 export class VM {
+  channelArray: Channel[]
   heapInstance: Heap
   threadQueue: Thread[]
   curThread: Thread
@@ -37,6 +40,7 @@ export class VM {
     this.initialise_machine(heapsize_words)
     this.curThread = new Thread(globalState.OS, globalState.E, globalState.RTS, 0, true)
     this.threadQueue = []
+    this.channelArray = []
   }
 
   // in this machine, the builtins take their
@@ -159,25 +163,25 @@ export class VM {
         ? true
         : false
       : this.heapInstance.is_Number(x)
-      ? this.heapInstance.heap_get(x + 1)
-      : this.heapInstance.is_Undefined(x)
-      ? undefined
-      : this.heapInstance.is_Unassigned(x)
-      ? '<unassigned>'
-      : this.heapInstance.is_Null(x)
-      ? null
-      : this.heapInstance.is_String(x)
-      ? this.heapInstance.heap_get_string(x)
-      : this.heapInstance.is_Pair(x)
-      ? [
-          this.address_to_TS_value(this.heapInstance.heap_get_child(x, 0)),
-          this.address_to_TS_value(this.heapInstance.heap_get_child(x, 1))
-        ]
-      : this.heapInstance.is_Closure(x)
-      ? '<closure>'
-      : this.heapInstance.is_Builtin(x)
-      ? '<builtin>'
-      : 'unknown word tag: ' + word_to_string(x)
+        ? this.heapInstance.heap_get(x + 1)
+        : this.heapInstance.is_Undefined(x)
+          ? undefined
+          : this.heapInstance.is_Unassigned(x)
+            ? '<unassigned>'
+            : this.heapInstance.is_Null(x)
+              ? null
+              : this.heapInstance.is_String(x)
+                ? this.heapInstance.heap_get_string(x)
+                : this.heapInstance.is_Pair(x)
+                  ? [
+                    this.address_to_TS_value(this.heapInstance.heap_get_child(x, 0)),
+                    this.address_to_TS_value(this.heapInstance.heap_get_child(x, 1))
+                  ]
+                  : this.heapInstance.is_Closure(x)
+                    ? '<closure>'
+                    : this.heapInstance.is_Builtin(x)
+                      ? '<builtin>'
+                      : 'unknown word tag: ' + word_to_string(x)
 
   TS_value_to_address = (x: any): string | number =>
     is_boolean(x)
@@ -185,14 +189,14 @@ export class VM {
         ? this.heapInstance.True
         : this.heapInstance.False
       : is_number(x)
-      ? this.heapInstance.heap_allocate_Number(x)
-      : is_undefined(x)
-      ? this.heapInstance.Undefined
-      : is_null(x)
-      ? this.heapInstance.Null
-      : is_string(x)
-      ? this.heapInstance.heap_allocate_String(x)
-      : 'unknown word tag: ' + word_to_string(x)
+        ? this.heapInstance.heap_allocate_Number(x)
+        : is_undefined(x)
+          ? this.heapInstance.Undefined
+          : is_null(x)
+            ? this.heapInstance.Null
+            : is_string(x)
+              ? this.heapInstance.heap_allocate_String(x)
+              : 'unknown word tag: ' + word_to_string(x)
 
   // ********
   // **********************
@@ -251,9 +255,9 @@ export class VM {
       push(globalState.OS, this.apply_binop(instr.sym, pop(globalState.OS), pop(globalState.OS))),
     POP: _ => pop(globalState.OS),
     JOF: instr =>
-      (this.curThread.PC = this.heapInstance.is_True(pop(globalState.OS))
-        ? this.curThread.PC
-        : instr.addr),
+    (this.curThread.PC = this.heapInstance.is_True(pop(globalState.OS))
+      ? this.curThread.PC
+      : instr.addr),
     GOTO: instr => (this.curThread.PC = instr.addr),
     ENTER_SCOPE: instr => {
       push(globalState.RTS, this.heapInstance.heap_allocate_Blockframe(globalState.E))
@@ -378,7 +382,79 @@ export class VM {
       }
 
       throw new Error(`GOCALL expects a function, got: ${fun}`)
+    },
+
+    MAKE: instr => {
+      const idx = this.channelArray.length;
+      this.createNewChannel(instr.capacity, idx);
+      const addr = this.heapInstance.heap_allocate_Channel(instr.capacity, instr.isBuffered, instr.elemType, idx);
+      push(this.curThread.OS, addr);
+    },
+
+    SIGNAL: instr => {
+      //OS top should have the address of the channel
+      const channel = peek(this.curThread.OS, 0);
+      if (this.heapInstance.heap_get_tag(channel) !== Channel_tag) {
+        throw Error("calling channel operations on non channel");
+      }
+      const counter = this.heapInstance.heap_get_channel_counter(channel);
+      const capacity = this.heapInstance.heap_get_channel_capacity(channel);
+      if (counter == capacity) {
+        // retry
+        this.curThread.PC--;
+        this.contextSwitch();
+      } else {
+        this.curThread.OS.pop();
+        // put val in the queue
+        const val = this.curThread.OS.pop();
+        const semId = this.heapInstance.heap_get_channel_idx(channel);
+        this.addItemToChannel(semId, val as number);
+        //increment counter
+        this.heapInstance.heap_set_channel_counter(channel, counter + 1);
+      }
+    },
+
+    WAIT: instr => {
+      //OS top should have the address of the channel
+      const channel = peek(this.curThread.OS, 0);
+      if (this.heapInstance.heap_get_tag(channel) !== Channel_tag) {
+        throw Error("calling channel operations on non channel");
+      }
+      const counter = this.heapInstance.heap_get_channel_counter(channel);
+
+      if (counter == 0) {
+        // retry
+        this.curThread.PC--;
+        this.contextSwitch();
+      } else {
+        this.curThread.OS.pop();
+        // read val from the channel
+        const semId = this.heapInstance.heap_get_channel_idx(channel);
+        const val = this.getItemFromChannel(semId);
+        // push val onto OS
+        push(this.curThread.OS, val);
+        // decrement counter
+        this.heapInstance.heap_set_channel_counter(channel, counter - 1);
+      }
     }
+  }
+
+  createNewChannel(capacity: number, idx: number) {
+    this.channelArray.push(new Channel(idx, capacity));
+  }
+
+  addItemToChannel(idx: number, val: number) {
+    if(idx >= this.channelArray.length) {
+      throw new Error("adding to non existent channel");
+    }
+    this.channelArray[idx].push(val);
+  }
+
+  getItemFromChannel(idx: number): number {
+    if(idx >= this.channelArray.length) {
+      throw new Error("popping from non existent channel");
+    }
+    return this.channelArray[idx].pop();
   }
 
   saveThread = () => {
