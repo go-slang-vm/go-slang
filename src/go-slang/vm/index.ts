@@ -19,6 +19,7 @@ export class VM {
   heapInstance: Heap
   threadQueue: Thread[]
   curThread: Thread
+  instrs: Instruction[]
   // builtins: builtin id is encoded in second byte
   // [1 byte tag, 1 byte id, 3 bytes unused,
   //  2 bytes #children, 1 byte unused]
@@ -48,7 +49,7 @@ export class VM {
       // before switching threads, we complete the apply_builtin() function by popping fun off the stack and pushing undefined
       pop(globalState.OS) // pop fun
       push(globalState.OS, undefined)
-      let steps: number = this.address_to_TS_value(address)
+      const steps: number = this.address_to_TS_value(address)
       this.curThread.sleepCount += steps
       // if the thread sleeps >= number of instructions allocated to it
       if (this.curThread.sleepCount >= numInstructions) {
@@ -332,10 +333,7 @@ export class VM {
     RESET: instr => {
       // keep popping...
       const top_frame = globalState.RTS.pop()!
-      if (top_frame === undefined) {
-        this.loadNextThread()
-        return
-      }
+
       if (this.heapInstance.is_Callframe(top_frame)) {
         // ...until top frame is a call frame
         this.curThread.PC = this.heapInstance.heap_get_Callframe_pc(top_frame)
@@ -362,13 +360,17 @@ export class VM {
         // remove function from the stack
         pop(globalState.OS)
         const newPC = this.heapInstance.heap_get_Closure_pc(fun)
+
+        const newRTS: any[] = [];
+        push(newRTS, this.heapInstance.heap_allocate_Callframe(globalState.E, this.instrs.length - 1));
+
         const newThread: Thread = new Thread(
           [],
           this.heapInstance.heap_Environment_extend(
             newFrame,
             this.heapInstance.heap_get_Closure_environment(fun)
           ),
-          [],
+          newRTS,
           newPC
         )
         this.threadQueue.push(newThread)
@@ -425,12 +427,15 @@ export class VM {
   }
 
   run(instrs: Instruction[]): any {
+    this.instrs = instrs;
     // console.log({ instrs })
     // only break out of loop if we reach DONE on the main thread
     while (!(instrs[this.curThread.PC].tag === 'DONE' && this.curThread.isMainThread)) {
       // if we reach DONE on a non-main thread, load next thread
       if (instrs[this.curThread.PC].tag === 'DONE') {
         this.loadNextThread()
+        // this is important, we want the main loop to check again in case the next thread is at DONE and then you try to do instrs[this.curThread.PC++] below 
+        continue;
       }
       // this.print_OS('\noperands: ')
       const instr = instrs[this.curThread.PC++]
