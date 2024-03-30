@@ -13,8 +13,11 @@ import {
   LambdaStmtNode,
   LiteralNode,
   LogicalNode,
+  MakeAppNode,
   NameNode,
+  RecvExprNode,
   ReturnStmtNode,
+  SendStmtNode,
   SequenceNode,
   StmtNode,
   Tag,
@@ -343,7 +346,39 @@ const compile_comp = {
     // we modify the tag of that instruction for our purposes (hacks)
     instrs[wc-1].tag = "GOCALL";
     instrs[wc++] = { tag: 'LDC', val: undefined };
+  },
+  send: (comp: SendStmtNode, ce: CompileTimeEnvironment) => {
+    // this is the expr on the right
+    compile(comp.scnd, ce);
+
+    //this should be the channel sym
+    compile(comp.frst, ce);
+    // after you wait the channel, push it back on OS for the write to use, to be on the VM side
+    instrs[wc++] = { tag: "WAIT", blocking: true }
+    instrs[wc++] = { tag: "WRITE" }
+    // TODO: figure out what value should be the value of a send statement
+  },
+  recv: (comp: RecvExprNode, ce: CompileTimeEnvironment) => {
+    //this should be the channel sym
+    compile(comp.frst, ce);
+
+    // after you signal the channel, push it back on OS for the read to use, to be on the VM side
+    instrs[wc++] = { tag: "SIGNAL", blocking: true}
+    // should read push the value read on the OS? i think so
+    instrs[wc++] = { tag: "READ" }
+    // the value of a recv statement should be the value read out
+  },
+  make: (comp: MakeAppNode, ce: CompileTimeEnvironment) => {
+    const elemType = getChanType(comp.chanType);
+    // this should call heap_allocate_channel(capacity, buffered, elemType) then throw the address on the OS
+    // notice that we dont have to compile comp.capacity because we force the syntax to be a DECIMAL_LIT()
+    instrs[wc++] = { tag: "MAKE", capacity: comp.capacity, isBuffered: comp.buffered, elemType: elemType };
   }
+}
+
+const getChanType = (chanType: string) => {
+  // invariant that chanType in MakeAppNode always starts with chan and then a space
+  return chanType.slice(5);
 }
 
 // compile component into instruction array instrs,
