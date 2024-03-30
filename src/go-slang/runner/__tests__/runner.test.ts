@@ -257,4 +257,76 @@ describe('Runner tests', () => {
 
     boilerplateAssert(result, undefined)
   })
-})
+
+  // this fails
+  test("basic buffered channel test", async () => {
+    const code = `
+    func inc(output chan int) {
+      num int := <-output
+      Println(num)
+    }
+    func main() {
+      var input chan int = make(chan int, 5)
+      i int := 0
+      for i < 5 {
+        go inc(input);
+        i = i + 1
+      }
+      i = 0
+      for i < 5 {
+        input <- i
+        i=i+1
+      }
+      sleep(35)
+    }
+    `;
+    const result = await goRunner(code, createContext());
+    boilerplateAssert(result, undefined)
+  })
+
+  // but this passes
+  test("basic buffered channel test", async () => {
+    const code = `
+    func inc(output chan int) {
+      num int := <-output
+      Println(num)
+    }
+    func main() {
+      var input chan int = make(chan int, 3)
+      i int := 0
+      go inc(input)
+      go inc(input)
+      go inc(input)
+      go inc(input)
+      go inc(input) 
+      i = 0
+      for i < 5 {
+        input <- i
+        i=i+1
+      }
+      sleep(500000) 
+    }
+    `;
+    const result = await goRunner(code, createContext());
+    boilerplateAssert(result, undefined)
+  })
+
+  test("go call in loop", async () => {
+    const code = `
+    func inc(x int) {
+      x = x + 1
+      Println(x)
+    }
+    func main() {
+      var input chan int = make(chan int, 5)
+      x int := 0
+      for x < 5 {
+        go inc(x)
+        x = x + 1
+      }
+      sleep(20)
+    }`;
+    const result = await goRunner(code, createContext());
+    boilerplateAssert(result, 5)
+  })
+});

@@ -715,7 +715,135 @@ describe('Basic compiler test', () => {
     const inputAst: ASTNode = parse(program)
     //console.dir(inputAst, {depth : 100});
     const outputInstr: any[] = compile_program(inputAst)
+    // console.log(JSON.stringify(outputInstr));
+    expect(outputInstr).toStrictEqual(expectedInstr)
+  })
+
+  test('basic sleep statement', async () => {
+    const program = `
+    func receive(messages chan int) {
+      msg int := <-messages
+      Println(msg)
+    }
+    func main() {
+      messages chan int := make(chan int, 3)
+      go receive(messages)
+      go receive(messages)
+      go receive(messages)
+      messages <- 1
+      messages <- 2
+      messages <- 3
+      sleep(1)
+    }`
+
+    const expectedInstr:any[] = [];
+
+    const inputAst: ASTNode = parse(program)
+    //console.dir(inputAst, {depth : 100});
+    const outputInstr: any[] = compile_program(inputAst)
     console.log(JSON.stringify(outputInstr));
+    expect(outputInstr).toStrictEqual(expectedInstr)
+  })
+
+  test.only('gocall in loop', async () => {
+    const program = `
+    func inc(output chan int) {
+      num int := <-output
+      Println(num)
+    }
+    func main() {
+      var input chan int = make(chan int, 5)
+      var i int = 0
+      for i < 5 {
+        go inc(input)
+        i = i + 1
+      }
+      i = 0
+      for i < 5 {
+        input <- i
+        i = i + 1
+      }
+      sleep(35)
+    }
+    `
+
+    const expectedInstr:any[] = [{"tag":"ENTER_SCOPE","num":2},
+    {"tag":"LDF","arity":1,"addr":3},
+    {"tag":"GOTO","addr":14},
+    {"tag":"ENTER_SCOPE","num":1},
+    {"tag":"LD","sym":"output","pos":[3,0]},
+    {"tag":"WAIT"},
+    {"tag":"ASSIGN","pos":[4,0]},
+    {"tag":"POP"},
+    {"tag":"LD","sym":"Println","pos":[0,0]},
+    {"tag":"LD","sym":"num","pos":[4,0]},
+    {"tag":"CALL","arity":1},
+    {"tag":"EXIT_SCOPE"},
+    {"tag":"LDC", "val" : undefined },
+    {"tag":"RESET"},
+    {"tag":"ASSIGN","pos":[2,0]},
+    {"tag":"POP"},
+    {"tag":"LDF","arity":0,"addr":18},
+    {"tag":"GOTO","addr":68},
+    {"tag":"ENTER_SCOPE","num":2},
+    {"tag":"MAKE","capacity":5,"isBuffered":true,"elemType":"int"},
+    {"tag":"ASSIGN","pos":[4,0]},
+    {"tag":"POP"},
+    {"tag":"LDC","val":0},
+    {"tag":"ASSIGN","pos":[4,1]},
+    {"tag":"POP"},
+    {"tag":"LD","sym":"i","pos":[4,1]},
+    {"tag":"LDC","val":5},
+    {"tag":"BINOP","sym":"<"},
+    {"tag":"JOF","addr":40},
+    {"tag":"LD","sym":"inc","pos":[2,0]},
+    {"tag":"LD","sym":"input","pos":[4,0]},
+    {"tag":"GOCALL","arity":1},
+    {"tag":"LDC", "val" : undefined },
+    {"tag":"POP"},
+    {"tag":"LD","sym":"i","pos":[4,1]},
+    {"tag":"LDC","val":1},
+    {"tag":"BINOP","sym":"+"},
+    {"tag":"ASSIGN","pos":[4,1]},
+    {"tag":"POP"},
+    {"tag":"GOTO","addr":25},
+    {"tag":"LDC", "val" : undefined },
+    {"tag":"POP"},
+    {"tag":"LDC","val":0},
+    {"tag":"ASSIGN","pos":[4,1]},
+    {"tag":"POP"},
+    {"tag":"LD","sym":"i","pos":[4,1]},
+    {"tag":"LDC","val":5},
+    {"tag":"BINOP","sym":"<"},
+    {"tag":"JOF","addr":60},
+    {"tag":"LD","sym":"i","pos":[4,1]},
+    {"tag":"LD","sym":"input","pos":[4,0]},
+    {"tag":"SIGNAL"},
+    {"tag":"LDC", "val" : undefined },
+    {"tag":"POP"},
+    {"tag":"LD","sym":"i","pos":[4,1]},
+    {"tag":"LDC","val":1},
+    {"tag":"BINOP","sym":"+"},
+    {"tag":"ASSIGN","pos":[4,1]},
+    {"tag":"POP"},
+    {"tag":"GOTO","addr":45},
+    {"tag":"LDC", "val" : undefined },
+    {"tag":"POP"},
+    {"tag":"LD","sym":"sleep","pos":[0,1]},
+    {"tag":"LDC","val":35},
+    {"tag":"CALL","arity":1},
+    {"tag":"EXIT_SCOPE"},
+    {"tag":"LDC", "val" : undefined },
+    {"tag":"RESET"},
+    {"tag":"ASSIGN","pos":[2,1]},
+    {"tag":"POP"},
+    {"tag":"LD","sym":"main","pos":[2,1]},
+    {"tag":"CALL","arity":0},
+    {"tag":"EXIT_SCOPE"},
+    {"tag":"DONE"}];
+
+    const inputAst: ASTNode = parse(program)
+    const outputInstr: any[] = compile_program(inputAst)
     expect(outputInstr).toStrictEqual(expectedInstr)
   })
 })

@@ -391,12 +391,14 @@ export class VM {
       push(this.curThread.OS, addr);
     },
 
-    SIGNAL: instr => {
+    SEND: instr => {
       //OS top should have the address of the channel
       const channel = peek(this.curThread.OS, 0);
       if (this.heapInstance.heap_get_tag(channel) !== Channel_tag) {
         throw Error("calling channel operations on non channel");
       }
+
+      // this is for buffered Channels
       const counter = this.heapInstance.heap_get_channel_counter(channel);
       const capacity = this.heapInstance.heap_get_channel_capacity(channel);
       if (counter == capacity) {
@@ -409,19 +411,21 @@ export class VM {
         const val = this.curThread.OS.pop();
         const semId = this.heapInstance.heap_get_channel_idx(channel);
         this.addItemToChannel(semId, val as number);
-        //increment counter
+        //increment counter  
         this.heapInstance.heap_set_channel_counter(channel, counter + 1);
       }
     },
 
-    WAIT: instr => {
+    RECV: instr => {
       //OS top should have the address of the channel
       const channel = peek(this.curThread.OS, 0);
       if (this.heapInstance.heap_get_tag(channel) !== Channel_tag) {
         throw Error("calling channel operations on non channel");
       }
-      const counter = this.heapInstance.heap_get_channel_counter(channel);
 
+      // this is for buffered Channels
+      const counter = this.heapInstance.heap_get_channel_counter(channel);
+      console.log("counter: " + counter);
       if (counter == 0) {
         // retry
         this.curThread.PC--;

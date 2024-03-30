@@ -352,7 +352,7 @@ const compile_comp = {
     //this should be the channel sym
     compile(comp.frst, ce);
 
-    instrs[wc++] = { tag: "SIGNAL" }
+    instrs[wc++] = { tag: "SEND" }
     // TODO: figure out what value should be the value of a send statement
     // lets default to undefined for now
     instrs[wc++] = { tag: "LDC", val: undefined }
@@ -361,7 +361,7 @@ const compile_comp = {
     //this should be the channel sym
     compile(comp.frst, ce);
 
-    instrs[wc++] = { tag: "WAIT" }
+    instrs[wc++] = { tag: "RECV" }
     // the value of a recv statement should be the value read out
   },
   make: (comp: MakeAppNode, ce: CompileTimeEnvironment) => {

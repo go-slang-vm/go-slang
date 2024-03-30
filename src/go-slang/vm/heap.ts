@@ -243,8 +243,8 @@ export class Heap {
     const address = this.heap_allocate(Channel_tag, 3);
     this.heap_set_4_bytes_at_offset(address, 1, idx)
     
-    this.heap_set(address + 1, 0);
-    this.heap_set(address + 1, capacity)
+    this.heap_set_channel_counter(address, 0);
+    this.heap_set_channel_capacity(address, capacity);
     return address
   }
 
