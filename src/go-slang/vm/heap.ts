@@ -33,7 +33,7 @@ export class Heap {
   Undefined: number
   String: number
   heap: DataView
-  node_size = 20
+  node_size = 15
   free: number
   heap_bottom: number
 
@@ -239,12 +239,17 @@ export class Heap {
   // followed by the counter
   // followed by the capacity
 
-  heap_allocate_Channel = (capacity: number, isBuffered: boolean, elemType: string, idx: number): number => {
-    const address = this.heap_allocate(Channel_tag, 3);
+  heap_allocate_Channel = (
+    capacity: number,
+    isBuffered: boolean,
+    elemType: string,
+    idx: number
+  ): number => {
+    const address = this.heap_allocate(Channel_tag, 3)
     this.heap_set_4_bytes_at_offset(address, 1, idx)
-    
-    this.heap_set_channel_counter(address, 0);
-    this.heap_set_channel_capacity(address, capacity);
+
+    this.heap_set_channel_counter(address, 0)
+    this.heap_set_channel_capacity(address, capacity)
     return address
   }
 
@@ -353,7 +358,9 @@ export class Heap {
 
   private heap_allocate(tag: number, size: number): number {
     if (size > this.node_size) {
-      throw new Error('limitation: nodes cannot be larger than 10 words. Current size: ' + size)
+      throw new Error(
+        `limitation: nodes cannot be larger than ${this.node_size} words. Current size: ${size}`
+      )
     }
 
     if (this.free === -1) {
