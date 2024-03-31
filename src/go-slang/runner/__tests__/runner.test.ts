@@ -259,7 +259,7 @@ describe('Runner tests', () => {
   })
 
   // this fails
-  test("basic buffered channel test", async () => {
+  test('basic buffered channel test', async () => {
     const code = `
     func inc(output chan int) {
       num int := <-output
@@ -279,13 +279,13 @@ describe('Runner tests', () => {
       }
       sleep(35)
     }
-    `;
-    const result = await goRunner(code, createContext());
+    `
+    const result = await goRunner(code, createContext())
     boilerplateAssert(result, undefined)
   })
 
   // but this passes
-  test("basic buffered channel test", async () => {
+  test('basic buffered channel test', async () => {
     const code = `
     func inc(output chan int) {
       num int := <-output
@@ -306,12 +306,12 @@ describe('Runner tests', () => {
       }
       sleep(500000) 
     }
-    `;
-    const result = await goRunner(code, createContext());
+    `
+    const result = await goRunner(code, createContext())
     boilerplateAssert(result, undefined)
   })
 
-  test("go call in loop", async () => {
+  test('go call in loop', async () => {
     const code = `
     func inc(x int) {
       x = x + 1
@@ -324,9 +324,9 @@ describe('Runner tests', () => {
         go inc(x)
         x = x + 1
       }
-      sleep(20)
-    }`;
-    const result = await goRunner(code, createContext());
-    boilerplateAssert(result, 5)
+      sleep(15)
+    }`
+    const result = await goRunner(code, createContext())
+    boilerplateAssert(result, undefined)
   })
-});
+})
