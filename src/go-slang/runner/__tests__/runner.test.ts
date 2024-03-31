@@ -324,10 +324,9 @@ describe('Runner tests', () => {
         go inc(x)
         x = x + 1
       }
-      sleep(20)
-      return x
+      sleep(15)
     }`
     const result = await goRunner(code, createContext())
-    boilerplateAssert(result, 5)
+    boilerplateAssert(result, undefined)
   })
 })

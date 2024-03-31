@@ -33,7 +33,7 @@ export class Heap {
   Undefined: number
   String: number
   heap: DataView
-  node_size = 15
+  node_size = 20
   free: number
   heap_bottom: number
 
@@ -375,9 +375,19 @@ export class Heap {
 
   private mark_sweep = (): void => {
     // mark r for r in roots
-    const roots = [...globalState.OS, globalState.E, ...globalState.RTS, ...globalState.ALLOCATING]
+
+    // current thread
+    let roots = [...globalState.OS, globalState.E, ...globalState.RTS, ...globalState.ALLOCATING]
     for (let i = 0; i < roots.length; i++) {
       this.mark(roots[i])
+    }
+    // rest of the threads
+    for(const thread of globalState.THREADQUEUE) {
+      // no allocating
+      roots = [...thread.OS, thread.E, ...thread.RTS]
+      for (let i = 0; i < roots.length; i++) {
+        this.mark(roots[i])
+      }
     }
 
     this.sweep()

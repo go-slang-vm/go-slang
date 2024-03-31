@@ -47,7 +47,6 @@ export class VM {
       numInstructions, // sleepStartTime
       true
     )
-    this.threadQueue = []
     this.channelArray = []
     this.globalTime = 0
   }
@@ -404,7 +403,7 @@ export class VM {
           -1, // to denote that the thread has never woken up
           -1 // if the thread has never woken up, it cannot have a sleep start time
         )
-        this.threadQueue.push(newThread)
+        globalState.THREADQUEUE.push(newThread)
         return
       }
 
@@ -457,7 +456,6 @@ export class VM {
 
       // this is for buffered Channels
       const counter = this.heapInstance.heap_get_channel_counter(channel)
-      console.log('counter: ' + counter)
       if (counter == 0) {
         // retry
         this.curThread.PC--
@@ -503,11 +501,11 @@ export class VM {
       this.curThread.sleepStartTime,
       this.curThread.isMainThread
     )
-    this.threadQueue.push(curThread)
+    globalState.THREADQUEUE.push(curThread)
   }
 
   loadNextThread = () => {
-    const nextThread: Thread | undefined = this.threadQueue.shift()
+    const nextThread: Thread | undefined = globalState.THREADQUEUE.shift()
     if (!nextThread) {
       return undefined
     }
@@ -541,6 +539,7 @@ export class VM {
       }
       // this.print_OS('\noperands: ')
       const instr = instrs[this.curThread.PC++]
+      //console.log("current PC: " + (this.curThread.PC-1) + " instr tag: " + instr.tag);
       this.microcode[instr.tag](instr)
       this.globalTime += 1
       if (this.globalTime === this.curThread.sleepStartTime) {
