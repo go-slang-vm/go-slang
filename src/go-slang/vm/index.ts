@@ -355,6 +355,10 @@ export class VM {
     RESET: instr => {
       // keep popping...
       const top_frame = globalState.RTS.pop()!
+      if (top_frame === undefined) {
+        console.log({ erroneousThread: this.curThread })
+        throw new Error('RESET: empty RTS')
+      }
 
       if (this.heapInstance.is_Callframe(top_frame)) {
         // ...until top frame is a call frame
