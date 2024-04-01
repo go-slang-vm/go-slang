@@ -54,9 +54,27 @@ block
 //    | IDENTIFIER DECLARE_ASSIGN expression
 //    ;
 
+// NOTE WE ARE FORCING TYPES TO BE THERE
 varDecl
-    : VAR identifierList type_ ASSIGN expressionList
-    | identifierList type_ DECLARE_ASSIGN expressionList
+    : varMutexDecl
+    | varWaitGroupDecl
+    | regVarDecl
+    ;
+
+regVarDecl
+    : VAR identifierList type_ (ASSIGN expressionList)?
+    ;
+
+varMutexDecl
+    : VAR identifierList MUTEX
+    ;
+
+varWaitGroupDecl
+    : VAR identifierList WAITGROUP
+    ;
+
+shortVarDecl
+    : identifierList type_ DECLARE_ASSIGN expressionList
     ;
 
 // we only allow these types for now
@@ -149,15 +167,41 @@ statement
     ;
 
 simpleStmt
-    : assignment
-    | sendStmt
+    : sendStmt
+//    | lockStmt
+//    | unlockStmt
+//    | addStmt
+//    | doneStmt
+//    | waitStmt
     | varDecl
     | funcDecl
+    | assignment
     | expressionStmt
+    | shortVarDecl
     ;
 
 sendStmt
     : channel = expression RECEIVE expression
+    ;
+
+lockStmt
+    : mutexLock = LOCK L_PAREN IDENTIFIER R_PAREN
+    ;
+
+unlockStmt
+    : mutexUnlock = UNLOCK L_PAREN IDENTIFIER R_PAREN
+    ;
+
+addStmt
+    : waitgroupAdd = ADD L_PAREN IDENTIFIER COMMA expression R_PAREN
+    ;
+
+doneStmt
+    : waitgroupDone = DONE L_PAREN IDENTIFIER R_PAREN 
+    ;
+
+waitStmt
+    : waitgroupwait = WAIT L_PAREN IDENTIFIER R_PAREN 
     ;
 
 // we only allow making channels for now so we make this very restrictive

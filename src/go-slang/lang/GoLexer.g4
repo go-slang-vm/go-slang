@@ -71,6 +71,15 @@ TRUE        : 'true';
 FALSE       : 'false';
 MAKE        : 'make';
 
+// CONCURRENCY
+MUTEX : 'Mutex';
+WAITGROUP: 'WaitGroup';
+//LOCK : 'lock';
+//UNLOCK: 'unlock';
+//ADD : 'add';
+//Done : 'done';
+//WAIT : 'wait';
+
 // types
 INT : 'int';
 BOOL : 'bool';
