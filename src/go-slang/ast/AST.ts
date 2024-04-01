@@ -47,6 +47,7 @@ export enum BINOP {
     MINUS = '-',
     TIMES = '*',
     DIV = '/',
+    MOD = '%',
     LT = '<',
     GT = '>',
     LTE = '<=',

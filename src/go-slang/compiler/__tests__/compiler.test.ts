@@ -1238,4 +1238,44 @@ describe('Basic compiler test', () => {
     const outputInstr: any[] = compile_program(inputAst)
     expect(outputInstr).toStrictEqual(expectedInstr)
   })
+
+  test("basic bin ops test", async() => {
+    const program = `
+    func main() {
+      x int := 1
+      Println(x + x - 4 * 3 / 2 % 5)
+    }`
+    const expectedInstr:any[] = [ {"tag": "ENTER_SCOPE", "num": 1},
+    {"tag": "LDF", "arity": 0, "addr": 3},
+    {"tag": "GOTO", "addr": 23},
+    {"tag": "ENTER_SCOPE", "num": 1},
+    {"tag": "LDC", "val": 1},
+    {"tag": "ASSIGN", "pos": [4, 0]},
+    {"tag": "POP"},
+    {"tag": "LD", "sym": "Println", "pos": [0, 0]},
+    {"tag": "LD", "sym": "x", "pos": [4, 0]},
+    {"tag": "LD", "sym": "x", "pos": [4, 0]},
+    {"tag": "BINOP", "sym": "+"},
+    {"tag": "LDC", "val": 4},
+    {"tag": "LDC", "val": 3},
+    {"tag": "BINOP", "sym": "*"},
+    {"tag": "LDC", "val": 2},
+    {"tag": "BINOP", "sym": "/"},
+    {"tag": "LDC", "val": 5},
+    {"tag": "BINOP", "sym": "%"},
+    {"tag": "BINOP", "sym": "-"},
+    {"tag": "CALL", "arity": 1},
+    {"tag": "EXIT_SCOPE"},
+    {"tag": "LDC", "val": undefined},
+    {"tag": "RESET"},
+    {"tag": "ASSIGN", "pos": [2, 0]},
+    {"tag": "POP"},
+    {"tag": "LD", "sym": "main", "pos": [2, 0]},
+    {"tag": "CALL", "arity": 0},
+    {"tag": "EXIT_SCOPE"},
+    {"tag": "DONE"}];
+    const inputAst: ASTNode = parse(program)
+    const outputInstr: any[] = compile_program(inputAst)
+    expect(outputInstr).toStrictEqual(expectedInstr)
+  })
 })

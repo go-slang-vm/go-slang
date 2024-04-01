@@ -1037,7 +1037,7 @@ export class SimpleParser extends GoParserBase {
 						this.state = 192;
 						(_localctx as BINOPContext)._bin_op = this._input.LT(1);
 						_la = this._input.LA(1);
-						if (!(_la === SimpleParser.DIV || _la === SimpleParser.STAR)) {
+						if (!(((((_la - 59)) & ~0x1F) === 0 && ((1 << (_la - 59)) & ((1 << (SimpleParser.DIV - 59)) | (1 << (SimpleParser.MOD - 59)) | (1 << (SimpleParser.STAR - 59)))) !== 0))) {
 							(_localctx as BINOPContext)._bin_op = this._errHandler.recoverInline(this);
 						} else {
 							if (this._input.LA(1) === Token.EOF) {
@@ -2090,7 +2090,7 @@ export class SimpleParser extends GoParserBase {
 		"\b\x02\n\x02\f\x02\x0E\x02\x10\x02\x12\x02\x14\x02\x16\x02\x18\x02\x1A" +
 		"\x02\x1C\x02\x1E\x02 \x02\"\x02$\x02&\x02(\x02*\x02,\x02.\x020\x022\x02" +
 		"4\x026\x028\x02:\x02<\x02>\x02@\x02B\x02D\x02F\x02\x02\x07\x04\x02CCE" +
-		"E\x04\x02==GG\x03\x02DE\x03\x026;\x03\x02XY\x02\u015F\x02P\x03\x02\x02" +
+		"E\x04\x02=>GG\x03\x02DE\x03\x026;\x03\x02XY\x02\u015F\x02P\x03\x02\x02" +
 		"\x02\x04S\x03\x02\x02\x02\x06^\x03\x02\x02\x02\b`\x03\x02\x02\x02\ne\x03" +
 		"\x02\x02\x02\fp\x03\x02\x02\x02\x0Et\x03\x02\x02\x02\x10\x8B\x03\x02\x02" +
 		"\x02\x12\x90\x03\x02\x02\x02\x14\x92\x03\x02\x02\x02\x16\xA3\x03\x02\x02" +
@@ -2948,6 +2948,7 @@ export class BINOPContext extends ExpressionContext {
 	}
 	public DIV(): TerminalNode | undefined { return this.tryGetToken(SimpleParser.DIV, 0); }
 	public STAR(): TerminalNode | undefined { return this.tryGetToken(SimpleParser.STAR, 0); }
+	public MOD(): TerminalNode | undefined { return this.tryGetToken(SimpleParser.MOD, 0); }
 	public PLUS(): TerminalNode | undefined { return this.tryGetToken(SimpleParser.PLUS, 0); }
 	public MINUS(): TerminalNode | undefined { return this.tryGetToken(SimpleParser.MINUS, 0); }
 	constructor(ctx: ExpressionContext) {

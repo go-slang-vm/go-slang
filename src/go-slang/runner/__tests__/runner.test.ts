@@ -431,4 +431,37 @@ describe('Runner tests', () => {
     const result = await goRunner(code, createContext())
     boilerplateAssert(result, undefined)
   })
+
+  // should print { value: 1 }
+  test("basic bin ops test", async() => {
+    const code = `
+    func main() {
+      x int := 1
+      Println(x + x - 4 * 3 / 2 % 5)
+    }`
+    const result = await goRunner(code, createContext())
+    boilerplateAssert(result, undefined)
+  })
+
+  // should print { value: 4 }
+  test("basic bin op precedence test should print 4 instead of 6", async() => {
+    const code = `
+    func main() {
+      x int := 1
+      Println(x + x * 3)
+    }`
+    const result = await goRunner(code, createContext())
+    boilerplateAssert(result, undefined)
+  })
+
+  // should print { value: 3 }
+  test("basic bin op precedence test should print 3 instead of 2", async() => {
+    const code = `
+    func main() {
+      x int := 2
+      Println(x + x / 2)
+    }`
+    const result = await goRunner(code, createContext())
+    boilerplateAssert(result, undefined)
+  })
 })

@@ -93,7 +93,7 @@ expression
     : makeExpr #MAKEOP
     | funcApp #FUNCAPP
     | unary_op = (MINUS | EXCLAMATION) expression #UNARYOP
-    | expression bin_op = (DIV | STAR) expression #BINOP
+    | expression bin_op = (DIV | STAR | MOD) expression #BINOP
     | expression bin_op = (PLUS | MINUS) expression #BINOP
     | expression rel_op = (
         EQUALS

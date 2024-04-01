@@ -139,7 +139,11 @@ export class ParseTree_To_AST implements SimpleParserVisitor<ASTNode> {
                         ? BINOP.MINUS
                         : ctx._bin_op.text === "*"
                         ? BINOP.TIMES
-                        : BINOP.MINUS;
+                        : ctx._bin_op.text === "/"
+                        ? BINOP.DIV
+                        : BINOP.MOD;
+
+
     return {
       tag: Tag.BINOP,
       sym: sym,
