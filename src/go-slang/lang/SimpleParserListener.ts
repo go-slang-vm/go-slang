@@ -22,6 +22,7 @@ import { ParametersContext } from "./SimpleParser";
 import { ParameterDeclContext } from "./SimpleParser";
 import { BlockContext } from "./SimpleParser";
 import { VarDeclContext } from "./SimpleParser";
+import { ShortVarDeclContext } from "./SimpleParser";
 import { Type_Context } from "./SimpleParser";
 import { ChannelTypeContext } from "./SimpleParser";
 import { AssignmentContext } from "./SimpleParser";
@@ -277,6 +278,17 @@ export interface SimpleParserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	exitVarDecl?: (ctx: VarDeclContext) => void;
+
+	/**
+	 * Enter a parse tree produced by `SimpleParser.shortVarDecl`.
+	 * @param ctx the parse tree
+	 */
+	enterShortVarDecl?: (ctx: ShortVarDeclContext) => void;
+	/**
+	 * Exit a parse tree produced by `SimpleParser.shortVarDecl`.
+	 * @param ctx the parse tree
+	 */
+	exitShortVarDecl?: (ctx: ShortVarDeclContext) => void;
 
 	/**
 	 * Enter a parse tree produced by `SimpleParser.type_`.

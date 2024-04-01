@@ -22,6 +22,7 @@ import { ParametersContext } from "./SimpleParser";
 import { ParameterDeclContext } from "./SimpleParser";
 import { BlockContext } from "./SimpleParser";
 import { VarDeclContext } from "./SimpleParser";
+import { ShortVarDeclContext } from "./SimpleParser";
 import { Type_Context } from "./SimpleParser";
 import { ChannelTypeContext } from "./SimpleParser";
 import { AssignmentContext } from "./SimpleParser";
@@ -196,6 +197,13 @@ export interface SimpleParserVisitor<Result> extends ParseTreeVisitor<Result> {
 	 * @return the visitor result
 	 */
 	visitVarDecl?: (ctx: VarDeclContext) => Result;
+
+	/**
+	 * Visit a parse tree produced by `SimpleParser.shortVarDecl`.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	visitShortVarDecl?: (ctx: ShortVarDeclContext) => Result;
 
 	/**
 	 * Visit a parse tree produced by `SimpleParser.type_`.

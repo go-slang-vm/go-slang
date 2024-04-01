@@ -54,9 +54,13 @@ block
 //    | IDENTIFIER DECLARE_ASSIGN expression
 //    ;
 
+// NOTE WE ARE FORCING TYPES TO BE THERE
 varDecl
-    : VAR identifierList type_ ASSIGN expressionList
-    | identifierList type_ DECLARE_ASSIGN expressionList
+    : VAR identifierList type_ (ASSIGN expressionList)?
+    ;
+
+shortVarDecl
+    : identifierList type_ DECLARE_ASSIGN expressionList
     ;
 
 // we only allow these types for now
@@ -154,6 +158,7 @@ simpleStmt
     | varDecl
     | funcDecl
     | expressionStmt
+    | shortVarDecl
     ;
 
 sendStmt
