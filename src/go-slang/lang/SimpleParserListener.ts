@@ -3,12 +3,14 @@
 
 import { ParseTreeListener } from "antlr4ts/tree/ParseTreeListener";
 
+import { MAKEOPContext } from "./SimpleParser";
 import { FUNCAPPContext } from "./SimpleParser";
 import { UNARYOPContext } from "./SimpleParser";
 import { BINOPContext } from "./SimpleParser";
 import { RELOPContext } from "./SimpleParser";
 import { LOGOPContext } from "./SimpleParser";
 import { PRIMARYContext } from "./SimpleParser";
+import { RECVOPContext } from "./SimpleParser";
 import { Global_scopeContext } from "./SimpleParser";
 import { ArgumentsContext } from "./SimpleParser";
 import { FuncAppContext } from "./SimpleParser";
@@ -21,6 +23,7 @@ import { ParameterDeclContext } from "./SimpleParser";
 import { BlockContext } from "./SimpleParser";
 import { VarDeclContext } from "./SimpleParser";
 import { Type_Context } from "./SimpleParser";
+import { ChannelTypeContext } from "./SimpleParser";
 import { AssignmentContext } from "./SimpleParser";
 import { Assign_opContext } from "./SimpleParser";
 import { ExpressionStmtContext } from "./SimpleParser";
@@ -32,6 +35,8 @@ import { LiteralContext } from "./SimpleParser";
 import { StatementListContext } from "./SimpleParser";
 import { StatementContext } from "./SimpleParser";
 import { SimpleStmtContext } from "./SimpleParser";
+import { SendStmtContext } from "./SimpleParser";
+import { MakeExprContext } from "./SimpleParser";
 import { ExpressionListContext } from "./SimpleParser";
 import { EosContext } from "./SimpleParser";
 import { IdentifierListContext } from "./SimpleParser";
@@ -48,6 +53,19 @@ import { GoStmtContext } from "./SimpleParser";
  * `SimpleParser`.
  */
 export interface SimpleParserListener extends ParseTreeListener {
+	/**
+	 * Enter a parse tree produced by the `MAKEOP`
+	 * labeled alternative in `SimpleParser.expression`.
+	 * @param ctx the parse tree
+	 */
+	enterMAKEOP?: (ctx: MAKEOPContext) => void;
+	/**
+	 * Exit a parse tree produced by the `MAKEOP`
+	 * labeled alternative in `SimpleParser.expression`.
+	 * @param ctx the parse tree
+	 */
+	exitMAKEOP?: (ctx: MAKEOPContext) => void;
+
 	/**
 	 * Enter a parse tree produced by the `FUNCAPP`
 	 * labeled alternative in `SimpleParser.expression`.
@@ -125,6 +143,19 @@ export interface SimpleParserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	exitPRIMARY?: (ctx: PRIMARYContext) => void;
+
+	/**
+	 * Enter a parse tree produced by the `RECVOP`
+	 * labeled alternative in `SimpleParser.expression`.
+	 * @param ctx the parse tree
+	 */
+	enterRECVOP?: (ctx: RECVOPContext) => void;
+	/**
+	 * Exit a parse tree produced by the `RECVOP`
+	 * labeled alternative in `SimpleParser.expression`.
+	 * @param ctx the parse tree
+	 */
+	exitRECVOP?: (ctx: RECVOPContext) => void;
 
 	/**
 	 * Enter a parse tree produced by `SimpleParser.global_scope`.
@@ -259,6 +290,17 @@ export interface SimpleParserListener extends ParseTreeListener {
 	exitType_?: (ctx: Type_Context) => void;
 
 	/**
+	 * Enter a parse tree produced by `SimpleParser.channelType`.
+	 * @param ctx the parse tree
+	 */
+	enterChannelType?: (ctx: ChannelTypeContext) => void;
+	/**
+	 * Exit a parse tree produced by `SimpleParser.channelType`.
+	 * @param ctx the parse tree
+	 */
+	exitChannelType?: (ctx: ChannelTypeContext) => void;
+
+	/**
 	 * Enter a parse tree produced by `SimpleParser.assignment`.
 	 * @param ctx the parse tree
 	 */
@@ -378,6 +420,28 @@ export interface SimpleParserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	exitSimpleStmt?: (ctx: SimpleStmtContext) => void;
+
+	/**
+	 * Enter a parse tree produced by `SimpleParser.sendStmt`.
+	 * @param ctx the parse tree
+	 */
+	enterSendStmt?: (ctx: SendStmtContext) => void;
+	/**
+	 * Exit a parse tree produced by `SimpleParser.sendStmt`.
+	 * @param ctx the parse tree
+	 */
+	exitSendStmt?: (ctx: SendStmtContext) => void;
+
+	/**
+	 * Enter a parse tree produced by `SimpleParser.makeExpr`.
+	 * @param ctx the parse tree
+	 */
+	enterMakeExpr?: (ctx: MakeExprContext) => void;
+	/**
+	 * Exit a parse tree produced by `SimpleParser.makeExpr`.
+	 * @param ctx the parse tree
+	 */
+	exitMakeExpr?: (ctx: MakeExprContext) => void;
 
 	/**
 	 * Enter a parse tree produced by `SimpleParser.expressionList`.

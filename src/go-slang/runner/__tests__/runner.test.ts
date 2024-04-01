@@ -257,4 +257,211 @@ describe('Runner tests', () => {
 
     boilerplateAssert(result, undefined)
   })
+
+  // this fails
+  test('basic buffered channel test', async () => {
+    const code = `
+    func inc(output chan int) {
+      num int := <-output
+      Println(num)
+    }
+    func main() {
+      var input chan int = make(chan int, 5)
+      i int := 0
+      for i < 5 {
+        go inc(input);
+        i = i + 1
+      }
+      i = 0
+      for i < 5 {
+        input <- i
+        i=i+1
+      }
+      sleep(35)
+    }
+    `
+    const result = await goRunner(code, createContext())
+    boilerplateAssert(result, undefined)
+  })
+
+  // but this passes
+  test('basic buffered channel test', async () => {
+    const code = `
+    func inc(output chan int) {
+      num int := <-output
+      Println(num)
+    }
+    func main() {
+      var input chan int = make(chan int, 3)
+      i int := 0
+      go inc(input)
+      go inc(input)
+      go inc(input)
+      go inc(input)
+      go inc(input) 
+      i = 0
+      for i < 5 {
+        input <- i
+        i=i+1
+      }
+      sleep(500000) 
+    }
+    `
+    const result = await goRunner(code, createContext())
+    boilerplateAssert(result, undefined)
+  })
+
+  test('go call in loop buffered channels', async () => {
+    const code = `
+    func inc(x int) {
+      x = x + 1
+      Println(x)
+    }
+    func main() {
+      var input chan int = make(chan int, 5)
+      x int := 0
+      for x < 5 {
+        go inc(x)
+        x = x + 1
+      }
+      sleep(15)
+    }`
+    const result = await goRunner(code, createContext())
+    boilerplateAssert(result, undefined)
+  })
+
+  test('test buffered channel deadlock detection', async () => {
+    const code = `
+    func inc() {
+      x int := 1
+      Println(x)
+    }
+    
+    func main() {
+      c chan int := make(chan int, 1)
+      go inc()
+      c <- 1
+      c <- 2
+    }`
+    expect(()=>goRunner(code, createContext())).rejects.toThrow("fatal error: all goroutines are asleep - deadlock!")
+  })
+
+  test('go call in loop unbuffered', async () => {
+    const code = `
+    func inc(output chan int) {
+      num int := <-output
+      Println(num)
+    }
+    func main() {
+      var input chan int = make(chan int)
+      x int := 0
+      for x < 5 {
+        go inc(input)
+        x = x + 1
+      }
+      x = 0
+      for x < 5 {
+        input <- x
+        x = x + 1
+      }
+      sleep(15)
+    }`
+    const result = await goRunner(code, createContext())
+    boilerplateAssert(result, undefined)
+  })
+
+  test("unbuffered channels", async () => {
+    const code = `
+      func hello(output chan string) {
+        output <- "Hello World"
+      }
+
+      func main() {
+        input chan string := make(chan string)
+        go hello(input)
+        text string := <-input
+        Println(text)
+      }`;
+      const result = await goRunner(code, createContext())
+    boilerplateAssert(result, undefined)
+  });
+
+  // should print { value: 'Hello World' }
+  test("unbuffered channels deadlock detection", async () => {
+    const code = `
+      func hello(output chan string) {
+        output <- "Hello World"
+      }
+
+      func main() {
+        input chan string := make(chan string)
+        go hello(input)
+        <-input
+        text string := <-input
+        Println(text)
+      }`;
+      expect(()=>goRunner(code, createContext())).rejects.toThrow("fatal error: all goroutines are asleep - deadlock!")
+  });
+
+  // should print { value: 7 }
+  test("basic rel ops test", async() => {
+    const code = `
+    func main() {
+      x int := 1
+      if x == 1 {
+        x = x + 1
+      }
+      if x != 1 {
+        x = x + 1
+      }
+      if x >= 1 {
+        x = x + 1
+      }
+      if x <= 10 {
+        x = x + 1
+      }
+      if x > 1 {
+        x = x + 1
+      }
+      if x < 10 {
+        x = x + 1
+      }
+      Println(x)
+    }`
+    const result = await goRunner(code, createContext())
+    boilerplateAssert(result, undefined)
+  })
+
+  // should print { value: 1 }
+  test("basic bin ops test", async() => {
+    const code = `
+    func main() {
+      x int := 1
+      Println(x + x - 4 * 3 / 2 % 5)
+    }`
+    const result = await goRunner(code, createContext())
+    boilerplateAssert(result, undefined)
+  })
+
+  // should print { value: 4 }
+  test("basic bin op precedence test should print 4 instead of 6", async() => {
+    const code = `
+    func main() {
+      x int := 1
+      Println(x + x * 3)
+    }`
+    const result = await goRunner(code, createContext())
+    boilerplateAssert(result, undefined)
+  })
+
+  // should print { value: 3 }
+  test("basic bin op precedence test should print 3 instead of 2", async() => {
+    const code = `
+    func main() {
+      x int := 2
+      Println(x + x / 2)
+    }`
+    const result = await goRunner(code, createContext())
+    boilerplateAssert(result, undefined)
+  })
 })

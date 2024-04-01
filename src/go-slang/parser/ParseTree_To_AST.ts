@@ -3,7 +3,7 @@ import { ParseTree } from 'antlr4ts/tree/ParseTree'
 import { RuleNode } from 'antlr4ts/tree/RuleNode'
 import { TerminalNode } from 'antlr4ts/tree/TerminalNode'
 
-import { AssignNode, ASTNode, BINOP, BinOpNode, BlockNode, ExpressionListNode, ExpressionStmtNode, ExprNode, ForStmtNode, FuncAppNode, FuncDeclNode, FunctionLiteralNode, GoStmtNode, IdListNode, IfStmtNode, LiteralNode, LogicalNode, LOGOP, NameNode, ParamDeclNode, ParamListNode, ResultNode, ReturnStmtNode, SequenceNode,  SignatureNode,  StmtNode, Tag, TypeListNode, TypeNode, UNOP, UnOpNode, VarDeclNode } from '../ast/AST'
+import { AssignNode, ASTNode, BINOP, BinOpNode, BlockNode, ChanTypeNode, ExpressionListNode, ExpressionStmtNode, ExprNode, ForStmtNode, FuncAppNode, FuncDeclNode, FunctionLiteralNode, GoStmtNode, IdListNode, IfStmtNode, LiteralNode, LogicalNode, LOGOP, MakeAppNode, NameNode, ParamDeclNode, ParamListNode, RecvExprNode, ResultNode, ReturnStmtNode, SendStmtNode, SequenceNode,  SignatureNode,  StmtNode, Tag, TypeListNode, TypeNode, UNOP, UnOpNode, VarDeclNode } from '../ast/AST'
 
 import {
   ArgumentsContext,
@@ -11,6 +11,7 @@ import {
   AssignmentContext,
   BINOPContext,
   BlockContext,
+  ChannelTypeContext,
   EosContext,
   ExpressionContext,
   ExpressionListContext,
@@ -26,15 +27,19 @@ import {
   IfStmtContext,
   LiteralContext,
   LOGOPContext,
+  MakeExprContext,
+  MAKEOPContext,
   OperandContext,
   OperandNameContext,
   ParameterDeclContext,
   ParametersContext,
   PRIMARYContext,
   PrimaryExprContext,
+  RECVOPContext,
   RELOPContext,
   ResultContext,
   ReturnStmtContext,
+  SendStmtContext,
   SignatureContext,
   SimpleStmtContext,
   StatementContext,
@@ -134,7 +139,11 @@ export class ParseTree_To_AST implements SimpleParserVisitor<ASTNode> {
                         ? BINOP.MINUS
                         : ctx._bin_op.text === "*"
                         ? BINOP.TIMES
-                        : BINOP.MINUS;
+                        : ctx._bin_op.text === "/"
+                        ? BINOP.DIV
+                        : BINOP.MOD;
+
+
     return {
       tag: Tag.BINOP,
       sym: sym,
@@ -153,7 +162,9 @@ export class ParseTree_To_AST implements SimpleParserVisitor<ASTNode> {
                         ? BINOP.LTE
                         : ctx._rel_op.text === ">="
                         ? BINOP.GTE
-                        : BINOP.EQ;
+                        : ctx._rel_op.text === "=="
+                        ? BINOP.EQ
+                        : BINOP.NTE; 
 
     return {
       tag: Tag.BINOP,
@@ -238,10 +249,22 @@ export class ParseTree_To_AST implements SimpleParserVisitor<ASTNode> {
       type = "int";
     } else if (ctx.STRING()){
       type = "string";
+    } else if (ctx.channelType()) {
+      return this.visitChannelType(ctx.channelType() as ChannelTypeContext)
     } else {
       throw Error("unknown or undeclared type");
     }
     return { tag: Tag.TYPE, type: type };
+  }
+
+  visitChannelType (ctx: ChannelTypeContext) : ChanTypeNode {
+    const typeOfChan = this.visitType_(ctx.type_());
+
+    // if (this.visitTerminal(ctx.CHAN()) == "<missing 'chan'>") {
+    //   throw new Error("expected Channel Type");
+    // }
+
+    return { tag: Tag.TYPE, type: "chan " + typeOfChan.type, typeOfChan: typeOfChan.type };
   }
 
   visitParameters(ctx: ParametersContext): ParamListNode {
@@ -357,6 +380,10 @@ visitAssignment(ctx: AssignmentContext): AssignNode {
     return
   }
 
+  visitRECVOP(ctx: RECVOPContext): RecvExprNode {
+    return { tag: Tag.RECV, sym:"<-", frst: this.visitExpression(ctx.expression())};
+  }
+
   visitExpression(ctx: ExpressionContext): ExprNode {
     //console.log("THIS IS IN VISIT EXPR " + ctx.ruleIndex);
     const res = ctx.accept(this);
@@ -399,6 +426,19 @@ visitAssignment(ctx: AssignmentContext): AssignNode {
     } else {
       throw Error("unknown function application syntax");
     }
+  }
+
+  visitMAKEOP(ctx: MAKEOPContext): MakeAppNode {
+    return this.visitMakeExpr(ctx.makeExpr());
+  }
+
+  visitMakeExpr(ctx: MakeExprContext): MakeAppNode {
+    const decimalLit = ctx.DECIMAL_LIT();
+    const isBuffered = decimalLit !== undefined;
+    const capacity = decimalLit !== undefined ? parseInt(this.visitTerminal(decimalLit), 10) : 0;
+
+    // make a channel with capacity zero should make it unbuffered
+    return { tag: Tag.MAKE, chanType: this.visitChannelType(ctx.channelType()).type, buffered: isBuffered && capacity != 0, capacity: capacity };
   }
 
   visitOperand(ctx: OperandContext): ExprNode {
@@ -522,11 +562,17 @@ visitAssignment(ctx: AssignmentContext): AssignNode {
       return res;
     } else if ((k = ctx.varDecl())) {
       return this.visitVarDecl(k)
+    } else if((k = ctx.sendStmt())) {
+      return this.visitSendStmt(k);
     } else {
         k = ctx.funcDecl();
         // should be safe cast
         return this.visitFuncDecl(k as FuncDeclContext);
     }
+  }
+
+  visitSendStmt(ctx: SendStmtContext): SendStmtNode {
+    return { tag: Tag.SEND, frst: this.visitExpression(ctx.expression()[0]), scnd: this.visitExpression(ctx.expression()[1]) };
   }
 
   visitExpressionList(ctx: ExpressionListContext): ExpressionListNode {

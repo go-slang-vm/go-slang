@@ -14,7 +14,8 @@ import {
   Environment_tag,
   Pair_tag,
   Builtin_tag,
-  String_tag
+  String_tag,
+  Channel_tag
 } from './constants'
 
 export class Heap {
@@ -232,6 +233,44 @@ export class Heap {
 
   is_Number = (address: number): boolean => this.heap_get_tag(address) === Number_tag
 
+  // channel
+  // [1 byte tag, 4 bytes channel idx,
+  //  2 bytes #children, 1 byte unused]
+  // followed by the counter
+  // followed by the capacity
+  ISBUFFERED_OFFSET: number = 7
+  heap_allocate_Channel = (
+    capacity: number,
+    isBuffered: boolean,
+    elemType: string,
+    idx: number
+  ): number => {
+    const address = this.heap_allocate(Channel_tag, 3)
+    this.heap_set_4_bytes_at_offset(address, 1, idx)
+    const buff = isBuffered ? 1 : 0
+    this.heap_set_channel_is_buffered(address, buff)
+
+    this.heap_set_channel_counter(address, 0)
+    this.heap_set_channel_capacity(address, capacity)
+    return address
+  }
+
+  heap_get_channel_idx = (address: number): number => this.heap_get_4_bytes_at_offset(address, 1)
+
+  heap_get_channel_counter = (address: number): number => this.heap_get_child(address, 0)
+
+  heap_get_channel_capacity = (address: number): number => this.heap_get_child(address, 1)
+
+  heap_get_channel_is_buffered = (address: number): boolean => this.heap_get_byte_at_offset(address, this.ISBUFFERED_OFFSET) == 1
+
+  heap_set_channel_counter = (address: number, val: number) => this.heap_set_child(address, 0, val)
+
+  heap_set_channel_capacity = (address: number, val: number) => this.heap_set_child(address, 1, val)
+
+  heap_set_channel_is_buffered = (address: number, buff: number) => this.heap_set_byte_at_offset(address, this.ISBUFFERED_OFFSET, buff)
+
+  is_Channel = (address: number): boolean => this.heap_get_tag(address) === Channel_tag
+
   allocate_literal_values = () => {
     this.False = this.heap_allocate(False_tag, 1)
     this.True = this.heap_allocate(True_tag, 1)
@@ -325,7 +364,9 @@ export class Heap {
 
   private heap_allocate(tag: number, size: number): number {
     if (size > this.node_size) {
-      throw new Error('limitation: nodes cannot be larger than 10 words. Current size: ' + size)
+      throw new Error(
+        `limitation: nodes cannot be larger than ${this.node_size} words. Current size: ${size}`
+      )
     }
 
     if (this.free === -1) {
@@ -340,9 +381,37 @@ export class Heap {
 
   private mark_sweep = (): void => {
     // mark r for r in roots
-    const roots = [...globalState.OS, globalState.E, ...globalState.RTS, ...globalState.ALLOCATING]
+
+    // current thread
+    let roots = [...globalState.OS, globalState.E, ...globalState.RTS, ...globalState.ALLOCATING]
     for (let i = 0; i < roots.length; i++) {
       this.mark(roots[i])
+    }
+    // rest of the threads
+    for(const thread of globalState.THREADQUEUE) {
+      // no allocating
+      roots = [...thread.OS, thread.E, ...thread.RTS]
+      for (let i = 0; i < roots.length; i++) {
+        this.mark(roots[i])
+      }
+    }
+
+    // blocked threads
+    for(const channel of globalState.CHANNELARRAY) {
+      for(const thread of channel.getRecvQueue()) {
+        // no allocating
+        roots = [...thread.OS, thread.E, ...thread.RTS]
+        for (let i = 0; i < roots.length; i++) {
+          this.mark(roots[i])
+        }
+      }
+      for(const thread of channel.getSendQueue()) {
+        // no allocating
+        roots = [...thread.OS, thread.E, ...thread.RTS]
+        for (let i = 0; i < roots.length; i++) {
+          this.mark(roots[i])
+        }
+      } 
     }
 
     this.sweep()

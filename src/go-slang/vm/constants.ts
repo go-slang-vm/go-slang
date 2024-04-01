@@ -25,3 +25,4 @@ export const Environment_tag = 10 // 0000 1010
 export const Pair_tag = 11
 export const Builtin_tag = 12
 export const String_tag = 13
+export const Channel_tag = 14

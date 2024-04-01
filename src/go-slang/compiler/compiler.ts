@@ -13,8 +13,11 @@ import {
   LambdaStmtNode,
   LiteralNode,
   LogicalNode,
+  MakeAppNode,
   NameNode,
+  RecvExprNode,
   ReturnStmtNode,
+  SendStmtNode,
   SequenceNode,
   StmtNode,
   Tag,
@@ -108,14 +111,14 @@ const scan_for_locals = (comp: ASTNode): string[] => {
   const ret =
     comp.tag === 'seq'
       ? (comp as SequenceNode).stmts.reduce(
-          (acc: string[], x: ASTNode) => acc.concat(scan_for_locals(x)),
-          []
-        )
+        (acc: string[], x: ASTNode) => acc.concat(scan_for_locals(x)),
+        []
+      )
       : ['let', 'const'].includes(comp.tag)
-      ? [...(comp as VarDeclNode).syms.IDENTS]
-      : comp.tag === 'fun'
-      ? [(comp as FuncDeclNode).sym]
-      : []
+        ? [...(comp as VarDeclNode).syms.IDENTS]
+        : comp.tag === 'fun'
+          ? [(comp as FuncDeclNode).sym]
+          : []
   // console.log(ret);
   return ret
 }
@@ -340,14 +343,43 @@ const compile_comp = {
     // we modify the tag of that instruction for our purposes (hacks)
     instrs[wc - 1].tag = 'GOCALL'
     instrs[wc++] = { tag: 'LDC', val: undefined }
+  },
+  send: (comp: SendStmtNode, ce: CompileTimeEnvironment) => {
+    // note that Go specs does not specify the order in which these 2 are evaluated
+    // this is the expr on the right
+    compile(comp.scnd, ce);
+
+    //this should be the channel sym
+    compile(comp.frst, ce);
+
+    instrs[wc++] = { tag: "SEND" }
+    // TODO: figure out what value should be the value of a send statement
+    // lets default to undefined for now
+    instrs[wc++] = { tag: "LDC", val: undefined }
+  },
+  recv: (comp: RecvExprNode, ce: CompileTimeEnvironment) => {
+    //this should be the channel sym
+    compile(comp.frst, ce);
+
+    instrs[wc++] = { tag: "RECV" }
+    // the value of a recv statement should be the value read out
+  },
+  make: (comp: MakeAppNode, ce: CompileTimeEnvironment) => {
+    const elemType = getChanType(comp.chanType);
+    // this should call heap_allocate_channel(capacity, buffered, elemType) then throw the address on the OS
+    // notice that we dont have to compile comp.capacity because we force the syntax to be a DECIMAL_LIT()
+    instrs[wc++] = { tag: "MAKE", capacity: comp.capacity, isBuffered: comp.buffered, elemType: elemType };
   }
+}
+
+const getChanType = (chanType: string) => {
+  // invariant that chanType in MakeAppNode always starts with chan and then a space
+  return chanType.slice(5);
 }
 
 // compile component into instruction array instrs,
 // starting at wc (write counter)
 const compile = (comp: ASTNode, ce: CompileTimeEnvironment) => {
-  // console.log("compiling: " , comp.tag);
-  // console.dir(comp, {depth: 1});
   compile_comp[comp.tag](comp, ce)
 }
 
