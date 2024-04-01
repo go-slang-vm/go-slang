@@ -1125,7 +1125,7 @@ describe('Basic compiler test', () => {
     expect(outputInstr).toStrictEqual(expectedInstr)
   })
 
-  test.only("basic rel ops test", async() => {
+  test("basic rel ops test", async() => {
     const program = `
     func main() {
       x int := 1

@@ -145,6 +145,8 @@ export class VM {
     globalState.OS = []
     globalState.RTS = []
     globalState.ALLOCATING = []
+    globalState.THREADQUEUE = []
+    globalState.CHANNELARRAY = []
 
     this.heapInstance.heap = this.heapInstance.heap_make(heapsize_words)
     this.heapInstance.heap_size = heapsize_words
@@ -173,6 +175,8 @@ export class VM {
     this.heapInstance.heap_bottom = this.heapInstance.free
   }
 
+  // TODO: null is nil in Go figure out how to deal with this
+
   address_to_TS_value = (x: number): any =>
     this.heapInstance.is_Boolean(x)
       ? this.heapInstance.is_True(x)
@@ -197,7 +201,9 @@ export class VM {
                     ? '<closure>'
                     : this.heapInstance.is_Builtin(x)
                       ? '<builtin>'
-                      : 'unknown word tag: ' + word_to_string(x)
+                      : this.heapInstance.is_Channel(x)
+                        ? '<channel>'
+                        : 'unknown word tag: ' + word_to_string(x)
 
   TS_value_to_address = (x: any): string | number =>
     is_boolean(x)
@@ -233,8 +239,8 @@ export class VM {
     '<=': (x, y) => x <= y,
     '>=': (x, y) => x >= y,
     '>': (x, y) => x > y,
-    '===': (x, y) => x === y,
-    '!==': (x, y) => x !== y
+    '==': (x, y) => x === y,
+    '!=': (x, y) => x !== y
   }
 
   // v2 is popped before v1
@@ -368,7 +374,7 @@ export class VM {
       // these are the same as CALL instruction from homwork
       const arity = instr.arity
       const fun = peek(globalState.OS, arity)
-      // this has to change to be called on the new thread -> how to do this?
+      // TODO: still need to handle this
       if (this.heapInstance.is_Builtin(fun)) {
         return this.apply_builtin(this.heapInstance.heap_get_Builtin_id(fun))
       }
@@ -428,9 +434,8 @@ export class VM {
 
       // this is for buffered Channels
       const counter = this.heapInstance.heap_get_channel_counter(channel)
-      const capacity = this.heapInstance.heap_get_channel_capacity(channel)
       // counter == capacity means queue is full
-      if (counter == capacity) {
+      if (this.shouldSendBlock(channel)) {
         // add myself to blocked queue for this sem
         const semId = this.heapInstance.heap_get_channel_idx(channel);
         // note that at this point the channel and expr are still at the top of the OS
@@ -465,7 +470,7 @@ export class VM {
       const counter = this.heapInstance.heap_get_channel_counter(channel)
 
       // counter should start at 0 to indicate an empty channel
-      if (counter == 0) {
+      if (this.shouldRecvBlock(channel)) {
         // the queue is empty
         // add myself to blocked queue for this channel
         const semId = this.heapInstance.heap_get_channel_idx(channel);
@@ -493,6 +498,33 @@ export class VM {
         push(this.curThread.OS, val);
       }
     },
+  }
+
+  shouldRecvBlock(channel: number): boolean {
+    const isBuffered = this.heapInstance.heap_get_channel_is_buffered(channel)
+    if(isBuffered) {
+      const counter = this.heapInstance.heap_get_channel_counter(channel)
+      return counter == 0
+    } else {
+      // unbuffered we check if there is no corresponding sender
+      const semId = this.heapInstance.heap_get_channel_idx(channel)
+      // if there are blocked go routines on the send queue this receive should not block
+      return !this.hasBlockedGoRoutines("send", semId)
+    }
+  }
+  
+  shouldSendBlock(channel: number): boolean {
+    const isBuffered = this.heapInstance.heap_get_channel_is_buffered(channel)
+    if(isBuffered) {
+      const counter = this.heapInstance.heap_get_channel_counter(channel);
+      const capacity = this.heapInstance.heap_get_channel_capacity(channel);
+      return counter == capacity
+    } else {
+      // unbuffered we check if there is no corresponding receiver
+      const semId = this.heapInstance.heap_get_channel_idx(channel)
+      // if there are blocked go routines on the recv queue this send should not block
+      return !this.hasBlockedGoRoutines("recv", semId)
+    }
   }
 
   hasBlockedGoRoutines(queue: string, idx: number): boolean {

@@ -311,7 +311,7 @@ describe('Runner tests', () => {
     boilerplateAssert(result, undefined)
   })
 
-  test('go call in loop', async () => {
+  test('go call in loop buffered channels', async () => {
     const code = `
     func inc(x int) {
       x = x + 1
@@ -344,5 +344,91 @@ describe('Runner tests', () => {
       c <- 2
     }`
     expect(()=>goRunner(code, createContext())).rejects.toThrow("fatal error: all goroutines are asleep - deadlock!")
+  })
+
+  test('go call in loop unbuffered', async () => {
+    const code = `
+    func inc(output chan int) {
+      num int := <-output
+      Println(num)
+    }
+    func main() {
+      var input chan int = make(chan int)
+      x int := 0
+      for x < 5 {
+        go inc(input)
+        x = x + 1
+      }
+      x = 0
+      for x < 5 {
+        input <- x
+        x = x + 1
+      }
+      sleep(15)
+    }`
+    const result = await goRunner(code, createContext())
+    boilerplateAssert(result, undefined)
+  })
+
+  test("unbuffered channels", async () => {
+    const code = `
+      func hello(output chan string) {
+        output <- "Hello World"
+      }
+
+      func main() {
+        input chan string := make(chan string)
+        go hello(input)
+        text string := <-input
+        Println(text)
+      }`;
+      const result = await goRunner(code, createContext())
+    boilerplateAssert(result, undefined)
+  });
+
+  // should print { value: 'Hello World' }
+  test("unbuffered channels deadlock detection", async () => {
+    const code = `
+      func hello(output chan string) {
+        output <- "Hello World"
+      }
+
+      func main() {
+        input chan string := make(chan string)
+        go hello(input)
+        <-input
+        text string := <-input
+        Println(text)
+      }`;
+      expect(()=>goRunner(code, createContext())).rejects.toThrow("fatal error: all goroutines are asleep - deadlock!")
+  });
+
+  // should print { value: 7 }
+  test("basic rel ops test", async() => {
+    const code = `
+    func main() {
+      x int := 1
+      if x == 1 {
+        x = x + 1
+      }
+      if x != 1 {
+        x = x + 1
+      }
+      if x >= 1 {
+        x = x + 1
+      }
+      if x <= 10 {
+        x = x + 1
+      }
+      if x > 1 {
+        x = x + 1
+      }
+      if x < 10 {
+        x = x + 1
+      }
+      Println(x)
+    }`
+    const result = await goRunner(code, createContext())
+    boilerplateAssert(result, undefined)
   })
 })
