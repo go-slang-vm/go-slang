@@ -1,3 +1,4 @@
+import { Channel } from "./channel"
 import { Thread } from "./thread"
 
 export class GlobalState {
@@ -6,6 +7,7 @@ export class GlobalState {
   RTS: number[] = []
   ALLOCATING: number[] = []
   THREADQUEUE: Thread[] = []
+  CHANNELARRAY: Channel[] = []
 }
 
 export const globalState = new GlobalState()

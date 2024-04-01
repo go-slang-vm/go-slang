@@ -390,6 +390,24 @@ export class Heap {
       }
     }
 
+    // blocked threads
+    for(const channel of globalState.CHANNELARRAY) {
+      for(const thread of channel.getRecvQueue()) {
+        // no allocating
+        roots = [...thread.OS, thread.E, ...thread.RTS]
+        for (let i = 0; i < roots.length; i++) {
+          this.mark(roots[i])
+        }
+      }
+      for(const thread of channel.getSendQueue()) {
+        // no allocating
+        roots = [...thread.OS, thread.E, ...thread.RTS]
+        for (let i = 0; i < roots.length; i++) {
+          this.mark(roots[i])
+        }
+      } 
+    }
+
     this.sweep()
 
     if (this.free === -1) {

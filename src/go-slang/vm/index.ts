@@ -17,9 +17,7 @@ import { Channel_tag, numInstructions } from './constants'
 import { Channel } from './channel'
 
 export class VM {
-  channelArray: Channel[]
   heapInstance: Heap
-  threadQueue: Thread[]
   curThread: Thread
   lastInstructionIndex: number
   globalTime: number // a global counter to keep track of number of steps executed by the VM
@@ -47,7 +45,6 @@ export class VM {
       numInstructions, // sleepStartTime
       true
     )
-    this.channelArray = []
     this.globalTime = 0
   }
 
@@ -182,25 +179,25 @@ export class VM {
         ? true
         : false
       : this.heapInstance.is_Number(x)
-      ? this.heapInstance.heap_get(x + 1)
-      : this.heapInstance.is_Undefined(x)
-      ? undefined
-      : this.heapInstance.is_Unassigned(x)
-      ? '<unassigned>'
-      : this.heapInstance.is_Null(x)
-      ? null
-      : this.heapInstance.is_String(x)
-      ? this.heapInstance.heap_get_string(x)
-      : this.heapInstance.is_Pair(x)
-      ? [
-          this.address_to_TS_value(this.heapInstance.heap_get_child(x, 0)),
-          this.address_to_TS_value(this.heapInstance.heap_get_child(x, 1))
-        ]
-      : this.heapInstance.is_Closure(x)
-      ? '<closure>'
-      : this.heapInstance.is_Builtin(x)
-      ? '<builtin>'
-      : 'unknown word tag: ' + word_to_string(x)
+        ? this.heapInstance.heap_get(x + 1)
+        : this.heapInstance.is_Undefined(x)
+          ? undefined
+          : this.heapInstance.is_Unassigned(x)
+            ? '<unassigned>'
+            : this.heapInstance.is_Null(x)
+              ? null
+              : this.heapInstance.is_String(x)
+                ? this.heapInstance.heap_get_string(x)
+                : this.heapInstance.is_Pair(x)
+                  ? [
+                    this.address_to_TS_value(this.heapInstance.heap_get_child(x, 0)),
+                    this.address_to_TS_value(this.heapInstance.heap_get_child(x, 1))
+                  ]
+                  : this.heapInstance.is_Closure(x)
+                    ? '<closure>'
+                    : this.heapInstance.is_Builtin(x)
+                      ? '<builtin>'
+                      : 'unknown word tag: ' + word_to_string(x)
 
   TS_value_to_address = (x: any): string | number =>
     is_boolean(x)
@@ -208,14 +205,14 @@ export class VM {
         ? this.heapInstance.True
         : this.heapInstance.False
       : is_number(x)
-      ? this.heapInstance.heap_allocate_Number(x)
-      : is_undefined(x)
-      ? this.heapInstance.Undefined
-      : is_null(x)
-      ? this.heapInstance.Null
-      : is_string(x)
-      ? this.heapInstance.heap_allocate_String(x)
-      : 'unknown word tag: ' + word_to_string(x)
+        ? this.heapInstance.heap_allocate_Number(x)
+        : is_undefined(x)
+          ? this.heapInstance.Undefined
+          : is_null(x)
+            ? this.heapInstance.Null
+            : is_string(x)
+              ? this.heapInstance.heap_allocate_String(x)
+              : 'unknown word tag: ' + word_to_string(x)
 
   // ********
   // **********************
@@ -275,9 +272,9 @@ export class VM {
       push(globalState.OS, this.apply_binop(instr.sym, pop(globalState.OS), pop(globalState.OS))),
     POP: _ => pop(globalState.OS),
     JOF: instr =>
-      (this.curThread.PC = this.heapInstance.is_True(pop(globalState.OS))
-        ? this.curThread.PC
-        : instr.addr),
+    (this.curThread.PC = this.heapInstance.is_True(pop(globalState.OS))
+      ? this.curThread.PC
+      : instr.addr),
     GOTO: instr => (this.curThread.PC = instr.addr),
     ENTER_SCOPE: instr => {
       push(globalState.RTS, this.heapInstance.heap_allocate_Blockframe(globalState.E))
@@ -411,7 +408,7 @@ export class VM {
     },
 
     MAKE: instr => {
-      const idx = this.channelArray.length
+      const idx = globalState.CHANNELARRAY.length
       this.createNewChannel(instr.capacity, idx)
       const addr = this.heapInstance.heap_allocate_Channel(
         instr.capacity,
@@ -423,7 +420,7 @@ export class VM {
     },
 
     SEND: instr => {
-      //OS top should have the address of the channel
+      //OS top should have the address of the channel... maybe change names cus might be mutex instead of channel also
       const channel = peek(this.curThread.OS, 0)
       if (this.heapInstance.heap_get_tag(channel) !== Channel_tag) {
         throw Error('calling channel operations on non channel')
@@ -432,18 +429,28 @@ export class VM {
       // this is for buffered Channels
       const counter = this.heapInstance.heap_get_channel_counter(channel)
       const capacity = this.heapInstance.heap_get_channel_capacity(channel)
+      // counter == capacity means queue is full
       if (counter == capacity) {
-        // retry
-        this.curThread.PC--
-        this.contextSwitch()
+        // add myself to blocked queue for this sem
+        const semId = this.heapInstance.heap_get_channel_idx(channel);
+        // note that at this point the channel and expr are still at the top of the OS
+        this.addCurrentGoRoutineToBlockedQueue("send", semId);
+        this.loadNextThread();
       } else {
-        this.curThread.OS.pop()
+        // we write into the channel first
+        this.curThread.OS.pop() //pop channel from the top
         // put val in the queue
-        const val = this.curThread.OS.pop()
+        const val = this.curThread.OS.pop() // pop val from the top
         const semId = this.heapInstance.heap_get_channel_idx(channel)
+        // add item to the channel itemQueue
         this.addItemToChannel(semId, val as number)
-        //increment counter
-        this.heapInstance.heap_set_channel_counter(channel, counter + 1)
+        // wake up a receiver if any else increment counter
+        if (this.hasBlockedGoRoutines("recv", semId)) {
+          this.unblockOne("recv", semId)
+        } else {
+          //increment counter
+          this.heapInstance.heap_set_channel_counter(channel, counter + 1)
+        }
       }
     },
 
@@ -456,39 +463,112 @@ export class VM {
 
       // this is for buffered Channels
       const counter = this.heapInstance.heap_get_channel_counter(channel)
+
+      // counter should start at 0 to indicate an empty channel
       if (counter == 0) {
-        // retry
-        this.curThread.PC--
-        this.contextSwitch()
+        // the queue is empty
+        // add myself to blocked queue for this channel
+        const semId = this.heapInstance.heap_get_channel_idx(channel);
+        // note that we did PC++ in the main loop and this is fine, when we unblock from this we do not want the PC to come back here and just move on
+        // note that at this point we have the channel on the top of the OS
+        this.addCurrentGoRoutineToBlockedQueue("recv", semId);
+        // contextSwitch or run next thread?
+        this.loadNextThread();
       } else {
-        this.curThread.OS.pop()
+        // in the non blocking case we need to read from the queue. We know at this point that the queue is not empty
+        // should we wake up a sending thread first then read or? Is there a case where we need the send to go first even if we know something is in the queue? maybe unbuffered channels?
+        // wake up a sender if any else increment counter
+        this.curThread.OS.pop() // pop channel from OS
         // read val from the channel
         const semId = this.heapInstance.heap_get_channel_idx(channel)
-        const val = this.getItemFromChannel(semId)
-        // push val onto OS
-        push(this.curThread.OS, val)
-        // decrement counter
-        this.heapInstance.heap_set_channel_counter(channel, counter - 1)
+        if (this.hasBlockedGoRoutines("send", semId)) {
+          this.unblockOne("send", semId);
+        } else {
+          // decrement counter
+          this.heapInstance.heap_set_channel_counter(channel, counter - 1)
+        }
+        // now as receivers we read from the channel
+        // read val from the channel
+        const val = this.getItemFromChannel(semId);
+        push(this.curThread.OS, val);
       }
+    },
+  }
+
+  hasBlockedGoRoutines(queue: string, idx: number): boolean {
+    if (queue == "send") {
+      return globalState.CHANNELARRAY[idx].getSendQueue().length > 0
+    } else if (queue == "recv") {
+      return globalState.CHANNELARRAY[idx].getRecvQueue().length > 0
+    } else {
+      throw new Error("accessing unknown queue in channel: " + queue)
     }
+  }
+
+  addCurrentGoRoutineToBlockedQueue(queue: string, idx: number) {
+    this.saveThread()
+    // after saveThread is called, the current thread context is at the back of the threadQueue
+    // pop off this thread from the threadQueue and add it to the back of the sem queue
+    // check if pop removes the last or first element
+    // should be safe cast since we just called saveThread
+    const thread = globalState.THREADQUEUE.pop() as Thread
+
+    // add to the respective queues
+    if (queue == "send") {
+      globalState.CHANNELARRAY[idx].getSendQueue().push(thread);
+    } else if (queue == "recv") {
+      globalState.CHANNELARRAY[idx].getRecvQueue().push(thread);
+    } else {
+      throw new Error("accessing unknown queue in channel: " + queue)
+    }
+  }
+
+  unblockOne(queue: string, idx: number) {
+    let thread = undefined;
+    if (queue == "send") {
+      // should be safe cast as we check for non empty before this and since the instruction is atomic, it will not be swapped out for another thread
+      thread = globalState.CHANNELARRAY[idx].getSendQueue().shift() as Thread
+      // since we are unblocking send, let us make the write call
+      thread.OS.pop() // pop channel from this thread's OS
+      const val = thread.OS.pop() // pop val from this thread's OS
+
+      // add item to the channel itemQueue
+      this.addItemToChannel(idx, val as number)
+    } else if (queue == "recv") {
+      // should be safe cast as we check for non empty before this and since the instruction is atomic, it will not be swapped out for another thread
+      thread = globalState.CHANNELARRAY[idx].getRecvQueue().shift() as Thread
+      // we assume that the sender that unblocks this receiver already wrote to the item queue
+      const val = this.getItemFromChannel(idx)
+      thread.OS.pop(); // pop channel from OS
+      // push val on OS as the return value
+      push(thread.OS, val);
+    } else {
+      throw new Error("accessing unknown queue in channel: " + queue)
+    }
+    // add thread back to the global state THREADQUEUE
+    // check if i need to change anything here
+    if (thread === undefined) {
+      throw new Error("trying to unblock an empty " + queue + " queue")
+    }
+    globalState.THREADQUEUE.push(thread);
   }
 
   createNewChannel(capacity: number, idx: number) {
-    this.channelArray.push(new Channel(idx, capacity))
+    globalState.CHANNELARRAY.push(new Channel(idx, capacity))
   }
 
   addItemToChannel(idx: number, val: number) {
-    if (idx >= this.channelArray.length) {
+    if (idx >= globalState.CHANNELARRAY.length) {
       throw new Error('adding to non existent channel')
     }
-    this.channelArray[idx].push(val)
+    globalState.CHANNELARRAY[idx].pushToItemQueue(val)
   }
 
   getItemFromChannel(idx: number): number {
-    if (idx >= this.channelArray.length) {
+    if (idx >= globalState.CHANNELARRAY.length) {
       throw new Error('popping from non existent channel')
     }
-    return this.channelArray[idx].pop()
+    return globalState.CHANNELARRAY[idx].popFromItemQueue()
   }
 
   saveThread = () => {
