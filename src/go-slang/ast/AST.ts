@@ -30,6 +30,8 @@ export enum Tag {
     RECV = "recv",
     SEND = "send",
     MAKE = "make",
+    MUT = "mut",
+    WAITGROUP = "waitgroup",
 }
 
 export enum LOGOP {
@@ -159,7 +161,7 @@ export interface AssignNode extends StmtNode {
 */
 
 export interface VarDeclNode extends StmtNode {
-    tag: Tag.VAR;
+    tag: Tag.VAR | Tag.MUT | Tag.WAITGROUP;
     syms: IdListNode;
     assignments: ExpressionListNode;
     type: string;

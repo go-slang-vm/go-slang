@@ -36,6 +36,7 @@ import {
   PRIMARYContext,
   PrimaryExprContext,
   RECVOPContext,
+  RegVarDeclContext,
   RELOPContext,
   ResultContext,
   ReturnStmtContext,
@@ -48,7 +49,9 @@ import {
   Type_Context,
   TypeListContext,
   UNARYOPContext,
-  VarDeclContext
+  VarDeclContext,
+  VarMutexDeclContext,
+  VarWaitGroupDeclContext
 } from '../lang/SimpleParser'
 import { SimpleParserVisitor } from '../lang/SimpleParserVisitor'
 
@@ -341,6 +344,31 @@ export class ParseTree_To_AST implements SimpleParserVisitor<ASTNode> {
 
   // NOTE we are forcing them to write the type
   visitVarDecl(ctx: VarDeclContext): VarDeclNode {
+    let k;
+    if((k=ctx.varMutexDecl())) {
+      return this.visitVarMutexDecl(k);
+    } else if((k = ctx.varWaitGroupDecl())) {
+      return this.visitVarWaitGroupDecl(k);
+    } else {
+      k = ctx.regVarDecl();
+      return this.visitRegVarDecl(k as RegVarDeclContext);
+    }
+    
+  }
+
+  visitVarMutexDecl (ctx: VarMutexDeclContext): VarDeclNode {
+    const variables = this.visitIdentifierList(ctx.identifierList());
+    const list: ExpressionListNode = { tag:Tag.EXPRLIST, list: [] }
+    return { tag: Tag.MUT, syms: variables, assignments: list, type: "mutex"};
+  }
+
+  visitVarWaitGroupDecl(ctx: VarWaitGroupDeclContext): VarDeclNode {
+    const variables = this.visitIdentifierList(ctx.identifierList());
+    const list: ExpressionListNode = { tag:Tag.EXPRLIST, list: [] }
+    return { tag: Tag.WAITGROUP, syms: variables, assignments: list, type: "waitgroup"}
+  }
+
+  visitRegVarDecl(ctx: RegVarDeclContext): VarDeclNode {
     const variables = this.visitIdentifierList(ctx.identifierList());
     let k;
     if ((k = ctx.expressionList())) {
@@ -354,7 +382,7 @@ export class ParseTree_To_AST implements SimpleParserVisitor<ASTNode> {
     }
   }
 
-  visitUNINITVARDECL(ctx: VarDeclContext): VarDeclNode {
+  visitUNINITVARDECL(ctx: RegVarDeclContext): VarDeclNode {
     const variables = this.visitIdentifierList(ctx.identifierList());
 
     const type = this.visitType_(ctx.type_()).type;

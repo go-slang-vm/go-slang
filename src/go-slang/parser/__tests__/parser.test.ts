@@ -393,7 +393,6 @@ describe('Basic parser test', () => {
       }
     }
     const outputAst: ASTNode = parse(program)
-    console.dir(outputAst, {depth: 100})
     expect(outputAst).toStrictEqual(expectedAst) 
   })
 
@@ -480,7 +479,6 @@ describe('Basic parser test', () => {
       }
     }
     const outputAst: ASTNode = parse(program)
-    console.dir(outputAst, {depth: 100})
     expect(outputAst).toStrictEqual(expectedAst) 
   })
 
@@ -567,7 +565,186 @@ describe('Basic parser test', () => {
       }
     }
     const outputAst: ASTNode = parse(program)
-    console.dir(outputAst, {depth: 100})
+    expect(outputAst).toStrictEqual(expectedAst) 
+  })
+
+  test('basic mutex test', async () => {
+    const program = `
+    func main(){
+      var x Mutex
+    }`
+    const expectedAst = {
+      tag: 'blk',
+      body: {
+        tag: 'seq',
+        stmts: [
+          {
+            tag: 'fun',
+            sym: 'main',
+            prms: [],
+            body: {
+              tag: 'blk',
+              body: {
+                tag: 'seq',
+                stmts: [
+                  {
+                    tag: 'mut',
+                    syms: { tag: 'idents', IDENTS: [ 'x' ] },
+                    assignments: { tag: 'exprlist', list: [] },
+                    type: 'mutex'
+                  },
+                ]
+              }
+            },
+            _arity: 0,
+            paramTypes: [],
+            returnTypes: []
+          },
+          {
+            tag: 'app',
+            fun: { tag: 'nam', sym: 'main' },
+            args: [],
+            _arity: 0
+          }
+        ]
+      }
+    }
+    const outputAst: ASTNode = parse(program)
+    expect(outputAst).toStrictEqual(expectedAst) 
+  })
+
+  test('basic waitgroup test', async () => {
+    const program = `
+    func main(){
+      var x WaitGroup
+    }`
+    const expectedAst = {
+      tag: 'blk',
+      body: {
+        tag: 'seq',
+        stmts: [
+          {
+            tag: 'fun',
+            sym: 'main',
+            prms: [],
+            body: {
+              tag: 'blk',
+              body: {
+                tag: 'seq',
+                stmts: [
+                  {
+                    tag: 'waitgroup',
+                    syms: { tag: 'idents', IDENTS: [ 'x' ] },
+                    assignments: { tag: 'exprlist', list: [] },
+                    type: 'waitgroup'
+                  },
+                ]
+              }
+            },
+            _arity: 0,
+            paramTypes: [],
+            returnTypes: []
+          },
+          {
+            tag: 'app',
+            fun: { tag: 'nam', sym: 'main' },
+            args: [],
+            _arity: 0
+          }
+        ]
+      }
+    }
+    const outputAst: ASTNode = parse(program)
+    expect(outputAst).toStrictEqual(expectedAst) 
+  })
+
+  test('multi mutex test', async () => {
+    const program = `
+    func main(){
+      var x,y,z Mutex
+    }`
+    const expectedAst = {
+      tag: 'blk',
+      body: {
+        tag: 'seq',
+        stmts: [
+          {
+            tag: 'fun',
+            sym: 'main',
+            prms: [],
+            body: {
+              tag: 'blk',
+              body: {
+                tag: 'seq',
+                stmts: [
+                  {
+                    tag: 'mut',
+                    syms: { tag: 'idents', IDENTS: [ 'x', 'y', 'z' ] },
+                    assignments: { tag: 'exprlist', list: [] },
+                    type: 'mutex'
+                  },
+                ]
+              }
+            },
+            _arity: 0,
+            paramTypes: [],
+            returnTypes: []
+          },
+          {
+            tag: 'app',
+            fun: { tag: 'nam', sym: 'main' },
+            args: [],
+            _arity: 0
+          }
+        ]
+      }
+    }
+    const outputAst: ASTNode = parse(program)
+    expect(outputAst).toStrictEqual(expectedAst) 
+  })
+
+  test('multi waitgroup test', async () => {
+    const program = `
+    func main(){
+      var x,y,z WaitGroup
+    }`
+    const expectedAst = {
+      tag: 'blk',
+      body: {
+        tag: 'seq',
+        stmts: [
+          {
+            tag: 'fun',
+            sym: 'main',
+            prms: [],
+            body: {
+              tag: 'blk',
+              body: {
+                tag: 'seq',
+                stmts: [
+                  {
+                    tag: 'waitgroup',
+                    syms: { tag: 'idents', IDENTS: [ 'x', 'y', 'z' ] },
+                    assignments: { tag: 'exprlist', list: [] },
+                    type: 'waitgroup'
+                  },
+                ]
+              }
+            },
+            _arity: 0,
+            paramTypes: [],
+            returnTypes: []
+          },
+          {
+            tag: 'app',
+            fun: { tag: 'nam', sym: 'main' },
+            args: [],
+            _arity: 0
+          }
+        ]
+      }
+    }
+    const outputAst: ASTNode = parse(program)
     expect(outputAst).toStrictEqual(expectedAst) 
   })
 })

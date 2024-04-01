@@ -56,7 +56,21 @@ block
 
 // NOTE WE ARE FORCING TYPES TO BE THERE
 varDecl
+    : varMutexDecl
+    | varWaitGroupDecl
+    | regVarDecl
+    ;
+
+regVarDecl
     : VAR identifierList type_ (ASSIGN expressionList)?
+    ;
+
+varMutexDecl
+    : VAR identifierList MUTEX
+    ;
+
+varWaitGroupDecl
+    : VAR identifierList WAITGROUP
     ;
 
 shortVarDecl

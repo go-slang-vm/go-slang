@@ -22,6 +22,9 @@ import { ParametersContext } from "./SimpleParser";
 import { ParameterDeclContext } from "./SimpleParser";
 import { BlockContext } from "./SimpleParser";
 import { VarDeclContext } from "./SimpleParser";
+import { RegVarDeclContext } from "./SimpleParser";
+import { VarMutexDeclContext } from "./SimpleParser";
+import { VarWaitGroupDeclContext } from "./SimpleParser";
 import { ShortVarDeclContext } from "./SimpleParser";
 import { Type_Context } from "./SimpleParser";
 import { ChannelTypeContext } from "./SimpleParser";
@@ -278,6 +281,39 @@ export interface SimpleParserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	exitVarDecl?: (ctx: VarDeclContext) => void;
+
+	/**
+	 * Enter a parse tree produced by `SimpleParser.regVarDecl`.
+	 * @param ctx the parse tree
+	 */
+	enterRegVarDecl?: (ctx: RegVarDeclContext) => void;
+	/**
+	 * Exit a parse tree produced by `SimpleParser.regVarDecl`.
+	 * @param ctx the parse tree
+	 */
+	exitRegVarDecl?: (ctx: RegVarDeclContext) => void;
+
+	/**
+	 * Enter a parse tree produced by `SimpleParser.varMutexDecl`.
+	 * @param ctx the parse tree
+	 */
+	enterVarMutexDecl?: (ctx: VarMutexDeclContext) => void;
+	/**
+	 * Exit a parse tree produced by `SimpleParser.varMutexDecl`.
+	 * @param ctx the parse tree
+	 */
+	exitVarMutexDecl?: (ctx: VarMutexDeclContext) => void;
+
+	/**
+	 * Enter a parse tree produced by `SimpleParser.varWaitGroupDecl`.
+	 * @param ctx the parse tree
+	 */
+	enterVarWaitGroupDecl?: (ctx: VarWaitGroupDeclContext) => void;
+	/**
+	 * Exit a parse tree produced by `SimpleParser.varWaitGroupDecl`.
+	 * @param ctx the parse tree
+	 */
+	exitVarWaitGroupDecl?: (ctx: VarWaitGroupDeclContext) => void;
 
 	/**
 	 * Enter a parse tree produced by `SimpleParser.shortVarDecl`.
