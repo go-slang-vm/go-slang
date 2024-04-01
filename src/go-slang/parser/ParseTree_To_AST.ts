@@ -431,7 +431,8 @@ visitAssignment(ctx: AssignmentContext): AssignNode {
     const isBuffered = decimalLit !== undefined;
     const capacity = decimalLit !== undefined ? parseInt(this.visitTerminal(decimalLit), 10) : 0;
 
-    return { tag: Tag.MAKE, chanType: this.visitChannelType(ctx.channelType()).type, buffered: isBuffered, capacity: capacity };
+    // make a channel with capacity zero should make it unbuffered
+    return { tag: Tag.MAKE, chanType: this.visitChannelType(ctx.channelType()).type, buffered: isBuffered && capacity != 0, capacity: capacity };
   }
 
   visitOperand(ctx: OperandContext): ExprNode {
