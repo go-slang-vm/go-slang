@@ -329,4 +329,20 @@ describe('Runner tests', () => {
     const result = await goRunner(code, createContext())
     boilerplateAssert(result, undefined)
   })
+
+  test('test buffered channel deadlock detection', async () => {
+    const code = `
+    func inc() {
+      x int := 1
+      Println(x)
+    }
+    
+    func main() {
+      c chan int := make(chan int, 1)
+      go inc()
+      c <- 1
+      c <- 2
+    }`
+    expect(()=>goRunner(code, createContext())).rejects.toThrow("fatal error: all goroutines are asleep - deadlock!")
+  })
 })

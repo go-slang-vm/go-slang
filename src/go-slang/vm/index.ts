@@ -587,7 +587,7 @@ export class VM {
   loadNextThread = () => {
     const nextThread: Thread | undefined = globalState.THREADQUEUE.shift()
     if (!nextThread) {
-      return undefined
+      throw new Error("fatal error: all goroutines are asleep - deadlock!")
     }
     nextThread.wakeTime = this.globalTime
     nextThread.sleepStartTime = this.globalTime + numInstructions
@@ -621,6 +621,8 @@ export class VM {
       const instr = instrs[this.curThread.PC++]
       //console.log("current PC: " + (this.curThread.PC-1) + " instr tag: " + instr.tag);
       this.microcode[instr.tag](instr)
+
+      // TODO: check this this is correct since the microcode can cause a context switch/ loading of next thread
       this.globalTime += 1
       if (this.globalTime === this.curThread.sleepStartTime) {
         this.contextSwitch()
