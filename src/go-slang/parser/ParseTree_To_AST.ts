@@ -509,8 +509,8 @@ export class ParseTree_To_AST implements SimpleParserVisitor<ASTNode> {
     if ((k = ctx.IDENTIFIER())) {
       const name = this.visitTerminal(k);
       if(name === "Done") {
-        if(argList.length !== 2) {
-          throw new Error("Done expects 2 arguments");
+        if(argList.length !== 1) {
+          throw new Error("Done expects 1 arguments");
         }
         return { tag: Tag.DONE, fun:{ tag: Tag.NAME, sym: name }, args: argList, _arity: argList.length}
       } else if(name === "Wait") {
@@ -519,8 +519,8 @@ export class ParseTree_To_AST implements SimpleParserVisitor<ASTNode> {
         }
         return { tag: Tag.WAIT, fun:{ tag: Tag.NAME, sym: name }, args: argList, _arity: argList.length} 
       } else if (name === "Add") {
-        if(argList.length !== 1) {
-          throw new Error("Add expects 1 arguments");
+        if(argList.length !== 2) {
+          throw new Error("Add expects 2 arguments");
         }
         return { tag: Tag.ADD, fun:{ tag: Tag.NAME, sym: name }, args: argList, _arity: argList.length}  
       } else if (name === "Lock") {
