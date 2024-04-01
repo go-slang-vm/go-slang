@@ -3,15 +3,17 @@ import { ParseTree } from 'antlr4ts/tree/ParseTree'
 import { RuleNode } from 'antlr4ts/tree/RuleNode'
 import { TerminalNode } from 'antlr4ts/tree/TerminalNode'
 
-import { AssignNode, ASTNode, BINOP, BinOpNode, BlockNode, ChanTypeNode, ExpressionListNode, ExpressionStmtNode, ExprNode, ForStmtNode, FuncAppNode, FuncDeclNode, FunctionLiteralNode, GoStmtNode, IdListNode, IfStmtNode, LiteralNode, LogicalNode, LOGOP, MakeAppNode, NameNode, ParamDeclNode, ParamListNode, RecvExprNode, ResultNode, ReturnStmtNode, SendStmtNode, SequenceNode, SignatureNode, StmtNode, Tag, TypeListNode, TypeNode, UNOP, UnOpNode, VarDeclNode } from '../ast/AST'
+import { AddStmtNode, AssignNode, ASTNode, BINOP, BinOpNode, BlockNode, ChanTypeNode, DoneStmtNode, ExpressionListNode, ExpressionStmtNode, ExprNode, ForStmtNode, FuncAppNode, FuncDeclNode, FunctionLiteralNode, GoStmtNode, IdListNode, IfStmtNode, LiteralNode, LockStmtNode, LogicalNode, LOGOP, MakeAppNode, NameNode, ParamDeclNode, ParamListNode, RecvExprNode, ResultNode, ReturnStmtNode, SendStmtNode, SequenceNode, SignatureNode, StmtNode, Tag, TypeListNode, TypeNode, UnlockStmtNode, UNOP, UnOpNode, VarDeclNode, WaitStmtNode } from '../ast/AST'
 
 import {
+  AddStmtContext,
   ArgumentsContext,
   Assign_opContext,
   AssignmentContext,
   BINOPContext,
   BlockContext,
   ChannelTypeContext,
+  DoneStmtContext,
   EosContext,
   ExpressionContext,
   ExpressionListContext,
@@ -26,6 +28,7 @@ import {
   IdentifierListContext,
   IfStmtContext,
   LiteralContext,
+  LockStmtContext,
   LOGOPContext,
   MakeExprContext,
   MAKEOPContext,
@@ -49,9 +52,11 @@ import {
   Type_Context,
   TypeListContext,
   UNARYOPContext,
+  UnlockStmtContext,
   VarDeclContext,
   VarMutexDeclContext,
-  VarWaitGroupDeclContext
+  VarWaitGroupDeclContext,
+  WaitStmtContext
 } from '../lang/SimpleParser'
 import { SimpleParserVisitor } from '../lang/SimpleParserVisitor'
 
@@ -342,30 +347,50 @@ export class ParseTree_To_AST implements SimpleParserVisitor<ASTNode> {
   }
   */
 
+  visitAddStmt(ctx: AddStmtContext): AddStmtNode {
+    return { tag: Tag.ADD, frst: this.visitTerminal(ctx.IDENTIFIER()), scnd: this.visitExpression(ctx.expression()[1]) }
+  }
+
+  visitDoneStmt(ctx: DoneStmtContext): DoneStmtNode {
+    return { tag: Tag.DONE, frst: this.visitTerminal(ctx.IDENTIFIER()) }
+  }
+
+  visitWaitStmt(ctx: WaitStmtContext): WaitStmtNode {
+    return { tag: Tag.WAIT, frst: this.visitTerminal(ctx.IDENTIFIER()) }
+  }
+
+  visitLockStmt(ctx: LockStmtContext): LockStmtNode {
+    return { tag: Tag.LOCK, frst: this.visitTerminal(ctx.IDENTIFIER()) }
+  }
+
+  visitUnlockStmt(ctx: UnlockStmtContext): UnlockStmtNode {
+    return { tag: Tag.UNLOCK, frst: this.visitTerminal(ctx.IDENTIFIER()) }
+  }
+
   // NOTE we are forcing them to write the type
   visitVarDecl(ctx: VarDeclContext): VarDeclNode {
     let k;
-    if((k=ctx.varMutexDecl())) {
+    if ((k = ctx.varMutexDecl())) {
       return this.visitVarMutexDecl(k);
-    } else if((k = ctx.varWaitGroupDecl())) {
+    } else if ((k = ctx.varWaitGroupDecl())) {
       return this.visitVarWaitGroupDecl(k);
     } else {
       k = ctx.regVarDecl();
       return this.visitRegVarDecl(k as RegVarDeclContext);
     }
-    
+
   }
 
-  visitVarMutexDecl (ctx: VarMutexDeclContext): VarDeclNode {
+  visitVarMutexDecl(ctx: VarMutexDeclContext): VarDeclNode {
     const variables = this.visitIdentifierList(ctx.identifierList());
-    const list: ExpressionListNode = { tag:Tag.EXPRLIST, list: [] }
-    return { tag: Tag.MUT, syms: variables, assignments: list, type: "mutex"};
+    const list: ExpressionListNode = { tag: Tag.EXPRLIST, list: [] }
+    return { tag: Tag.MUT, syms: variables, assignments: list, type: "mutex" };
   }
 
   visitVarWaitGroupDecl(ctx: VarWaitGroupDeclContext): VarDeclNode {
     const variables = this.visitIdentifierList(ctx.identifierList());
-    const list: ExpressionListNode = { tag:Tag.EXPRLIST, list: [] }
-    return { tag: Tag.WAITGROUP, syms: variables, assignments: list, type: "waitgroup"}
+    const list: ExpressionListNode = { tag: Tag.EXPRLIST, list: [] }
+    return { tag: Tag.WAITGROUP, syms: variables, assignments: list, type: "waitgroup" }
   }
 
   visitRegVarDecl(ctx: RegVarDeclContext): VarDeclNode {
@@ -482,12 +507,25 @@ export class ParseTree_To_AST implements SimpleParserVisitor<ASTNode> {
     const argList: ExprNode[] = this.visitArguments(ctx.arguments()).list;
     let k;
     if ((k = ctx.IDENTIFIER())) {
-      return {
-        tag: Tag.APP,
-        fun: { tag: Tag.NAME, sym: this.visitTerminal(k) },
-        args: argList,
-        _arity: argList.length
-      };
+      const name = this.visitTerminal(k);
+      if(name === "Done") {
+        return { tag: Tag.DONE, fun:{ tag: Tag.NAME, sym: name }, args: argList, _arity: argList.length}
+      } else if(name === "Wait") {
+        return { tag: Tag.WAIT, fun:{ tag: Tag.NAME, sym: name }, args: argList, _arity: argList.length} 
+      } else if (name === "Add") {
+        return { tag: Tag.ADD, fun:{ tag: Tag.NAME, sym: name }, args: argList, _arity: argList.length}  
+      } else if (name === "Lock") {
+        return { tag: Tag.LOCK, fun:{ tag: Tag.NAME, sym: name }, args: argList, _arity: argList.length}  
+      } else if (name === "Unlock") {
+        return { tag: Tag.UNLOCK, fun:{ tag: Tag.NAME, sym: name }, args: argList, _arity: argList.length}  
+      } else {
+        return {
+          tag: Tag.APP,
+          fun: { tag: Tag.NAME, sym: name },
+          args: argList,
+          _arity: argList.length
+        };
+      }
     } else if ((k = ctx.functionLit())) {
       return {
         tag: Tag.APP,
@@ -638,6 +676,16 @@ export class ParseTree_To_AST implements SimpleParserVisitor<ASTNode> {
       return this.visitSendStmt(k);
     } else if ((k = ctx.shortVarDecl())) {
       return this.visitShortVarDecl(k);
+    // } else if ((k = ctx.lockStmt())) {
+    //   return this.visitLockStmt(k)
+    // } else if ((k = ctx.unlockStmt())) {
+    //   return this.visitUnlockStmt(k);
+    // } else if ((k = ctx.waitStmt())) {
+    //   return this.visitWaitStmt(k);
+    // } else if ((k = ctx.doneStmt())) {
+    //   return this.visitDoneStmt(k)
+    // } else if ((k = ctx.addStmt())) {
+    //   return this.visitAddStmt(k);
     } else {
       k = ctx.funcDecl();
       // should be safe cast

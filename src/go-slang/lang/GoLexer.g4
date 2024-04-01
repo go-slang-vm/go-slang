@@ -74,11 +74,11 @@ MAKE        : 'make';
 // CONCURRENCY
 MUTEX : 'Mutex';
 WAITGROUP: 'WaitGroup';
-LOCK : 'Lock';
-UNLOCK: 'Unlock';
-ADD : 'Add';
-Done : 'Done';
-WAIT : 'Wait';
+//LOCK : 'lock';
+//UNLOCK: 'unlock';
+//ADD : 'add';
+//Done : 'done';
+//WAIT : 'wait';
 
 // types
 INT : 'int';

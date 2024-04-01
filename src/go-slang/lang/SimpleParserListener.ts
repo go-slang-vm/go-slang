@@ -40,6 +40,11 @@ import { StatementListContext } from "./SimpleParser";
 import { StatementContext } from "./SimpleParser";
 import { SimpleStmtContext } from "./SimpleParser";
 import { SendStmtContext } from "./SimpleParser";
+import { LockStmtContext } from "./SimpleParser";
+import { UnlockStmtContext } from "./SimpleParser";
+import { AddStmtContext } from "./SimpleParser";
+import { DoneStmtContext } from "./SimpleParser";
+import { WaitStmtContext } from "./SimpleParser";
 import { MakeExprContext } from "./SimpleParser";
 import { ExpressionListContext } from "./SimpleParser";
 import { EosContext } from "./SimpleParser";
@@ -479,6 +484,61 @@ export interface SimpleParserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	exitSendStmt?: (ctx: SendStmtContext) => void;
+
+	/**
+	 * Enter a parse tree produced by `SimpleParser.lockStmt`.
+	 * @param ctx the parse tree
+	 */
+	enterLockStmt?: (ctx: LockStmtContext) => void;
+	/**
+	 * Exit a parse tree produced by `SimpleParser.lockStmt`.
+	 * @param ctx the parse tree
+	 */
+	exitLockStmt?: (ctx: LockStmtContext) => void;
+
+	/**
+	 * Enter a parse tree produced by `SimpleParser.unlockStmt`.
+	 * @param ctx the parse tree
+	 */
+	enterUnlockStmt?: (ctx: UnlockStmtContext) => void;
+	/**
+	 * Exit a parse tree produced by `SimpleParser.unlockStmt`.
+	 * @param ctx the parse tree
+	 */
+	exitUnlockStmt?: (ctx: UnlockStmtContext) => void;
+
+	/**
+	 * Enter a parse tree produced by `SimpleParser.addStmt`.
+	 * @param ctx the parse tree
+	 */
+	enterAddStmt?: (ctx: AddStmtContext) => void;
+	/**
+	 * Exit a parse tree produced by `SimpleParser.addStmt`.
+	 * @param ctx the parse tree
+	 */
+	exitAddStmt?: (ctx: AddStmtContext) => void;
+
+	/**
+	 * Enter a parse tree produced by `SimpleParser.doneStmt`.
+	 * @param ctx the parse tree
+	 */
+	enterDoneStmt?: (ctx: DoneStmtContext) => void;
+	/**
+	 * Exit a parse tree produced by `SimpleParser.doneStmt`.
+	 * @param ctx the parse tree
+	 */
+	exitDoneStmt?: (ctx: DoneStmtContext) => void;
+
+	/**
+	 * Enter a parse tree produced by `SimpleParser.waitStmt`.
+	 * @param ctx the parse tree
+	 */
+	enterWaitStmt?: (ctx: WaitStmtContext) => void;
+	/**
+	 * Exit a parse tree produced by `SimpleParser.waitStmt`.
+	 * @param ctx the parse tree
+	 */
+	exitWaitStmt?: (ctx: WaitStmtContext) => void;
 
 	/**
 	 * Enter a parse tree produced by `SimpleParser.makeExpr`.

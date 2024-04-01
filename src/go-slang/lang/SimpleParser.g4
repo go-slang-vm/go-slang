@@ -167,16 +167,41 @@ statement
     ;
 
 simpleStmt
-    : assignment
-    | sendStmt
+    : sendStmt
+//    | lockStmt
+//    | unlockStmt
+//    | addStmt
+//    | doneStmt
+//    | waitStmt
     | varDecl
     | funcDecl
+    | assignment
     | expressionStmt
     | shortVarDecl
     ;
 
 sendStmt
     : channel = expression RECEIVE expression
+    ;
+
+lockStmt
+    : mutexLock = LOCK L_PAREN IDENTIFIER R_PAREN
+    ;
+
+unlockStmt
+    : mutexUnlock = UNLOCK L_PAREN IDENTIFIER R_PAREN
+    ;
+
+addStmt
+    : waitgroupAdd = ADD L_PAREN IDENTIFIER COMMA expression R_PAREN
+    ;
+
+doneStmt
+    : waitgroupDone = DONE L_PAREN IDENTIFIER R_PAREN 
+    ;
+
+waitStmt
+    : waitgroupwait = WAIT L_PAREN IDENTIFIER R_PAREN 
     ;
 
 // we only allow making channels for now so we make this very restrictive

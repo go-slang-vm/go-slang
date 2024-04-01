@@ -32,6 +32,11 @@ export enum Tag {
     MAKE = "make",
     MUT = "mut",
     WAITGROUP = "waitgroup",
+    WAIT = "wait",
+    ADD = "add",
+    DONE = "done",
+    LOCK = "lock",
+    UNLOCK = "unlock",
 }
 
 export enum LOGOP {
@@ -229,6 +234,32 @@ export interface SendStmtNode extends StmtNode {
     scnd: ExprNode;
 }
 
+export interface LockStmtNode extends StmtNode {
+    tag: Tag.LOCK;
+    frst: ExprNode;
+}
+
+export interface UnlockStmtNode extends StmtNode {
+    tag: Tag.UNLOCK;
+    frst: ExprNode;
+}
+
+export interface DoneStmtNode extends StmtNode {
+    tag: Tag.DONE;
+    frst: ExprNode;
+}
+
+export interface WaitStmtNode extends StmtNode {
+    tag: Tag.WAIT;
+    frst: ExprNode;
+}
+
+export interface AddStmtNode extends StmtNode {
+    tag: Tag.ADD;
+    frst: ExprNode;
+    scnd: ExprNode;
+}
+
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface ExpressionStmtNode extends StmtNode {}
 
@@ -257,7 +288,7 @@ export interface NameNode extends ExprNode {
 }
 
 export interface FuncAppNode extends ExprNode, ExpressionStmtNode {
-    tag: Tag.APP;
+    tag: Tag.APP | Tag.DONE | Tag.ADD | Tag.WAIT | Tag.LOCK | Tag.UNLOCK;
     fun: NameNode | LambdaStmtNode;
     args: ExprNode[];
     _arity: Number;

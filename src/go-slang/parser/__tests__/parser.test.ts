@@ -747,4 +747,131 @@ describe('Basic parser test', () => {
     const outputAst: ASTNode = parse(program)
     expect(outputAst).toStrictEqual(expectedAst) 
   })
+
+  test('basic done, add, wait test', async () => {
+    const program = `
+    func main() {
+      var x WaitGroup;
+      Add(x, 2)
+      Done(x)
+      Wait(x)
+    }`
+    const expectedAst = {
+      tag: 'blk',
+      body: {
+        tag: 'seq',
+        stmts: [
+          {
+            tag: 'fun',
+            sym: 'main',
+            prms: [],
+            body: {
+              tag: 'blk',
+              body: {
+                tag: 'seq',
+                stmts: [
+                  {
+                    tag: 'waitgroup',
+                    syms: { tag: 'idents', IDENTS: [ 'x' ] },
+                    assignments: { tag: 'exprlist', list: [] },
+                    type: 'waitgroup'
+                  },
+                  {
+                    tag: 'add',
+                    fun: { tag: 'nam', sym: 'Add' },
+                    args: [ { tag: 'nam', sym: 'x' }, { tag: 'lit', val: 2 } ],
+                    _arity: 2
+                  },
+                  {
+                    tag: 'done',
+                    fun: { tag: 'nam', sym: 'Done' },
+                    args: [ { tag: 'nam', sym: 'x' } ],
+                    _arity: 1
+                  },
+                  {
+                    tag: 'wait',
+                    fun: { tag: 'nam', sym: 'Wait' },
+                    args: [ { tag: 'nam', sym: 'x' } ],
+                    _arity: 1
+                  }
+                ]
+              }
+            },
+            _arity: 0,
+            paramTypes: [],
+            returnTypes: []
+          },
+          {
+            tag: 'app',
+            fun: { tag: 'nam', sym: 'main' },
+            args: [],
+            _arity: 0
+          }
+        ]
+      }
+    }
+    const outputAst: ASTNode = parse(program)
+    console.dir(outputAst, {depth: 100})
+    expect(outputAst).toStrictEqual(expectedAst) 
+  })
+
+  test('basic lock, unlock test', async () => {
+    const program = `
+    func main() {
+      var x Mutex;
+      Lock(x)
+      Unlock(x)
+    }`
+    const expectedAst = {
+      tag: 'blk',
+      body: {
+        tag: 'seq',
+        stmts: [
+          {
+            tag: 'fun',
+            sym: 'main',
+            prms: [],
+            body: {
+              tag: 'blk',
+              body: {
+                tag: 'seq',
+                stmts: [
+                  {
+                    tag: 'mut',
+                    syms: { tag: 'idents', IDENTS: [ 'x' ] },
+                    assignments: { tag: 'exprlist', list: [] },
+                    type: 'mutex'
+                  },
+                  {
+                    tag: 'lock',
+                    fun: { tag: 'nam', sym: 'Lock' },
+                    args: [ { tag: 'nam', sym: 'x' } ],
+                    _arity: 1
+                  },
+                  {
+                    tag: 'unlock',
+                    fun: { tag: 'nam', sym: 'Unlock' },
+                    args: [ { tag: 'nam', sym: 'x' } ],
+                    _arity: 1
+                  }
+                ]
+              }
+            },
+            _arity: 0,
+            paramTypes: [],
+            returnTypes: []
+          },
+          {
+            tag: 'app',
+            fun: { tag: 'nam', sym: 'main' },
+            args: [],
+            _arity: 0
+          }
+        ]
+      }
+    }
+    const outputAst: ASTNode = parse(program)
+    console.dir(outputAst, {depth: 100})
+    expect(outputAst).toStrictEqual(expectedAst) 
+  })
 })

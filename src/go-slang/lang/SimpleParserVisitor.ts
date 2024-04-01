@@ -40,6 +40,11 @@ import { StatementListContext } from "./SimpleParser";
 import { StatementContext } from "./SimpleParser";
 import { SimpleStmtContext } from "./SimpleParser";
 import { SendStmtContext } from "./SimpleParser";
+import { LockStmtContext } from "./SimpleParser";
+import { UnlockStmtContext } from "./SimpleParser";
+import { AddStmtContext } from "./SimpleParser";
+import { DoneStmtContext } from "./SimpleParser";
+import { WaitStmtContext } from "./SimpleParser";
 import { MakeExprContext } from "./SimpleParser";
 import { ExpressionListContext } from "./SimpleParser";
 import { EosContext } from "./SimpleParser";
@@ -326,6 +331,41 @@ export interface SimpleParserVisitor<Result> extends ParseTreeVisitor<Result> {
 	 * @return the visitor result
 	 */
 	visitSendStmt?: (ctx: SendStmtContext) => Result;
+
+	/**
+	 * Visit a parse tree produced by `SimpleParser.lockStmt`.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	visitLockStmt?: (ctx: LockStmtContext) => Result;
+
+	/**
+	 * Visit a parse tree produced by `SimpleParser.unlockStmt`.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	visitUnlockStmt?: (ctx: UnlockStmtContext) => Result;
+
+	/**
+	 * Visit a parse tree produced by `SimpleParser.addStmt`.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	visitAddStmt?: (ctx: AddStmtContext) => Result;
+
+	/**
+	 * Visit a parse tree produced by `SimpleParser.doneStmt`.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	visitDoneStmt?: (ctx: DoneStmtContext) => Result;
+
+	/**
+	 * Visit a parse tree produced by `SimpleParser.waitStmt`.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	visitWaitStmt?: (ctx: WaitStmtContext) => Result;
 
 	/**
 	 * Visit a parse tree produced by `SimpleParser.makeExpr`.
