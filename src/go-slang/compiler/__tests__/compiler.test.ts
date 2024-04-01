@@ -1124,4 +1124,118 @@ describe('Basic compiler test', () => {
     const outputInstr: any[] = compile_program(inputAst)
     expect(outputInstr).toStrictEqual(expectedInstr)
   })
+
+  test.only("basic rel ops test", async() => {
+    const program = `
+    func main() {
+      x int := 1
+      if x == 1 {
+        x = x + 1
+      }
+      if x != 1 {
+        x = x + 1
+      }
+      if x >= 1 {
+        x = x + 1
+      }
+      if x <= 10 {
+        x = x + 1
+      }
+      if x > 1 {
+        x = x + 1
+      }
+      if x < 10 {
+        x = x + 1
+      }
+      Println(x)
+    }`
+    const expectedInstr:any[] = [ {"tag": "ENTER_SCOPE", "num": 1},
+    {"tag": "LDF", "arity": 0, "addr": 3},
+    {"tag": "GOTO", "addr": 79},
+    {"tag": "ENTER_SCOPE", "num": 1},
+    {"tag": "LDC", "val": 1},
+    {"tag": "ASSIGN", "pos": [4, 0]},
+    {"tag": "POP"},
+    {"tag": "LD", "sym": "x", "pos": [4, 0]},
+    {"tag": "LDC", "val": 1},
+    {"tag": "BINOP", "sym": "=="},
+    {"tag": "JOF", "addr": 16},
+    {"tag": "LD", "sym": "x", "pos": [4, 0]},
+    {"tag": "LDC", "val": 1},
+    {"tag": "BINOP", "sym": "+"},
+    {"tag": "ASSIGN", "pos": [4, 0]},
+    {"tag": "GOTO", "addr": 17},
+    {"tag": "LDC", "val": undefined},
+    {"tag": "POP"},
+    {"tag": "LD", "sym": "x", "pos": [4, 0]},
+    {"tag": "LDC", "val": 1},
+    {"tag": "BINOP", "sym": "!="},
+    {"tag": "JOF", "addr": 27},
+    {"tag": "LD", "sym": "x", "pos": [4, 0]},
+    {"tag": "LDC", "val": 1},
+    {"tag": "BINOP", "sym": "+"},
+    {"tag": "ASSIGN", "pos": [4, 0]},
+    {"tag": "GOTO", "addr": 28},
+    {"tag": "LDC", "val": undefined},
+    {"tag": "POP"},
+    {"tag": "LD", "sym": "x", "pos": [4, 0]},
+    {"tag": "LDC", "val": 1},
+    {"tag": "BINOP", "sym": ">="},
+    {"tag": "JOF", "addr": 38},
+    {"tag": "LD", "sym": "x", "pos": [4, 0]},
+    {"tag": "LDC", "val": 1},
+    {"tag": "BINOP", "sym": "+"},
+    {"tag": "ASSIGN", "pos": [4, 0]},
+    {"tag": "GOTO", "addr": 39},
+    {"tag": "LDC", "val": undefined},
+    {"tag": "POP"},
+    {"tag": "LD", "sym": "x", "pos": [4, 0]},
+    {"tag": "LDC", "val": 10},
+    {"tag": "BINOP", "sym": "<="},
+    {"tag": "JOF", "addr": 49},
+    {"tag": "LD", "sym": "x", "pos": [4, 0]},
+    {"tag": "LDC", "val": 1},
+    {"tag": "BINOP", "sym": "+"},
+    {"tag": "ASSIGN", "pos": [4, 0]},
+    {"tag": "GOTO", "addr": 50},
+    {"tag": "LDC", "val": undefined},
+    {"tag": "POP"},
+    {"tag": "LD", "sym": "x", "pos": [4, 0]},
+    {"tag": "LDC", "val": 1},
+    {"tag": "BINOP", "sym": ">"},
+    {"tag": "JOF", "addr": 60},
+    {"tag": "LD", "sym": "x", "pos": [4, 0]},
+    {"tag": "LDC", "val": 1},
+    {"tag": "BINOP", "sym": "+"},
+    {"tag": "ASSIGN", "pos": [4, 0]},
+    {"tag": "GOTO", "addr": 61},
+    {"tag": "LDC", "val": undefined},
+    {"tag": "POP"},
+    {"tag": "LD", "sym": "x", "pos": [4, 0]},
+    {"tag": "LDC", "val": 10},
+    {"tag": "BINOP", "sym": "<"},
+    {"tag": "JOF", "addr": 71},
+    {"tag": "LD", "sym": "x", "pos": [4, 0]},
+    {"tag": "LDC", "val": 1},
+    {"tag": "BINOP", "sym": "+"},
+    {"tag": "ASSIGN", "pos": [4, 0]},
+    {"tag": "GOTO", "addr": 72},
+    {"tag": "LDC", "val": undefined},
+    {"tag": "POP"},
+    {"tag": "LD", "sym": "Println", "pos": [0, 0]},
+    {"tag": "LD", "sym": "x", "pos": [4, 0]},
+    {"tag": "CALL", "arity": 1},
+    {"tag": "EXIT_SCOPE"},
+    {"tag": "LDC", "val": undefined},
+    {"tag": "RESET"},
+    {"tag": "ASSIGN", "pos": [2, 0]},
+    {"tag": "POP"},
+    {"tag": "LD", "sym": "main", "pos": [2, 0]},
+    {"tag": "CALL", "arity": 0},
+    {"tag": "EXIT_SCOPE"},
+    {"tag": "DONE"}];
+    const inputAst: ASTNode = parse(program)
+    const outputInstr: any[] = compile_program(inputAst)
+    expect(outputInstr).toStrictEqual(expectedInstr)
+  })
 })

@@ -51,7 +51,8 @@ export enum BINOP {
     GT = '>',
     LTE = '<=',
     GTE = '>=',
-    EQ = '=='
+    EQ = '==',
+    NTE = '!='
 }
 
 export interface ASTNode {

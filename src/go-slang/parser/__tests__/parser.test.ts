@@ -196,4 +196,26 @@ describe('Basic parser test', () => {
 
     expect(()=>parse(program)).toThrow("Syntax Error at line 1, col 34: mismatched input 'int' expecting '='");
   })
+
+  test('=== should throw parser error', async () => {
+    const program = `
+    func main(){
+      x int := 1
+      if x === 1 {
+        x = x + 1
+      }
+    }`
+    expect(()=>parse(program)).toThrow("Syntax Error at line 4, col 13: extraneous input '=' expecting {'func', 'true', 'false', 'make', 'nil', IDENTIFIER, '(', '!', '-', '<-', DECIMAL_LIT, FLOAT_LIT, RAW_STRING_LIT, INTERPRETED_STRING_LIT}");
+  })
+
+  test('!== should throw parser error', async () => {
+    const program = `
+    func main(){
+      x int := 1
+      if x !== 1 {
+        x = x + 1
+      }
+    }`
+    expect(()=>parse(program)).toThrow("Syntax Error at line 4, col 13: extraneous input '=' expecting {'func', 'true', 'false', 'make', 'nil', IDENTIFIER, '(', '!', '-', '<-', DECIMAL_LIT, FLOAT_LIT, RAW_STRING_LIT, INTERPRETED_STRING_LIT}");
+  })
 })

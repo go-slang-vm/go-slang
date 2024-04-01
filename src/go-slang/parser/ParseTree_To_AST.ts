@@ -158,7 +158,9 @@ export class ParseTree_To_AST implements SimpleParserVisitor<ASTNode> {
                         ? BINOP.LTE
                         : ctx._rel_op.text === ">="
                         ? BINOP.GTE
-                        : BINOP.EQ;
+                        : ctx._rel_op.text === "=="
+                        ? BINOP.EQ
+                        : BINOP.NTE; 
 
     return {
       tag: Tag.BINOP,
