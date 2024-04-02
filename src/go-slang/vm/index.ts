@@ -527,6 +527,8 @@ export class VM {
         this.curThread.PC--
         this.contextSwitch()
         return
+      } else if (curCount < 0) {
+        throw new Error('negative waitgroup counter')
       }
     }
   }
