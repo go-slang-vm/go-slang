@@ -613,4 +613,53 @@ describe('Runner tests', () => {
 
     expect(() => goRunner(code, createContext())).rejects.toThrow('negative waitgroup counter')
   })
+  test('wait - deadlock testing', async () => {
+    const code = `
+    func main() {
+      var wg WaitGroup = waitgroup
+      x int := 0
+      y int := 0
+      Add(wg, 2)
+      go func() {
+        x = 1
+        Done(wg)
+      }()
+      sleep(500)
+      Wait(wg)
+
+      return x + y
+    }`
+    expect(() => goRunner(code, createContext())).rejects.toThrow(
+      'error in waitgroup_wait: deadlock detected'
+    )
+  })
+  test('wait - deadlock testing with multiple waitgroups', async () => {
+    const code = `
+    func main() {
+      var wg1 WaitGroup = waitgroup
+      var wg2 WaitGroup = waitgroup
+      
+      x int := 0
+      y int := 0
+      go func() {
+        Add(wg1, 1)
+        x = 1
+        Done(wg2)
+      }()
+
+      x int := 0
+      y int := 0
+      go func() {
+        Add(wg2, 1)
+        y = 2
+        Done(wg1)
+      }()
+      Wait(wg1)
+
+      return x + y
+    }`
+    expect(() => goRunner(code, createContext())).rejects.toThrow(
+      'error in waitgroup_wait: deadlock detected'
+    )
+  })
 })
