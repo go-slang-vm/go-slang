@@ -9,6 +9,7 @@ export class GlobalState {
   THREADQUEUE: Thread[] = []
   CHANNELARRAY: Channel[] = []
   BLOCKEDQUEUE: { [key: number]: Set<Thread> } = {}
+  WAITGROUPS_COUNT: number = 0
 }
 
 export const globalState = new GlobalState()

@@ -517,32 +517,43 @@ export class VM {
     WAITGROUP_DONE: _ => {
       const wg_addr = peek(globalState.OS, 0)
       const curCount = this.heapInstance.heap_get_child(wg_addr, 0)
+      const wg_index = this.heapInstance.heap_get_waitgroup_idx(wg_addr)
       this.heapInstance.heap_set_child(wg_addr, 0, curCount - 1)
+      // remove all threads from the current waitgroup's blocked queue
+      if (curCount - 1 === 0) {
+        if (globalState.BLOCKEDQUEUE[wg_index]) {
+          for (const thread of globalState.BLOCKEDQUEUE[wg_index]) {
+            globalState.THREADQUEUE.push(thread)
+          }
+          delete globalState.BLOCKEDQUEUE[wg_index]
+        }
+      }
     },
     WAITGROUP_WAIT: _ => {
       const wg_addr = peek(globalState.OS, 0)
       const curCount = this.heapInstance.heap_get_child(wg_addr, 0)
+      const wg_index = this.heapInstance.heap_get_waitgroup_idx(wg_addr)
       // ensure that the blocked queue for the current waitgroup exists
-      if (!globalState.BLOCKEDQUEUE[wg_addr]) {
-        globalState.BLOCKEDQUEUE[wg_addr] = new Set()
+      if (!globalState.BLOCKEDQUEUE[wg_index]) {
+        globalState.BLOCKEDQUEUE[wg_index] = new Set()
       }
       if (curCount > 0) {
         // decrease PC by 1 to retry this instruction again later
         this.curThread.PC--
         // add current thread to the blocked queue of the current waitgroup
-        globalState.BLOCKEDQUEUE[wg_addr].add(this.curThread)
+        globalState.BLOCKEDQUEUE[wg_index].add(this.curThread)
+        let numBlockedThreads = 0
+        for (const key in globalState.BLOCKEDQUEUE) {
+          numBlockedThreads += globalState.BLOCKEDQUEUE[key].size
+        }
         // '+1' is to account for the current thread that we have just added to the blocked queue
         // in other words, the total number of threads will always be the number of threads in the thread queue + 1
-        if (globalState.BLOCKEDQUEUE[wg_addr].size === globalState.THREADQUEUE.length + 1) {
+        if (numBlockedThreads === globalState.THREADQUEUE.length + 1) {
           throw new Error('error in waitgroup_wait: deadlock detected')
         }
-        this.contextSwitch()
+        this.loadNextThread()
       } else if (curCount < 0) {
         throw new Error('negative waitgroup counter')
-      }
-      // if the current thread woken up is not in the blocked queue, remove all threads from the blocked queue of the current waitgroup
-      if (!globalState.BLOCKEDQUEUE[wg_addr].has(this.curThread)) {
-        globalState.BLOCKEDQUEUE[wg_addr] = new Set()
       }
     }
   }

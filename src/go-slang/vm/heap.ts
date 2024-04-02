@@ -235,7 +235,7 @@ export class Heap {
   is_Number = (address: number): boolean => this.heap_get_tag(address) === Number_tag
 
   // waitgroup
-  // [1 byte tag, 4 bytes unused,
+  // [1 byte tag, 4 bytes waitgroup idx,
   //  2 bytes #children, 1 byte unused]
   // followed by the internal counter, one word
   // note: #children is 0
@@ -243,8 +243,12 @@ export class Heap {
   heap_allocate_Waitgroup = (): number => {
     const waitgroup_address = this.heap_allocate(Waitgroup_tag, 2)
     this.heap_set(waitgroup_address + 1, 0)
+    this.heap_set_4_bytes_at_offset(waitgroup_address, 1, globalState.WAITGROUPS_COUNT)
+    globalState.WAITGROUPS_COUNT++
     return waitgroup_address
   }
+
+  heap_get_waitgroup_idx = (address: number): number => this.heap_get_4_bytes_at_offset(address, 1)
 
   is_Waitgroup = (address: number): boolean => this.heap_get_tag(address) === Waitgroup_tag
 
