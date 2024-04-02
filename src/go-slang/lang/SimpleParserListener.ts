@@ -22,9 +22,7 @@ import { ParametersContext } from "./SimpleParser";
 import { ParameterDeclContext } from "./SimpleParser";
 import { BlockContext } from "./SimpleParser";
 import { VarDeclContext } from "./SimpleParser";
-import { RegVarDeclContext } from "./SimpleParser";
-import { VarMutexDeclContext } from "./SimpleParser";
-import { VarWaitGroupDeclContext } from "./SimpleParser";
+import { VarSpecContext } from "./SimpleParser";
 import { ShortVarDeclContext } from "./SimpleParser";
 import { Type_Context } from "./SimpleParser";
 import { ChannelTypeContext } from "./SimpleParser";
@@ -40,11 +38,6 @@ import { StatementListContext } from "./SimpleParser";
 import { StatementContext } from "./SimpleParser";
 import { SimpleStmtContext } from "./SimpleParser";
 import { SendStmtContext } from "./SimpleParser";
-import { LockStmtContext } from "./SimpleParser";
-import { UnlockStmtContext } from "./SimpleParser";
-import { AddStmtContext } from "./SimpleParser";
-import { DoneStmtContext } from "./SimpleParser";
-import { WaitStmtContext } from "./SimpleParser";
 import { MakeExprContext } from "./SimpleParser";
 import { ExpressionListContext } from "./SimpleParser";
 import { EosContext } from "./SimpleParser";
@@ -288,37 +281,15 @@ export interface SimpleParserListener extends ParseTreeListener {
 	exitVarDecl?: (ctx: VarDeclContext) => void;
 
 	/**
-	 * Enter a parse tree produced by `SimpleParser.regVarDecl`.
+	 * Enter a parse tree produced by `SimpleParser.varSpec`.
 	 * @param ctx the parse tree
 	 */
-	enterRegVarDecl?: (ctx: RegVarDeclContext) => void;
+	enterVarSpec?: (ctx: VarSpecContext) => void;
 	/**
-	 * Exit a parse tree produced by `SimpleParser.regVarDecl`.
+	 * Exit a parse tree produced by `SimpleParser.varSpec`.
 	 * @param ctx the parse tree
 	 */
-	exitRegVarDecl?: (ctx: RegVarDeclContext) => void;
-
-	/**
-	 * Enter a parse tree produced by `SimpleParser.varMutexDecl`.
-	 * @param ctx the parse tree
-	 */
-	enterVarMutexDecl?: (ctx: VarMutexDeclContext) => void;
-	/**
-	 * Exit a parse tree produced by `SimpleParser.varMutexDecl`.
-	 * @param ctx the parse tree
-	 */
-	exitVarMutexDecl?: (ctx: VarMutexDeclContext) => void;
-
-	/**
-	 * Enter a parse tree produced by `SimpleParser.varWaitGroupDecl`.
-	 * @param ctx the parse tree
-	 */
-	enterVarWaitGroupDecl?: (ctx: VarWaitGroupDeclContext) => void;
-	/**
-	 * Exit a parse tree produced by `SimpleParser.varWaitGroupDecl`.
-	 * @param ctx the parse tree
-	 */
-	exitVarWaitGroupDecl?: (ctx: VarWaitGroupDeclContext) => void;
+	exitVarSpec?: (ctx: VarSpecContext) => void;
 
 	/**
 	 * Enter a parse tree produced by `SimpleParser.shortVarDecl`.
@@ -484,61 +455,6 @@ export interface SimpleParserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	exitSendStmt?: (ctx: SendStmtContext) => void;
-
-	/**
-	 * Enter a parse tree produced by `SimpleParser.lockStmt`.
-	 * @param ctx the parse tree
-	 */
-	enterLockStmt?: (ctx: LockStmtContext) => void;
-	/**
-	 * Exit a parse tree produced by `SimpleParser.lockStmt`.
-	 * @param ctx the parse tree
-	 */
-	exitLockStmt?: (ctx: LockStmtContext) => void;
-
-	/**
-	 * Enter a parse tree produced by `SimpleParser.unlockStmt`.
-	 * @param ctx the parse tree
-	 */
-	enterUnlockStmt?: (ctx: UnlockStmtContext) => void;
-	/**
-	 * Exit a parse tree produced by `SimpleParser.unlockStmt`.
-	 * @param ctx the parse tree
-	 */
-	exitUnlockStmt?: (ctx: UnlockStmtContext) => void;
-
-	/**
-	 * Enter a parse tree produced by `SimpleParser.addStmt`.
-	 * @param ctx the parse tree
-	 */
-	enterAddStmt?: (ctx: AddStmtContext) => void;
-	/**
-	 * Exit a parse tree produced by `SimpleParser.addStmt`.
-	 * @param ctx the parse tree
-	 */
-	exitAddStmt?: (ctx: AddStmtContext) => void;
-
-	/**
-	 * Enter a parse tree produced by `SimpleParser.doneStmt`.
-	 * @param ctx the parse tree
-	 */
-	enterDoneStmt?: (ctx: DoneStmtContext) => void;
-	/**
-	 * Exit a parse tree produced by `SimpleParser.doneStmt`.
-	 * @param ctx the parse tree
-	 */
-	exitDoneStmt?: (ctx: DoneStmtContext) => void;
-
-	/**
-	 * Enter a parse tree produced by `SimpleParser.waitStmt`.
-	 * @param ctx the parse tree
-	 */
-	enterWaitStmt?: (ctx: WaitStmtContext) => void;
-	/**
-	 * Exit a parse tree produced by `SimpleParser.waitStmt`.
-	 * @param ctx the parse tree
-	 */
-	exitWaitStmt?: (ctx: WaitStmtContext) => void;
 
 	/**
 	 * Enter a parse tree produced by `SimpleParser.makeExpr`.

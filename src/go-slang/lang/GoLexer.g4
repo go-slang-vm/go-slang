@@ -67,13 +67,13 @@ FOR         : 'for';
 IMPORT      : 'import';
 RETURN      : 'return' -> mode(NLSEMI);
 VAR         : 'var';
-TRUE        : 'true';
-FALSE       : 'false';
+//TRUE        : 'true';
+//FALSE       : 'false';
 MAKE        : 'make';
 
 // CONCURRENCY
-MUTEX : 'Mutex';
-WAITGROUP: 'WaitGroup';
+// MUTEX : 'Mutex';
+// WAITGROUP: 'WaitGroup';
 //LOCK : 'lock';
 //UNLOCK: 'unlock';
 //ADD : 'add';
@@ -85,6 +85,8 @@ INT : 'int';
 BOOL : 'bool';
 STRING : 'string';
 FLOAT : 'float';
+MUTEX : 'Mutex';
+WAITGROUP: 'WaitGroup';
 
 NIL_LIT: 'nil' -> mode(NLSEMI);
 
