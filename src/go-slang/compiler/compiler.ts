@@ -12,6 +12,7 @@ import {
   IfStmtNode,
   LambdaStmtNode,
   LiteralNode,
+  LockStmtNode,
   LogicalNode,
   MakeAppNode,
   NameNode,
@@ -22,6 +23,7 @@ import {
   StmtNode,
   Tag,
   UnOpNode,
+  UnlockStmtNode,
   VarDeclNode
 } from '../ast/AST'
 
@@ -387,6 +389,22 @@ const compile_comp = {
         pos: compile_time_environment_position(ce, comp.syms.IDENTS[i])
       }
     }
+  },
+  lock: (comp: LockStmtNode, ce: CompileTimeEnvironment) => {
+    // compile the mutex symbol
+    compile(comp.frst, ce);
+    instrs[wc++] = { tag: "RECV"}
+    // the value of a recv statement should be the value read out which should be undefined
+  },
+  unlock: (comp: UnlockStmtNode, ce: CompileTimeEnvironment) => {
+    // this is the "msg" that we will send in mutex which coincidentally will be the evaluated result of Lock statement
+    instrs[wc++] = { tag: "LDC", val: undefined }
+    // compile the mutex symbol
+    compile(comp.frst, ce);
+    instrs[wc++] = { tag: "SEND"}
+    // TODO: figure out what value should be the value of a send statement
+    // lets default to undefined for now
+    instrs[wc++] = { tag: "LDC", val: undefined }
   },
 }
 
