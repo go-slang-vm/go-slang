@@ -503,8 +503,33 @@ describe('Runner tests', () => {
       go inc(x,c)
       sleep(50)
       Lock(x)
+      c <- 1
       Unlock(x)
     }`
     expect(()=>goRunner(code, createContext())).rejects.toThrow("fatal error: all goroutines are asleep - deadlock!")
+  })
+
+  test("basic mutex test on other go routines blocks no deadlocks", async() => {
+    const code = `
+    func inc(x Mutex, c chan int) {
+      Lock(x)
+      <-c
+      Unlock(x)
+    }
+    func inc2(c chan int) {
+      sleep(5000000)
+      c<-1
+    }
+    func main() {
+      var x Mutex = mutex
+      var c chan int = make(chan int)
+      go inc(x,c)
+      go inc2(c)
+      sleep(50)
+      Lock(x)
+      Unlock(x)
+    }`
+    const result = await goRunner(code, createContext())
+    boilerplateAssert(result, undefined)
   })
 })
