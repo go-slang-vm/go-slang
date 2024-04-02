@@ -224,7 +224,6 @@ export class Heap {
   // [1 byte tag, 4 bytes unused,
   //  2 bytes #children, 1 byte unused]
   // followed by the number, one word
-  // note: #children is 0
 
   heap_allocate_Number = (n: number): number => {
     const number_address = this.heap_allocate(Number_tag, 2)
@@ -238,7 +237,6 @@ export class Heap {
   // [1 byte tag, 4 bytes unused,
   //  2 bytes #children, 1 byte unused]
   // followed by the internal counter, one word
-  // note: #children is 0
 
   heap_allocate_Waitgroup = (): number => {
     const waitgroup_address = this.heap_allocate(Waitgroup_tag, 2)
