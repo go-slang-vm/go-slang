@@ -118,8 +118,6 @@ const scan_for_locals = (comp: ASTNode): string[] => {
       ? [...(comp as VarDeclNode).syms.IDENTS]
       : comp.tag === 'fun'
       ? [(comp as FuncDeclNode).sym]
-      : ['add', 'done', 'wait'].includes(comp.tag)
-      ? [((comp as FuncAppNode).fun as NameNode).sym]
       : []
   // console.log(ret);
   return ret
