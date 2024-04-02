@@ -593,4 +593,24 @@ describe('Runner tests', () => {
     const result = await goRunner(code, createContext(), 3000)
     boilerplateAssert(result, 0)
   })
+  test('wait - negative waitgroup counter', async () => {
+    const code = `
+    func main() {
+      var wg WaitGroup = waitgroup
+      x int := 0
+      y int := 0
+      Add(wg, 1)
+      go func() {
+        Done(wg)
+        Done(wg)
+        x = 1
+      }()
+      sleep(500)
+      Wait(wg)
+
+      return x + y
+    }`
+
+    expect(() => goRunner(code, createContext())).rejects.toThrow('negative waitgroup counter')
+  })
 })
