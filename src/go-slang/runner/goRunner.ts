@@ -5,6 +5,7 @@ import { ASTNode } from '../ast/AST'
 import { Context, RecursivePartial } from '../../types'
 import { compile_program } from '../compiler/compiler'
 import { VM } from '../vm'
+import { preprocess } from '../preprocessor/preprocessor'
 
 export async function goRunner(
   code: string,
@@ -12,10 +13,11 @@ export async function goRunner(
   memory: number = 1500,
   options: RecursivePartial<IOptions> = {}
 ): Promise<Result> {
-  const program: ASTNode | undefined = parse(code)
+  let program: ASTNode | undefined = parse(code)
   if (!program) {
     return resolvedErrorPromise
   }
+  program = preprocess(program)
   const compiledProgram: any[] = compile_program(program)
   const vm = new VM(memory)
 
