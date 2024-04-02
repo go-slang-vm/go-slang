@@ -415,7 +415,6 @@ export class VM {
 
       throw new Error(`GOCALL expects a function, got: ${fun}`)
     },
-
     MAKE: instr => {
       const idx = globalState.CHANNELARRAY.length
       this.createNewChannel(instr.capacity, idx)
@@ -503,6 +502,31 @@ export class VM {
         // read val from the channel
         const val = this.getItemFromChannel(semId)
         push(this.curThread.OS, val)
+      }
+    },
+    MAKE_WAITGROUP: _ => {
+      const addr = this.heapInstance.heap_allocate_Waitgroup()
+      push(this.curThread.OS, addr)
+    },
+    WAITGROUP_ADD: _ => {
+      const valueToAdd = this.address_to_TS_value(pop(globalState.OS))
+      const wg_addr = peek(globalState.OS, 0)
+      const curCount = this.heapInstance.heap_get_child(wg_addr, 0)
+      this.heapInstance.heap_set_child(wg_addr, 0, curCount + valueToAdd)
+    },
+    WAITGROUP_DONE: _ => {
+      const wg_addr = peek(globalState.OS, 0)
+      const curCount = this.heapInstance.heap_get_child(wg_addr, 0)
+      this.heapInstance.heap_set_child(wg_addr, 0, curCount - 1)
+    },
+    WAITGROUP_WAIT: _ => {
+      const wg_addr = peek(globalState.OS, 0)
+      const curCount = this.heapInstance.heap_get_child(wg_addr, 0)
+      if (curCount > 0) {
+        // decrease PC by 1 to retry this instruction again later
+        this.curThread.PC--
+        this.contextSwitch()
+        return
       }
     }
   }

@@ -15,7 +15,8 @@ import {
   Pair_tag,
   Builtin_tag,
   String_tag,
-  Channel_tag
+  Channel_tag,
+  Waitgroup_tag
 } from './constants'
 
 export class Heap {
@@ -233,6 +234,20 @@ export class Heap {
 
   is_Number = (address: number): boolean => this.heap_get_tag(address) === Number_tag
 
+  // waitgroup
+  // [1 byte tag, 4 bytes unused,
+  //  2 bytes #children, 1 byte unused]
+  // followed by the internal counter, one word
+  // note: #children is 0
+
+  heap_allocate_Waitgroup = (): number => {
+    const waitgroup_address = this.heap_allocate(Waitgroup_tag, 2)
+    this.heap_set(waitgroup_address + 1, 0)
+    return waitgroup_address
+  }
+
+  is_Waitgroup = (address: number): boolean => this.heap_get_tag(address) === Waitgroup_tag
+
   // channel
   // [1 byte tag, 4 bytes channel idx,
   //  2 bytes #children, 1 byte unused]
@@ -244,14 +259,14 @@ export class Heap {
     capacity: number,
     type: number,
     elemType: string,
-    idx: number,
+    idx: number
   ): number => {
     const address = this.heap_allocate(Channel_tag, 3)
     this.heap_set_4_bytes_at_offset(address, 1, idx)
 
     this.heap_set_channel_type(address, type)
     // mutex start counter at 1
-    const initialCounter = type === 2 ? 1 : 0;
+    const initialCounter = type === 2 ? 1 : 0
     this.heap_set_channel_counter(address, initialCounter)
     this.heap_set_channel_capacity(address, capacity)
     return address
@@ -263,13 +278,15 @@ export class Heap {
 
   heap_get_channel_capacity = (address: number): number => this.heap_get_child(address, 1)
 
-  heap_get_channel_type = (address: number): number => this.heap_get_byte_at_offset(address, this.TYPE_OFFSET)
+  heap_get_channel_type = (address: number): number =>
+    this.heap_get_byte_at_offset(address, this.TYPE_OFFSET)
 
   heap_set_channel_counter = (address: number, val: number) => this.heap_set_child(address, 0, val)
 
   heap_set_channel_capacity = (address: number, val: number) => this.heap_set_child(address, 1, val)
 
-  heap_set_channel_type = (address: number, type: number) => this.heap_set_byte_at_offset(address, this.TYPE_OFFSET, type)
+  heap_set_channel_type = (address: number, type: number) =>
+    this.heap_set_byte_at_offset(address, this.TYPE_OFFSET, type)
 
   is_Channel = (address: number): boolean => this.heap_get_tag(address) === Channel_tag
 
@@ -390,7 +407,7 @@ export class Heap {
       this.mark(roots[i])
     }
     // rest of the threads
-    for(const thread of globalState.THREADQUEUE) {
+    for (const thread of globalState.THREADQUEUE) {
       // no allocating
       roots = [...thread.OS, thread.E, ...thread.RTS]
       for (let i = 0; i < roots.length; i++) {
@@ -399,21 +416,21 @@ export class Heap {
     }
 
     // blocked threads
-    for(const channel of globalState.CHANNELARRAY) {
-      for(const thread of channel.getRecvQueue()) {
+    for (const channel of globalState.CHANNELARRAY) {
+      for (const thread of channel.getRecvQueue()) {
         // no allocating
         roots = [...thread.OS, thread.E, ...thread.RTS]
         for (let i = 0; i < roots.length; i++) {
           this.mark(roots[i])
         }
       }
-      for(const thread of channel.getSendQueue()) {
+      for (const thread of channel.getSendQueue()) {
         // no allocating
         roots = [...thread.OS, thread.E, ...thread.RTS]
         for (let i = 0; i < roots.length; i++) {
           this.mark(roots[i])
         }
-      } 
+      }
     }
 
     this.sweep()
