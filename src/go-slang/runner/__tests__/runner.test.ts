@@ -20,9 +20,7 @@ describe('Runner tests', () => {
         }
         return y
       }`
-
     const result = await goRunner(code, createContext())
-
     boilerplateAssert(result, 1)
   })
   test('variable declaration in a new block scope 2', async () => {
@@ -34,9 +32,7 @@ describe('Runner tests', () => {
           return y
         }
       }`
-
     const result = await goRunner(code, createContext())
-
     boilerplateAssert(result, 2)
   })
   test('function', async () => {
@@ -44,18 +40,14 @@ describe('Runner tests', () => {
     func g(x, y int) {
       return x - y
     }
-
     func f(x, y int) {
       return g(x, y)
     }
-
     func main() {
       result int := f(33, 22)
       return result
     }`
-
     const result = await goRunner(code, createContext())
-
     boilerplateAssert(result, 11)
   })
   test('function 2', async () => {
@@ -70,7 +62,6 @@ describe('Runner tests', () => {
         return x
       }`
     const result = await goRunner(code, createContext())
-
     boilerplateAssert(result, 1)
   })
   test('function 3', async () => {
@@ -86,7 +77,6 @@ describe('Runner tests', () => {
         return x
       }`
     const result = await goRunner(code, createContext())
-
     boilerplateAssert(result, 0)
   })
   test('factorial function (recursion) with memory management', async () => {
@@ -104,12 +94,9 @@ describe('Runner tests', () => {
     func main() (int) {
       return fact(5)
     }`
-
     const result = await goRunner(code, createContext(), 1200)
-
     boilerplateAssert(result, 120)
   })
-
   test('while loop', async () => {
     const code = `
       func main() (int) {
@@ -122,7 +109,6 @@ describe('Runner tests', () => {
         return y
       }`
     const result = await goRunner(code, createContext())
-
     boilerplateAssert(result, 55)
   })
   test('while loop 2', async () => {
@@ -142,7 +128,6 @@ describe('Runner tests', () => {
         return x
       }`
     const result = await goRunner(code, createContext())
-
     boilerplateAssert(result, 990100)
   })
   test('if statement with nesting and empty else', async () => {
@@ -161,7 +146,6 @@ describe('Runner tests', () => {
         return x
       }`
     const result = await goRunner(code, createContext())
-
     boilerplateAssert(result, 20)
   })
   test('empty return', async () => {
@@ -179,7 +163,6 @@ describe('Runner tests', () => {
         }
       }`
     const result = await goRunner(code, createContext())
-
     boilerplateAssert(result, undefined)
   })
   test('string', async () => {
@@ -189,7 +172,6 @@ describe('Runner tests', () => {
         return x
       }`
     const result = await goRunner(code, createContext())
-
     boilerplateAssert(result, 'this is a string')
   })
   test('string 2', async () => {
@@ -198,7 +180,6 @@ describe('Runner tests', () => {
         return "aaa" + "bbb"
       }`
     const result = await goRunner(code, createContext())
-
     boilerplateAssert(result, 'aaabbb')
   })
   test('go statement', async () => {
@@ -212,7 +193,6 @@ describe('Runner tests', () => {
         return x
       }`
     const result = await goRunner(code, createContext())
-
     boilerplateAssert(result, 0)
   })
   test('go statement 2', async () => {
@@ -227,7 +207,6 @@ describe('Runner tests', () => {
         sleep(20)
       }`
     const result = await goRunner(code, createContext())
-
     boilerplateAssert(result, undefined)
   })
   test('go statement 3', async () => {
@@ -243,7 +222,6 @@ describe('Runner tests', () => {
         return x
       }`
     const result = await goRunner(code, createContext())
-
     boilerplateAssert(result, 0)
   })
   test('go statement 4', async () => {
@@ -254,10 +232,8 @@ describe('Runner tests', () => {
       }(1);
     }`
     const result = await goRunner(code, createContext())
-
     boilerplateAssert(result, undefined)
   })
-
   // this fails
   test('basic buffered channel test', async () => {
     const code = `
@@ -283,7 +259,6 @@ describe('Runner tests', () => {
     const result = await goRunner(code, createContext())
     boilerplateAssert(result, undefined)
   })
-
   // but this passes
   test('basic buffered channel test', async () => {
     const code = `
@@ -298,19 +273,18 @@ describe('Runner tests', () => {
       go inc(input)
       go inc(input)
       go inc(input)
-      go inc(input) 
+      go inc(input)
       i = 0
       for i < 5 {
         input <- i
         i=i+1
       }
-      sleep(500000) 
+      sleep(500000)
     }
     `
     const result = await goRunner(code, createContext())
     boilerplateAssert(result, undefined)
   })
-
   test('go call in loop buffered channels', async () => {
     const code = `
     func inc(x int) {
@@ -329,14 +303,12 @@ describe('Runner tests', () => {
     const result = await goRunner(code, createContext())
     boilerplateAssert(result, undefined)
   })
-
   test('test buffered channel deadlock detection', async () => {
     const code = `
     func inc() {
       x int := 1
       Println(x)
     }
-    
     func main() {
       c chan int := make(chan int, 1)
       go inc()
@@ -347,7 +319,6 @@ describe('Runner tests', () => {
       'fatal error: all goroutines are asleep - deadlock!'
     )
   })
-
   test('go call in loop unbuffered', async () => {
     const code = `
     func inc(output chan int) {
@@ -371,13 +342,11 @@ describe('Runner tests', () => {
     const result = await goRunner(code, createContext())
     boilerplateAssert(result, undefined)
   })
-
   test('unbuffered channels', async () => {
     const code = `
       func hello(output chan string) {
         output <- "Hello World"
       }
-
       func main() {
         input chan string := make(chan string)
         go hello(input)
@@ -387,14 +356,12 @@ describe('Runner tests', () => {
     const result = await goRunner(code, createContext())
     boilerplateAssert(result, 'Hello World')
   })
-
   // should print { value: 'Hello World' }
   test('unbuffered channels deadlock detection', async () => {
     const code = `
       func hello(output chan string) {
         output <- "Hello World"
       }
-
       func main() {
         input chan string := make(chan string)
         go hello(input)
@@ -406,7 +373,6 @@ describe('Runner tests', () => {
       'fatal error: all goroutines are asleep - deadlock!'
     )
   })
-
   test('basic rel ops test', async () => {
     const code = `
     func main() {
@@ -434,7 +400,6 @@ describe('Runner tests', () => {
     const result = await goRunner(code, createContext())
     boilerplateAssert(result, 7)
   })
-
   test('basic bin ops test', async () => {
     const code = `
     func main() {
@@ -444,7 +409,6 @@ describe('Runner tests', () => {
     const result = await goRunner(code, createContext())
     boilerplateAssert(result, 1)
   })
-
   test('basic bin op precedence test should print 4 instead of 6', async () => {
     const code = `
     func main() {
@@ -454,7 +418,6 @@ describe('Runner tests', () => {
     const result = await goRunner(code, createContext())
     boilerplateAssert(result, 4)
   })
-
   test('basic bin op precedence test should print 3 instead of 2', async () => {
     const code = `
     func main() {
@@ -463,5 +426,25 @@ describe('Runner tests', () => {
     }`
     const result = await goRunner(code, createContext())
     boilerplateAssert(result, 3)
+  })
+  test('sleep', async () => {
+    const code = `
+    func worker(id int) {
+      sleep(500)
+      return id * 2
+    }
+    func main() {
+      res int := 0
+      i int := 0
+      for i < 3 {
+        i = i + 1
+        go func() {
+          res = res + worker(i)
+        }()
+      }
+      return res
+    }`
+    const result = await goRunner(code, createContext())
+    boilerplateAssert(result, 0)
   })
 })
