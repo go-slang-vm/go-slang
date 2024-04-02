@@ -704,4 +704,261 @@ describe('Basic compiler test', () => {
     const inputAst: ASTNode = parse(program);
     expect(() => preprocess(inputAst)).toThrow("initialization cycle present");
   })
+
+  test("test channels, Mutex, WaitGroups should not have cycles", async () => {
+    const program = `
+    func inc2() int {
+      Println(2)
+      return z + x + y
+    }
+    
+    var x chan int = make(chan int)
+
+    var y Mutex = inc2()
+    var z WaitGroup = inc2()
+    
+    func main() {
+    }`;
+
+    const expectedAst = {
+      tag: 'blk',
+      body: {
+        tag: 'seq',
+        stmts: [
+          {
+            tag: 'fun',
+            sym: 'inc2',
+            prms: [],
+            body: {
+              tag: 'blk',
+              body: {
+                tag: 'seq',
+                stmts: [
+                  {
+                    tag: 'app',
+                    fun: { tag: 'nam', sym: 'Println' },
+                    args: [ { tag: 'lit', val: 2 } ],
+                    _arity: 1
+                  },
+                  {
+                    tag: 'ret',
+                    expr: [
+                      {
+                        tag: 'binop',
+                        sym: '+',
+                        frst: {
+                          tag: 'binop',
+                          sym: '+',
+                          frst: { tag: 'nam', sym: 'z' },
+                          scnd: { tag: 'nam', sym: 'x' }
+                        },
+                        scnd: { tag: 'nam', sym: 'y' }
+                      }
+                    ],
+                    _arity: 1
+                  }
+                ]
+              }
+            },
+            _arity: 0,
+            paramTypes: [],
+            returnTypes: [ 'int' ]
+          },
+          {
+            tag: 'fun',
+            sym: 'main',
+            prms: [],
+            body: { tag: 'blk', body: { tag: 'seq', stmts: [] } },
+            _arity: 0,
+            paramTypes: [],
+            returnTypes: []
+          },
+          {
+            tag: 'let',
+            syms: { tag: 'idents', IDENTS: [ 'x' ] },
+            assignments: {
+              tag: 'exprlist',
+              list: [
+                {
+                  tag: 'make',
+                  chanType: 'chan int',
+                  buffered: false,
+                  capacity: 0
+                }
+              ]
+            },
+            type: 'chan int'
+          },
+          {
+            tag: 'mut',
+            syms: { tag: 'idents', IDENTS: [ 'y' ] },
+            assignments: { tag: 'exprlist', list: [] },
+            type: 'mutex'
+          },
+          {
+            tag: 'waitgroup',
+            syms: { tag: 'idents', IDENTS: [ 'z' ] },
+            assignments: { tag: 'exprlist', list: [] },
+            type: 'waitgroup'
+          },
+          {
+            tag: 'app',
+            fun: { tag: 'nam', sym: 'main' },
+            args: [],
+            _arity: 0
+          }
+        ]
+      }
+    };
+
+    const inputAst: ASTNode = parse(program);
+    const outputAst: ASTNode = preprocess(inputAst);
+    expect(() => preprocess(inputAst)).not.toThrow("initialization cycle present");
+    expect(outputAst).toStrictEqual(expectedAst);
+  })
+
+  test("test channels, Mutex, WaitGroups operations with reordering", async () => {
+    const program = `
+    func inc2() int {
+      Println(2)
+      Done(z)
+      return z + y
+    }
+
+    func main() {
+      x <- y
+      x = inc2()
+    }
+    
+    var x chan int = make(chan int)
+
+    var y Mutex = inc2()
+    var z WaitGroup = inc2()
+    `;
+
+    const expectedAst = {
+      tag: 'blk',
+      body: {
+        tag: 'seq',
+        stmts: [
+          {
+            tag: 'fun',
+            sym: 'inc2',
+            prms: [],
+            body: {
+              tag: 'blk',
+              body: {
+                tag: 'seq',
+                stmts: [
+                  {
+                    tag: 'app',
+                    fun: { tag: 'nam', sym: 'Println' },
+                    args: [ { tag: 'lit', val: 2 } ],
+                    _arity: 1
+                  },
+                  {
+                    tag: 'done',
+                    fun: { tag: 'nam', sym: 'Done' },
+                    args: [ { tag: 'nam', sym: 'z' } ],
+                    _arity: 1
+                  },
+                  {
+                    tag: 'ret',
+                    expr: [
+                      {
+                        tag: 'binop',
+                        sym: '+',
+                        frst: { tag: 'nam', sym: 'z' },
+                        scnd: { tag: 'nam', sym: 'y' }
+                      }
+                    ],
+                    _arity: 1
+                  }
+                ]
+              }
+            },
+            _arity: 0,
+            paramTypes: [],
+            returnTypes: [ 'int' ]
+          },
+          {
+            tag: 'fun',
+            sym: 'main',
+            prms: [],
+            body: {
+              tag: 'blk',
+              body: {
+                tag: 'seq',
+                stmts: [
+                  {
+                    tag: 'send',
+                    frst: { tag: 'nam', sym: 'x' },
+                    scnd: { tag: 'nam', sym: 'y' }
+                  },
+                  {
+                    tag: 'assmt',
+                    syms: { tag: 'idents', IDENTS: [ 'x' ] },
+                    exprs: {
+                      tag: 'exprlist',
+                      list: [
+                        {
+                          tag: 'app',
+                          fun: { tag: 'nam', sym: 'inc2' },
+                          args: [],
+                          _arity: 0
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            },
+            _arity: 0,
+            paramTypes: [],
+            returnTypes: []
+          },
+          {
+            tag: 'let',
+            syms: { tag: 'idents', IDENTS: [ 'x' ] },
+            assignments: {
+              tag: 'exprlist',
+              list: [
+                {
+                  tag: 'make',
+                  chanType: 'chan int',
+                  buffered: false,
+                  capacity: 0
+                }
+              ]
+            },
+            type: 'chan int'
+          },
+          {
+            tag: 'mut',
+            syms: { tag: 'idents', IDENTS: [ 'y' ] },
+            assignments: { tag: 'exprlist', list: [] },
+            type: 'mutex'
+          },
+          {
+            tag: 'waitgroup',
+            syms: { tag: 'idents', IDENTS: [ 'z' ] },
+            assignments: { tag: 'exprlist', list: [] },
+            type: 'waitgroup'
+          },
+          {
+            tag: 'app',
+            fun: { tag: 'nam', sym: 'main' },
+            args: [],
+            _arity: 0
+          }
+        ]
+      }
+    };
+
+    const inputAst: ASTNode = parse(program);
+    const outputAst: ASTNode = preprocess(inputAst);
+    console.dir(outputAst, {depth: 100})
+    expect(() => preprocess(inputAst)).not.toThrow("initialization cycle present");
+    expect(outputAst).toStrictEqual(expectedAst);
+  })
 })
