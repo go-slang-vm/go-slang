@@ -224,6 +224,7 @@ export class Heap {
   // [1 byte tag, 4 bytes unused,
   //  2 bytes #children, 1 byte unused]
   // followed by the number, one word
+  // note: #children is 0
 
   heap_allocate_Number = (n: number): number => {
     const number_address = this.heap_allocate(Number_tag, 2)
@@ -237,6 +238,7 @@ export class Heap {
   // [1 byte tag, 4 bytes unused,
   //  2 bytes #children, 1 byte unused]
   // followed by the internal counter, one word
+  // note: #children is 0
 
   heap_allocate_Waitgroup = (): number => {
     const waitgroup_address = this.heap_allocate(Waitgroup_tag, 2)
@@ -252,6 +254,7 @@ export class Heap {
   // followed by the counter
   // followed by the capacity
   // CHANNEL TYPES: 0 = unbuffered, 1 = buffered, 2 = mutex
+  // note: #children is 0
   TYPE_OFFSET: number = 7
   heap_allocate_Channel = (
     capacity: number,
@@ -351,7 +354,11 @@ export class Heap {
   }
 
   private heap_get_number_of_children(address: number): number {
-    return this.heap_get_tag(address) === Number_tag ? 0 : this.heap_get_size(address) - 1
+    if (new Set([Number_tag, Waitgroup_tag, Channel_tag]).has(this.heap_get_tag(address))) {
+      return 0
+    }
+
+    return this.heap_get_size(address) - 1
   }
 
   private heap_set_byte_at_offset(address: number, offset: number, value: number): void {
