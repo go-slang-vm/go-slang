@@ -1,5 +1,5 @@
-import { Channel } from "./channel"
-import { Thread } from "./thread"
+import { Channel } from './channel'
+import { Thread } from './thread'
 
 export class GlobalState {
   OS: number[] = []
@@ -8,6 +8,7 @@ export class GlobalState {
   ALLOCATING: number[] = []
   THREADQUEUE: Thread[] = []
   CHANNELARRAY: Channel[] = []
+  BLOCKEDQUEUE: { [key: number]: Set<Thread> } = {}
 }
 
 export const globalState = new GlobalState()
