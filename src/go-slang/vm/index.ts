@@ -418,10 +418,14 @@ export class VM {
       this.createNewChannel(instr.capacity, idx)
       const addr = this.heapInstance.heap_allocate_Channel(
         instr.capacity,
-        instr.isBuffered,
+        instr.type,
         instr.elemType,
         idx
       )
+      // if it is a mutex, we populate it with 1 UNDEFINED
+      if(instr.type === 2) {
+        globalState.CHANNELARRAY[idx].pushToItemQueue(this.heapInstance.Undefined)
+      }
       push(this.curThread.OS, addr)
     },
 
@@ -501,8 +505,8 @@ export class VM {
   }
 
   shouldRecvBlock(channel: number): boolean {
-    const isBuffered = this.heapInstance.heap_get_channel_is_buffered(channel)
-    if(isBuffered) {
+    const type = this.heapInstance.heap_get_channel_type(channel)
+    if(type == 1 || type == 2) {
       const counter = this.heapInstance.heap_get_channel_counter(channel)
       return counter == 0
     } else {
@@ -514,16 +518,25 @@ export class VM {
   }
   
   shouldSendBlock(channel: number): boolean {
-    const isBuffered = this.heapInstance.heap_get_channel_is_buffered(channel)
-    if(isBuffered) {
+    const type = this.heapInstance.heap_get_channel_type(channel)
+    if(type === 1) {
       const counter = this.heapInstance.heap_get_channel_counter(channel);
       const capacity = this.heapInstance.heap_get_channel_capacity(channel);
       return counter == capacity
-    } else {
+    } else if(type === 0){
       // unbuffered we check if there is no corresponding receiver
       const semId = this.heapInstance.heap_get_channel_idx(channel)
       // if there are blocked go routines on the recv queue this send should not block
       return !this.hasBlockedGoRoutines("recv", semId)
+    } else {
+      // type is 2 which is mutex
+      const counter = this.heapInstance.heap_get_channel_counter(channel);
+      const capacity = this.heapInstance.heap_get_channel_capacity(channel);
+      // if counter == 1 == capacity, means mutex is unlocked
+      if(counter == capacity) {
+        throw new Error("unlock of unlocked mutex")
+      }
+      return false;
     }
   }
 

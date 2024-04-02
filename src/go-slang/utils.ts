@@ -49,7 +49,7 @@ export const scan_for_locals = (comp: ASTNode): string[] => {
             (acc: string[], x: ASTNode) => acc.concat(scan_for_locals(x)),
             []
           )
-        : ['let', 'const'].includes(comp.tag)
+        : ['let', 'const', 'mut', 'waitgroup'].includes(comp.tag)
         ? [...(comp as VarDeclNode).syms.IDENTS]
         : comp.tag === 'fun'
         ? [(comp as FuncDeclNode).sym]

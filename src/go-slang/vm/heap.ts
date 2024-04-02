@@ -238,19 +238,21 @@ export class Heap {
   //  2 bytes #children, 1 byte unused]
   // followed by the counter
   // followed by the capacity
-  ISBUFFERED_OFFSET: number = 7
+  // CHANNEL TYPES: 0 = unbuffered, 1 = buffered, 2 = mutex
+  TYPE_OFFSET: number = 7
   heap_allocate_Channel = (
     capacity: number,
-    isBuffered: boolean,
+    type: number,
     elemType: string,
-    idx: number
+    idx: number,
   ): number => {
     const address = this.heap_allocate(Channel_tag, 3)
     this.heap_set_4_bytes_at_offset(address, 1, idx)
-    const buff = isBuffered ? 1 : 0
-    this.heap_set_channel_is_buffered(address, buff)
 
-    this.heap_set_channel_counter(address, 0)
+    this.heap_set_channel_type(address, type)
+    // mutex start counter at 1
+    const initialCounter = type === 2 ? 1 : 0;
+    this.heap_set_channel_counter(address, initialCounter)
     this.heap_set_channel_capacity(address, capacity)
     return address
   }
@@ -261,13 +263,13 @@ export class Heap {
 
   heap_get_channel_capacity = (address: number): number => this.heap_get_child(address, 1)
 
-  heap_get_channel_is_buffered = (address: number): boolean => this.heap_get_byte_at_offset(address, this.ISBUFFERED_OFFSET) == 1
+  heap_get_channel_type = (address: number): number => this.heap_get_byte_at_offset(address, this.TYPE_OFFSET)
 
   heap_set_channel_counter = (address: number, val: number) => this.heap_set_child(address, 0, val)
 
   heap_set_channel_capacity = (address: number, val: number) => this.heap_set_child(address, 1, val)
 
-  heap_set_channel_is_buffered = (address: number, buff: number) => this.heap_set_byte_at_offset(address, this.ISBUFFERED_OFFSET, buff)
+  heap_set_channel_type = (address: number, type: number) => this.heap_set_byte_at_offset(address, this.TYPE_OFFSET, type)
 
   is_Channel = (address: number): boolean => this.heap_get_tag(address) === Channel_tag
 

@@ -114,7 +114,7 @@ const scan_for_locals = (comp: ASTNode): string[] => {
         (acc: string[], x: ASTNode) => acc.concat(scan_for_locals(x)),
         []
       )
-      : ['let', 'const'].includes(comp.tag)
+      : ['let', 'const', 'mut', 'waitgroup'].includes(comp.tag)
         ? [...(comp as VarDeclNode).syms.IDENTS]
         : comp.tag === 'fun'
           ? [(comp as FuncDeclNode).sym]
@@ -368,8 +368,42 @@ const compile_comp = {
     const elemType = getChanType(comp.chanType);
     // this should call heap_allocate_channel(capacity, buffered, elemType) then throw the address on the OS
     // notice that we dont have to compile comp.capacity because we force the syntax to be a DECIMAL_LIT()
-    instrs[wc++] = { tag: "MAKE", capacity: comp.capacity, isBuffered: comp.buffered, elemType: elemType };
-  }
+    instrs[wc++] = { tag: "MAKE", capacity: comp.capacity, type: comp.buffered ? 1 : 0, elemType: elemType };
+  },
+  mut: (comp: VarDeclNode, ce: CompileTimeEnvironment) => {
+    // create a channel with capacity 1 for every symbol
+    // we abuse make channel here
+    for(let i = 0; i < comp.syms.IDENTS.length; ++i) {
+      instrs[wc++] = { tag: "MAKE", capacity: 1, type: 2, elemType: "mutex" };
+    }
+
+    const symsLen = comp.syms.IDENTS.length
+    let first = true
+    for (let i = symsLen - 1; i >= 0; --i) {
+      // POP the value after each assignment
+      first ? (first = false) : (instrs[wc++] = { tag: 'POP' })
+      instrs[wc++] = {
+        tag: 'ASSIGN',
+        pos: compile_time_environment_position(ce, comp.syms.IDENTS[i])
+      }
+    }
+  },
+  lock: (comp: FuncAppNode, ce: CompileTimeEnvironment) => {
+    // compile the mutex symbol
+    compile(comp.args[0], ce);
+    instrs[wc++] = { tag: "RECV"}
+    // the value of a recv statement should be the value read out which should be undefined
+  },
+  unlock: (comp: FuncAppNode, ce: CompileTimeEnvironment) => {
+    // this is the "msg" that we will send in mutex which coincidentally will be the evaluated result of Lock statement
+    instrs[wc++] = { tag: "LDC", val: undefined }
+    // compile the mutex symbol
+    compile(comp.args[0], ce);
+    instrs[wc++] = { tag: "SEND"}
+    // TODO: figure out what value should be the value of a send statement
+    // lets default to undefined for now
+    instrs[wc++] = { tag: "LDC", val: undefined }
+  },
 }
 
 const getChanType = (chanType: string) => {
