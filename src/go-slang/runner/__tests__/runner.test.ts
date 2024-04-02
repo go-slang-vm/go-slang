@@ -370,6 +370,7 @@ describe('Runner tests', () => {
     boilerplateAssert(result, undefined)
   })
 
+  // should print { value: 'Hello World' }
   test("unbuffered channels", async () => {
     const code = `
       func hello(output chan string) {
@@ -386,7 +387,7 @@ describe('Runner tests', () => {
     boilerplateAssert(result, undefined)
   });
 
-  // should print { value: 'Hello World' }
+  
   test("unbuffered channels deadlock detection", async () => {
     const code = `
       func hello(output chan string) {
@@ -463,5 +464,47 @@ describe('Runner tests', () => {
     }`
     const result = await goRunner(code, createContext())
     boilerplateAssert(result, undefined)
+  })
+
+  test("basic mutex test", async() => {
+    const code = `
+    func main() {
+      var x Mutex = mutex
+      var a,b,c Mutex = mutex
+      Lock(x)
+      Unlock(x)
+    }`
+    const result = await goRunner(code, createContext())
+    boilerplateAssert(result, undefined)
+  })
+
+  test("basic mutex test unlocking unlocked channel should throw an error", async() => {
+    const code = `
+    func main() {
+      var x Mutex = mutex
+      var a,b,c Mutex = mutex
+      Lock(x)
+      Unlock(x)
+      Unlock(b)
+    }`
+    expect(()=>goRunner(code, createContext())).rejects.toThrow("unlock of unlocked mutex")
+  })
+
+  test("basic mutex test on other go routines blocks and deadlocks", async() => {
+    const code = `
+    func inc(x Mutex, c chan int) {
+      Lock(x)
+      <-c
+      Unlock(x)
+    }
+    func main() {
+      var x Mutex = mutex
+      var c chan int = make(chan int)
+      go inc(x,c)
+      sleep(50)
+      Lock(x)
+      Unlock(x)
+    }`
+    expect(()=>goRunner(code, createContext())).rejects.toThrow("fatal error: all goroutines are asleep - deadlock!")
   })
 })

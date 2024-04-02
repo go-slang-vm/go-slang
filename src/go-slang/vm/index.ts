@@ -422,6 +422,10 @@ export class VM {
         instr.elemType,
         idx
       )
+      // if it is a mutex, we populate it with 1 UNDEFINED
+      if(instr.type === 2) {
+        globalState.CHANNELARRAY[idx].pushToItemQueue(this.heapInstance.Undefined)
+      }
       push(this.curThread.OS, addr)
     },
 
