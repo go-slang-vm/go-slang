@@ -756,9 +756,7 @@ visitChildren(node: RuleNode): SequenceNode {
     for (let i = 0; i < node.childCount; i++) {
       const res = node.getChild(i).accept(this)
       if (res) {
-        if (res.tag == Tag.VAR) {
-          nodes.push(res);
-        } else if (res.tag == Tag.FUNC) {
+        if (res.tag == Tag.VAR || res.tag == Tag.MUT || res.tag == Tag.WAITGROUP || res.tag == Tag.FUNC) {
           nodes.push(res);
         }
       }

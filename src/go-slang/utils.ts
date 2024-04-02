@@ -19,7 +19,7 @@ export type Frame = string[]
 export type CompileTimeEnvironment = Frame[]
 export type FramePosition = Pair<number, number>
 //TODO: make sure to update this with more builtins for Go
-export const builtin_compile_frame: Frame = ["Println"];
+export const builtin_compile_frame: Frame = ["Println", "sleep"];
 
 //TODO: make sure to update this with more constants for Go
 export const constant_compile_frame: Frame = ['nil']

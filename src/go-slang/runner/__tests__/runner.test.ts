@@ -532,4 +532,44 @@ describe('Runner tests', () => {
     const result = await goRunner(code, createContext())
     boilerplateAssert(result, undefined)
   })
+
+  // should print { value: 1 }
+  test("basic recursive cycle present should not throw", async() => {
+    const code = `
+    func recurse1(o int) int {
+      if o == 0 {
+        return y
+      }
+      return recurse2(o - 1)
+    }
+    
+    var x int = recurse1(4)
+    
+    func recurse2(t int) int {
+      return recurse1(t - 1)
+    }
+    func main() {
+      Println(x)
+    }
+    
+    var y int = 1
+      `;
+    const result = await goRunner(code, createContext())
+    boilerplateAssert(result, undefined)
+  })
+
+  test("basic preprocessor test 4 declaration with reordering in func", async() => {
+    const code = `
+    var x int = inc()
+    func inc() {
+      return y
+    }
+    func main() {
+      sz int :=1
+    }
+    var y int = 3
+    `;
+    const result = await goRunner(code, createContext())
+    boilerplateAssert(result, undefined)
+  })
 })
