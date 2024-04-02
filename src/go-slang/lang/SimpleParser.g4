@@ -49,28 +49,14 @@ block
     : L_CURLY statementList? R_CURLY
     ;
 
-// varDecl
-//    : VAR IDENTIFIER ASSIGN expression
-//    | IDENTIFIER DECLARE_ASSIGN expression
-//    ;
 
 // NOTE WE ARE FORCING TYPES TO BE THERE
 varDecl
-    : varMutexDecl
-    | varWaitGroupDecl
-    | regVarDecl
+    : VAR (varSpec | L_PAREN (varSpec eos)* R_PAREN)
     ;
 
-regVarDecl
-    : VAR identifierList type_ (ASSIGN expressionList)?
-    ;
-
-varMutexDecl
-    : VAR identifierList MUTEX
-    ;
-
-varWaitGroupDecl
-    : VAR identifierList WAITGROUP
+varSpec
+    : identifierList type_ ASSIGN expressionList
     ;
 
 shortVarDecl
@@ -85,15 +71,13 @@ type_
     | STRING
     | FLOAT
     | channelType
+    | MUTEX
+    | WAITGROUP
     ;
 
 channelType
     : CHAN type_
     ;
-
-//assignment
-//    :  IDENTIFIER ASSIGN expression
-//    ;
 
 assignment
     : identifierList assign_op expressionList
@@ -145,8 +129,6 @@ literal
     : NIL_LIT
     | DECIMAL_LIT
     | FLOAT_LIT
-    | TRUE
-    | FALSE
     | string_
     | functionLit
     ;
@@ -184,25 +166,6 @@ sendStmt
     : channel = expression RECEIVE expression
     ;
 
-lockStmt
-    : mutexLock = LOCK L_PAREN IDENTIFIER R_PAREN
-    ;
-
-unlockStmt
-    : mutexUnlock = UNLOCK L_PAREN IDENTIFIER R_PAREN
-    ;
-
-addStmt
-    : waitgroupAdd = ADD L_PAREN IDENTIFIER COMMA expression R_PAREN
-    ;
-
-doneStmt
-    : waitgroupDone = DONE L_PAREN IDENTIFIER R_PAREN 
-    ;
-
-waitStmt
-    : waitgroupwait = WAIT L_PAREN IDENTIFIER R_PAREN 
-    ;
 
 // we only allow making channels for now so we make this very restrictive
 // if the comma and DECIMAL_LIT is not present, it is an unbuffered channel

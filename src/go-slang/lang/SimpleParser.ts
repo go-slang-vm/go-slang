@@ -56,84 +56,77 @@ export class SimpleParser extends GoParserBase {
 	public static readonly IMPORT = 23;
 	public static readonly RETURN = 24;
 	public static readonly VAR = 25;
-	public static readonly TRUE = 26;
-	public static readonly FALSE = 27;
-	public static readonly MAKE = 28;
-	public static readonly MUTEX = 29;
-	public static readonly WAITGROUP = 30;
-	public static readonly INT = 31;
-	public static readonly BOOL = 32;
-	public static readonly STRING = 33;
-	public static readonly FLOAT = 34;
-	public static readonly NIL_LIT = 35;
-	public static readonly IDENTIFIER = 36;
-	public static readonly L_PAREN = 37;
-	public static readonly R_PAREN = 38;
-	public static readonly L_CURLY = 39;
-	public static readonly R_CURLY = 40;
-	public static readonly L_BRACKET = 41;
-	public static readonly R_BRACKET = 42;
-	public static readonly ASSIGN = 43;
-	public static readonly COMMA = 44;
-	public static readonly SEMI = 45;
-	public static readonly COLON = 46;
-	public static readonly DOT = 47;
-	public static readonly PLUS_PLUS = 48;
-	public static readonly MINUS_MINUS = 49;
-	public static readonly DECLARE_ASSIGN = 50;
-	public static readonly ELLIPSIS = 51;
-	public static readonly LOGICAL_OR = 52;
-	public static readonly LOGICAL_AND = 53;
-	public static readonly EQUALS = 54;
-	public static readonly NOT_EQUALS = 55;
-	public static readonly LESS = 56;
-	public static readonly LESS_OR_EQUALS = 57;
-	public static readonly GREATER = 58;
-	public static readonly GREATER_OR_EQUALS = 59;
-	public static readonly OR = 60;
-	public static readonly DIV = 61;
-	public static readonly MOD = 62;
-	public static readonly LSHIFT = 63;
-	public static readonly RSHIFT = 64;
-	public static readonly BIT_CLEAR = 65;
-	public static readonly UNDERLYING = 66;
-	public static readonly EXCLAMATION = 67;
-	public static readonly PLUS = 68;
-	public static readonly MINUS = 69;
-	public static readonly CARET = 70;
-	public static readonly STAR = 71;
-	public static readonly AMPERSAND = 72;
-	public static readonly RECEIVE = 73;
-	public static readonly DECIMAL_LIT = 74;
-	public static readonly BINARY_LIT = 75;
-	public static readonly OCTAL_LIT = 76;
-	public static readonly HEX_LIT = 77;
-	public static readonly FLOAT_LIT = 78;
-	public static readonly DECIMAL_FLOAT_LIT = 79;
-	public static readonly HEX_FLOAT_LIT = 80;
-	public static readonly IMAGINARY_LIT = 81;
-	public static readonly RUNE_LIT = 82;
-	public static readonly BYTE_VALUE = 83;
-	public static readonly OCTAL_BYTE_VALUE = 84;
-	public static readonly HEX_BYTE_VALUE = 85;
-	public static readonly LITTLE_U_VALUE = 86;
-	public static readonly BIG_U_VALUE = 87;
-	public static readonly RAW_STRING_LIT = 88;
-	public static readonly INTERPRETED_STRING_LIT = 89;
-	public static readonly WS = 90;
-	public static readonly COMMENT = 91;
-	public static readonly TERMINATOR = 92;
-	public static readonly LINE_COMMENT = 93;
-	public static readonly WS_NLSEMI = 94;
-	public static readonly COMMENT_NLSEMI = 95;
-	public static readonly LINE_COMMENT_NLSEMI = 96;
-	public static readonly EOS = 97;
-	public static readonly OTHER = 98;
-	public static readonly LOCK = 99;
-	public static readonly UNLOCK = 100;
-	public static readonly ADD = 101;
-	public static readonly DONE = 102;
-	public static readonly WAIT = 103;
+	public static readonly MAKE = 26;
+	public static readonly INT = 27;
+	public static readonly BOOL = 28;
+	public static readonly STRING = 29;
+	public static readonly FLOAT = 30;
+	public static readonly MUTEX = 31;
+	public static readonly WAITGROUP = 32;
+	public static readonly NIL_LIT = 33;
+	public static readonly IDENTIFIER = 34;
+	public static readonly L_PAREN = 35;
+	public static readonly R_PAREN = 36;
+	public static readonly L_CURLY = 37;
+	public static readonly R_CURLY = 38;
+	public static readonly L_BRACKET = 39;
+	public static readonly R_BRACKET = 40;
+	public static readonly ASSIGN = 41;
+	public static readonly COMMA = 42;
+	public static readonly SEMI = 43;
+	public static readonly COLON = 44;
+	public static readonly DOT = 45;
+	public static readonly PLUS_PLUS = 46;
+	public static readonly MINUS_MINUS = 47;
+	public static readonly DECLARE_ASSIGN = 48;
+	public static readonly ELLIPSIS = 49;
+	public static readonly LOGICAL_OR = 50;
+	public static readonly LOGICAL_AND = 51;
+	public static readonly EQUALS = 52;
+	public static readonly NOT_EQUALS = 53;
+	public static readonly LESS = 54;
+	public static readonly LESS_OR_EQUALS = 55;
+	public static readonly GREATER = 56;
+	public static readonly GREATER_OR_EQUALS = 57;
+	public static readonly OR = 58;
+	public static readonly DIV = 59;
+	public static readonly MOD = 60;
+	public static readonly LSHIFT = 61;
+	public static readonly RSHIFT = 62;
+	public static readonly BIT_CLEAR = 63;
+	public static readonly UNDERLYING = 64;
+	public static readonly EXCLAMATION = 65;
+	public static readonly PLUS = 66;
+	public static readonly MINUS = 67;
+	public static readonly CARET = 68;
+	public static readonly STAR = 69;
+	public static readonly AMPERSAND = 70;
+	public static readonly RECEIVE = 71;
+	public static readonly DECIMAL_LIT = 72;
+	public static readonly BINARY_LIT = 73;
+	public static readonly OCTAL_LIT = 74;
+	public static readonly HEX_LIT = 75;
+	public static readonly FLOAT_LIT = 76;
+	public static readonly DECIMAL_FLOAT_LIT = 77;
+	public static readonly HEX_FLOAT_LIT = 78;
+	public static readonly IMAGINARY_LIT = 79;
+	public static readonly RUNE_LIT = 80;
+	public static readonly BYTE_VALUE = 81;
+	public static readonly OCTAL_BYTE_VALUE = 82;
+	public static readonly HEX_BYTE_VALUE = 83;
+	public static readonly LITTLE_U_VALUE = 84;
+	public static readonly BIG_U_VALUE = 85;
+	public static readonly RAW_STRING_LIT = 86;
+	public static readonly INTERPRETED_STRING_LIT = 87;
+	public static readonly WS = 88;
+	public static readonly COMMENT = 89;
+	public static readonly TERMINATOR = 90;
+	public static readonly LINE_COMMENT = 91;
+	public static readonly WS_NLSEMI = 92;
+	public static readonly COMMENT_NLSEMI = 93;
+	public static readonly LINE_COMMENT_NLSEMI = 94;
+	public static readonly EOS = 95;
+	public static readonly OTHER = 96;
 	public static readonly RULE_global_scope = 0;
 	public static readonly RULE_arguments = 1;
 	public static readonly RULE_funcApp = 2;
@@ -145,49 +138,41 @@ export class SimpleParser extends GoParserBase {
 	public static readonly RULE_parameterDecl = 8;
 	public static readonly RULE_block = 9;
 	public static readonly RULE_varDecl = 10;
-	public static readonly RULE_regVarDecl = 11;
-	public static readonly RULE_varMutexDecl = 12;
-	public static readonly RULE_varWaitGroupDecl = 13;
-	public static readonly RULE_shortVarDecl = 14;
-	public static readonly RULE_type_ = 15;
-	public static readonly RULE_channelType = 16;
-	public static readonly RULE_assignment = 17;
-	public static readonly RULE_assign_op = 18;
-	public static readonly RULE_expressionStmt = 19;
-	public static readonly RULE_expression = 20;
-	public static readonly RULE_primaryExpr = 21;
-	public static readonly RULE_operand = 22;
-	public static readonly RULE_operandName = 23;
-	public static readonly RULE_literal = 24;
-	public static readonly RULE_statementList = 25;
-	public static readonly RULE_statement = 26;
-	public static readonly RULE_simpleStmt = 27;
-	public static readonly RULE_sendStmt = 28;
-	public static readonly RULE_lockStmt = 29;
-	public static readonly RULE_unlockStmt = 30;
-	public static readonly RULE_addStmt = 31;
-	public static readonly RULE_doneStmt = 32;
-	public static readonly RULE_waitStmt = 33;
-	public static readonly RULE_makeExpr = 34;
-	public static readonly RULE_expressionList = 35;
-	public static readonly RULE_eos = 36;
-	public static readonly RULE_identifierList = 37;
-	public static readonly RULE_ifStmt = 38;
-	public static readonly RULE_returnStmt = 39;
-	public static readonly RULE_forStmt = 40;
-	public static readonly RULE_string_ = 41;
-	public static readonly RULE_functionLit = 42;
-	public static readonly RULE_goStmt = 43;
+	public static readonly RULE_varSpec = 11;
+	public static readonly RULE_shortVarDecl = 12;
+	public static readonly RULE_type_ = 13;
+	public static readonly RULE_channelType = 14;
+	public static readonly RULE_assignment = 15;
+	public static readonly RULE_assign_op = 16;
+	public static readonly RULE_expressionStmt = 17;
+	public static readonly RULE_expression = 18;
+	public static readonly RULE_primaryExpr = 19;
+	public static readonly RULE_operand = 20;
+	public static readonly RULE_operandName = 21;
+	public static readonly RULE_literal = 22;
+	public static readonly RULE_statementList = 23;
+	public static readonly RULE_statement = 24;
+	public static readonly RULE_simpleStmt = 25;
+	public static readonly RULE_sendStmt = 26;
+	public static readonly RULE_makeExpr = 27;
+	public static readonly RULE_expressionList = 28;
+	public static readonly RULE_eos = 29;
+	public static readonly RULE_identifierList = 30;
+	public static readonly RULE_ifStmt = 31;
+	public static readonly RULE_returnStmt = 32;
+	public static readonly RULE_forStmt = 33;
+	public static readonly RULE_string_ = 34;
+	public static readonly RULE_functionLit = 35;
+	public static readonly RULE_goStmt = 36;
 	// tslint:disable:no-trailing-whitespace
 	public static readonly ruleNames: string[] = [
 		"global_scope", "arguments", "funcApp", "funcDecl", "signature", "result", 
-		"typeList", "parameters", "parameterDecl", "block", "varDecl", "regVarDecl", 
-		"varMutexDecl", "varWaitGroupDecl", "shortVarDecl", "type_", "channelType", 
-		"assignment", "assign_op", "expressionStmt", "expression", "primaryExpr", 
-		"operand", "operandName", "literal", "statementList", "statement", "simpleStmt", 
-		"sendStmt", "lockStmt", "unlockStmt", "addStmt", "doneStmt", "waitStmt", 
-		"makeExpr", "expressionList", "eos", "identifierList", "ifStmt", "returnStmt", 
-		"forStmt", "string_", "functionLit", "goStmt",
+		"typeList", "parameters", "parameterDecl", "block", "varDecl", "varSpec", 
+		"shortVarDecl", "type_", "channelType", "assignment", "assign_op", "expressionStmt", 
+		"expression", "primaryExpr", "operand", "operandName", "literal", "statementList", 
+		"statement", "simpleStmt", "sendStmt", "makeExpr", "expressionList", "eos", 
+		"identifierList", "ifStmt", "returnStmt", "forStmt", "string_", "functionLit", 
+		"goStmt",
 	];
 
 	private static readonly _LITERAL_NAMES: Array<string | undefined> = [
@@ -195,30 +180,28 @@ export class SimpleParser extends GoParserBase {
 		"'case'", "'defer'", "'go'", "'map'", "'struct'", "'chan'", "'else'", 
 		"'goto'", "'package'", "'switch'", "'const'", "'fallthrough'", "'if'", 
 		"'range'", "'type'", "'continue'", "'for'", "'import'", "'return'", "'var'", 
-		"'true'", "'false'", "'make'", "'Mutex'", "'WaitGroup'", "'int'", "'bool'", 
-		"'string'", "'float'", "'nil'", undefined, "'('", "')'", "'{'", "'}'", 
-		"'['", "']'", "'='", "','", "';'", "':'", "'.'", "'++'", "'--'", "':='", 
-		"'...'", "'||'", "'&&'", "'=='", "'!='", "'<'", "'<='", "'>'", "'>='", 
-		"'|'", "'/'", "'%'", "'<<'", "'>>'", "'&^'", "'~'", "'!'", "'+'", "'-'", 
-		"'^'", "'*'", "'&'", "'<-'",
+		"'make'", "'int'", "'bool'", "'string'", "'float'", "'Mutex'", "'WaitGroup'", 
+		"'nil'", undefined, "'('", "')'", "'{'", "'}'", "'['", "']'", "'='", "','", 
+		"';'", "':'", "'.'", "'++'", "'--'", "':='", "'...'", "'||'", "'&&'", 
+		"'=='", "'!='", "'<'", "'<='", "'>'", "'>='", "'|'", "'/'", "'%'", "'<<'", 
+		"'>>'", "'&^'", "'~'", "'!'", "'+'", "'-'", "'^'", "'*'", "'&'", "'<-'",
 	];
 	private static readonly _SYMBOLIC_NAMES: Array<string | undefined> = [
 		undefined, "BREAK", "DEFAULT", "FUNC", "INTERFACE", "SELECT", "CASE", 
 		"DEFER", "GO", "MAP", "STRUCT", "CHAN", "ELSE", "GOTO", "PACKAGE", "SWITCH", 
 		"CONST", "FALLTHROUGH", "IF", "RANGE", "TYPE", "CONTINUE", "FOR", "IMPORT", 
-		"RETURN", "VAR", "TRUE", "FALSE", "MAKE", "MUTEX", "WAITGROUP", "INT", 
-		"BOOL", "STRING", "FLOAT", "NIL_LIT", "IDENTIFIER", "L_PAREN", "R_PAREN", 
-		"L_CURLY", "R_CURLY", "L_BRACKET", "R_BRACKET", "ASSIGN", "COMMA", "SEMI", 
-		"COLON", "DOT", "PLUS_PLUS", "MINUS_MINUS", "DECLARE_ASSIGN", "ELLIPSIS", 
-		"LOGICAL_OR", "LOGICAL_AND", "EQUALS", "NOT_EQUALS", "LESS", "LESS_OR_EQUALS", 
-		"GREATER", "GREATER_OR_EQUALS", "OR", "DIV", "MOD", "LSHIFT", "RSHIFT", 
-		"BIT_CLEAR", "UNDERLYING", "EXCLAMATION", "PLUS", "MINUS", "CARET", "STAR", 
-		"AMPERSAND", "RECEIVE", "DECIMAL_LIT", "BINARY_LIT", "OCTAL_LIT", "HEX_LIT", 
-		"FLOAT_LIT", "DECIMAL_FLOAT_LIT", "HEX_FLOAT_LIT", "IMAGINARY_LIT", "RUNE_LIT", 
-		"BYTE_VALUE", "OCTAL_BYTE_VALUE", "HEX_BYTE_VALUE", "LITTLE_U_VALUE", 
-		"BIG_U_VALUE", "RAW_STRING_LIT", "INTERPRETED_STRING_LIT", "WS", "COMMENT", 
-		"TERMINATOR", "LINE_COMMENT", "WS_NLSEMI", "COMMENT_NLSEMI", "LINE_COMMENT_NLSEMI", 
-		"EOS", "OTHER", "LOCK", "UNLOCK", "ADD", "DONE", "WAIT",
+		"RETURN", "VAR", "MAKE", "INT", "BOOL", "STRING", "FLOAT", "MUTEX", "WAITGROUP", 
+		"NIL_LIT", "IDENTIFIER", "L_PAREN", "R_PAREN", "L_CURLY", "R_CURLY", "L_BRACKET", 
+		"R_BRACKET", "ASSIGN", "COMMA", "SEMI", "COLON", "DOT", "PLUS_PLUS", "MINUS_MINUS", 
+		"DECLARE_ASSIGN", "ELLIPSIS", "LOGICAL_OR", "LOGICAL_AND", "EQUALS", "NOT_EQUALS", 
+		"LESS", "LESS_OR_EQUALS", "GREATER", "GREATER_OR_EQUALS", "OR", "DIV", 
+		"MOD", "LSHIFT", "RSHIFT", "BIT_CLEAR", "UNDERLYING", "EXCLAMATION", "PLUS", 
+		"MINUS", "CARET", "STAR", "AMPERSAND", "RECEIVE", "DECIMAL_LIT", "BINARY_LIT", 
+		"OCTAL_LIT", "HEX_LIT", "FLOAT_LIT", "DECIMAL_FLOAT_LIT", "HEX_FLOAT_LIT", 
+		"IMAGINARY_LIT", "RUNE_LIT", "BYTE_VALUE", "OCTAL_BYTE_VALUE", "HEX_BYTE_VALUE", 
+		"LITTLE_U_VALUE", "BIG_U_VALUE", "RAW_STRING_LIT", "INTERPRETED_STRING_LIT", 
+		"WS", "COMMENT", "TERMINATOR", "LINE_COMMENT", "WS_NLSEMI", "COMMENT_NLSEMI", 
+		"LINE_COMMENT_NLSEMI", "EOS", "OTHER",
 	];
 	public static readonly VOCABULARY: Vocabulary = new VocabularyImpl(SimpleParser._LITERAL_NAMES, SimpleParser._SYMBOLIC_NAMES, []);
 
@@ -254,35 +237,35 @@ export class SimpleParser extends GoParserBase {
 		try {
 			this.enterOuterAlt(_localctx, 1);
 			{
-			this.state = 96;
+			this.state = 82;
 			this._errHandler.sync(this);
 			_la = this._input.LA(1);
 			while (_la === SimpleParser.FUNC || _la === SimpleParser.VAR) {
 				{
 				{
-				this.state = 90;
+				this.state = 76;
 				this._errHandler.sync(this);
 				switch (this._input.LA(1)) {
 				case SimpleParser.VAR:
 					{
-					this.state = 88;
+					this.state = 74;
 					this.varDecl();
 					}
 					break;
 				case SimpleParser.FUNC:
 					{
-					this.state = 89;
+					this.state = 75;
 					this.funcDecl();
 					}
 					break;
 				default:
 					throw new NoViableAltException(this);
 				}
-				this.state = 92;
+				this.state = 78;
 				this.eos();
 				}
 				}
-				this.state = 98;
+				this.state = 84;
 				this._errHandler.sync(this);
 				_la = this._input.LA(1);
 			}
@@ -310,19 +293,19 @@ export class SimpleParser extends GoParserBase {
 		try {
 			this.enterOuterAlt(_localctx, 1);
 			{
-			this.state = 99;
+			this.state = 85;
 			this.match(SimpleParser.L_PAREN);
-			this.state = 101;
+			this.state = 87;
 			this._errHandler.sync(this);
 			_la = this._input.LA(1);
-			if ((((_la) & ~0x1F) === 0 && ((1 << _la) & ((1 << SimpleParser.FUNC) | (1 << SimpleParser.TRUE) | (1 << SimpleParser.FALSE) | (1 << SimpleParser.MAKE))) !== 0) || ((((_la - 35)) & ~0x1F) === 0 && ((1 << (_la - 35)) & ((1 << (SimpleParser.NIL_LIT - 35)) | (1 << (SimpleParser.IDENTIFIER - 35)) | (1 << (SimpleParser.L_PAREN - 35)))) !== 0) || ((((_la - 67)) & ~0x1F) === 0 && ((1 << (_la - 67)) & ((1 << (SimpleParser.EXCLAMATION - 67)) | (1 << (SimpleParser.MINUS - 67)) | (1 << (SimpleParser.RECEIVE - 67)) | (1 << (SimpleParser.DECIMAL_LIT - 67)) | (1 << (SimpleParser.FLOAT_LIT - 67)) | (1 << (SimpleParser.RAW_STRING_LIT - 67)) | (1 << (SimpleParser.INTERPRETED_STRING_LIT - 67)))) !== 0)) {
+			if (_la === SimpleParser.FUNC || _la === SimpleParser.MAKE || ((((_la - 33)) & ~0x1F) === 0 && ((1 << (_la - 33)) & ((1 << (SimpleParser.NIL_LIT - 33)) | (1 << (SimpleParser.IDENTIFIER - 33)) | (1 << (SimpleParser.L_PAREN - 33)))) !== 0) || ((((_la - 65)) & ~0x1F) === 0 && ((1 << (_la - 65)) & ((1 << (SimpleParser.EXCLAMATION - 65)) | (1 << (SimpleParser.MINUS - 65)) | (1 << (SimpleParser.RECEIVE - 65)) | (1 << (SimpleParser.DECIMAL_LIT - 65)) | (1 << (SimpleParser.FLOAT_LIT - 65)) | (1 << (SimpleParser.RAW_STRING_LIT - 65)) | (1 << (SimpleParser.INTERPRETED_STRING_LIT - 65)))) !== 0)) {
 				{
-				this.state = 100;
+				this.state = 86;
 				this.expressionList();
 				}
 			}
 
-			this.state = 103;
+			this.state = 89;
 			this.match(SimpleParser.R_PAREN);
 			}
 		}
@@ -345,24 +328,24 @@ export class SimpleParser extends GoParserBase {
 		let _localctx: FuncAppContext = new FuncAppContext(this._ctx, this.state);
 		this.enterRule(_localctx, 4, SimpleParser.RULE_funcApp);
 		try {
-			this.state = 110;
+			this.state = 96;
 			this._errHandler.sync(this);
 			switch (this._input.LA(1)) {
 			case SimpleParser.IDENTIFIER:
 				this.enterOuterAlt(_localctx, 1);
 				{
-				this.state = 105;
+				this.state = 91;
 				this.match(SimpleParser.IDENTIFIER);
-				this.state = 106;
+				this.state = 92;
 				this.arguments();
 				}
 				break;
 			case SimpleParser.FUNC:
 				this.enterOuterAlt(_localctx, 2);
 				{
-				this.state = 107;
+				this.state = 93;
 				this.functionLit();
-				this.state = 108;
+				this.state = 94;
 				this.arguments();
 				}
 				break;
@@ -391,13 +374,13 @@ export class SimpleParser extends GoParserBase {
 		try {
 			this.enterOuterAlt(_localctx, 1);
 			{
-			this.state = 112;
+			this.state = 98;
 			this.match(SimpleParser.FUNC);
-			this.state = 113;
+			this.state = 99;
 			this.match(SimpleParser.IDENTIFIER);
-			this.state = 114;
+			this.state = 100;
 			this.signature();
-			this.state = 115;
+			this.state = 101;
 			this.block();
 			}
 		}
@@ -423,18 +406,18 @@ export class SimpleParser extends GoParserBase {
 		try {
 			this.enterOuterAlt(_localctx, 1);
 			{
-			this.state = 117;
+			this.state = 103;
 			this.match(SimpleParser.L_PAREN);
-			this.state = 118;
+			this.state = 104;
 			this.parameters();
-			this.state = 119;
+			this.state = 105;
 			this.match(SimpleParser.R_PAREN);
-			this.state = 121;
+			this.state = 107;
 			this._errHandler.sync(this);
 			_la = this._input.LA(1);
-			if (((((_la - 11)) & ~0x1F) === 0 && ((1 << (_la - 11)) & ((1 << (SimpleParser.CHAN - 11)) | (1 << (SimpleParser.INT - 11)) | (1 << (SimpleParser.BOOL - 11)) | (1 << (SimpleParser.STRING - 11)) | (1 << (SimpleParser.FLOAT - 11)) | (1 << (SimpleParser.L_PAREN - 11)))) !== 0)) {
+			if (((((_la - 11)) & ~0x1F) === 0 && ((1 << (_la - 11)) & ((1 << (SimpleParser.CHAN - 11)) | (1 << (SimpleParser.INT - 11)) | (1 << (SimpleParser.BOOL - 11)) | (1 << (SimpleParser.STRING - 11)) | (1 << (SimpleParser.FLOAT - 11)) | (1 << (SimpleParser.MUTEX - 11)) | (1 << (SimpleParser.WAITGROUP - 11)) | (1 << (SimpleParser.L_PAREN - 11)))) !== 0)) {
 				{
-				this.state = 120;
+				this.state = 106;
 				this.result();
 				}
 			}
@@ -460,17 +443,17 @@ export class SimpleParser extends GoParserBase {
 		let _localctx: ResultContext = new ResultContext(this._ctx, this.state);
 		this.enterRule(_localctx, 10, SimpleParser.RULE_result);
 		try {
-			this.state = 128;
+			this.state = 114;
 			this._errHandler.sync(this);
 			switch (this._input.LA(1)) {
 			case SimpleParser.L_PAREN:
 				this.enterOuterAlt(_localctx, 1);
 				{
-				this.state = 123;
+				this.state = 109;
 				this.match(SimpleParser.L_PAREN);
-				this.state = 124;
+				this.state = 110;
 				this.typeList();
-				this.state = 125;
+				this.state = 111;
 				this.match(SimpleParser.R_PAREN);
 				}
 				break;
@@ -479,9 +462,11 @@ export class SimpleParser extends GoParserBase {
 			case SimpleParser.BOOL:
 			case SimpleParser.STRING:
 			case SimpleParser.FLOAT:
+			case SimpleParser.MUTEX:
+			case SimpleParser.WAITGROUP:
 				this.enterOuterAlt(_localctx, 2);
 				{
-				this.state = 127;
+				this.state = 113;
 				this.type_();
 				}
 				break;
@@ -511,7 +496,7 @@ export class SimpleParser extends GoParserBase {
 		try {
 			this.enterOuterAlt(_localctx, 1);
 			{
-			this.state = 132;
+			this.state = 118;
 			this._errHandler.sync(this);
 			switch (this._input.LA(1)) {
 			case SimpleParser.CHAN:
@@ -519,29 +504,31 @@ export class SimpleParser extends GoParserBase {
 			case SimpleParser.BOOL:
 			case SimpleParser.STRING:
 			case SimpleParser.FLOAT:
+			case SimpleParser.MUTEX:
+			case SimpleParser.WAITGROUP:
 				{
-				this.state = 130;
+				this.state = 116;
 				this.type_();
 				}
 				break;
 			case SimpleParser.NIL_LIT:
 				{
-				this.state = 131;
+				this.state = 117;
 				this.match(SimpleParser.NIL_LIT);
 				}
 				break;
 			default:
 				throw new NoViableAltException(this);
 			}
-			this.state = 141;
+			this.state = 127;
 			this._errHandler.sync(this);
 			_la = this._input.LA(1);
 			while (_la === SimpleParser.COMMA) {
 				{
 				{
-				this.state = 134;
+				this.state = 120;
 				this.match(SimpleParser.COMMA);
-				this.state = 137;
+				this.state = 123;
 				this._errHandler.sync(this);
 				switch (this._input.LA(1)) {
 				case SimpleParser.CHAN:
@@ -549,14 +536,16 @@ export class SimpleParser extends GoParserBase {
 				case SimpleParser.BOOL:
 				case SimpleParser.STRING:
 				case SimpleParser.FLOAT:
+				case SimpleParser.MUTEX:
+				case SimpleParser.WAITGROUP:
 					{
-					this.state = 135;
+					this.state = 121;
 					this.type_();
 					}
 					break;
 				case SimpleParser.NIL_LIT:
 					{
-					this.state = 136;
+					this.state = 122;
 					this.match(SimpleParser.NIL_LIT);
 					}
 					break;
@@ -565,7 +554,7 @@ export class SimpleParser extends GoParserBase {
 				}
 				}
 				}
-				this.state = 143;
+				this.state = 129;
 				this._errHandler.sync(this);
 				_la = this._input.LA(1);
 			}
@@ -594,37 +583,37 @@ export class SimpleParser extends GoParserBase {
 			let _alt: number;
 			this.enterOuterAlt(_localctx, 1);
 			{
-			this.state = 155;
+			this.state = 141;
 			this._errHandler.sync(this);
 			switch ( this.interpreter.adaptivePredict(this._input, 11, this._ctx) ) {
 			case 1:
 				{
-				this.state = 144;
+				this.state = 130;
 				this.parameterDecl();
-				this.state = 149;
+				this.state = 135;
 				this._errHandler.sync(this);
 				_alt = this.interpreter.adaptivePredict(this._input, 9, this._ctx);
 				while (_alt !== 2 && _alt !== ATN.INVALID_ALT_NUMBER) {
 					if (_alt === 1) {
 						{
 						{
-						this.state = 145;
+						this.state = 131;
 						this.match(SimpleParser.COMMA);
-						this.state = 146;
+						this.state = 132;
 						this.parameterDecl();
 						}
 						}
 					}
-					this.state = 151;
+					this.state = 137;
 					this._errHandler.sync(this);
 					_alt = this.interpreter.adaptivePredict(this._input, 9, this._ctx);
 				}
-				this.state = 153;
+				this.state = 139;
 				this._errHandler.sync(this);
 				_la = this._input.LA(1);
 				if (_la === SimpleParser.COMMA) {
 					{
-					this.state = 152;
+					this.state = 138;
 					this.match(SimpleParser.COMMA);
 					}
 				}
@@ -656,14 +645,14 @@ export class SimpleParser extends GoParserBase {
 		try {
 			this.enterOuterAlt(_localctx, 1);
 			{
-			this.state = 160;
+			this.state = 146;
 			this._errHandler.sync(this);
 			_la = this._input.LA(1);
 			if (_la === SimpleParser.IDENTIFIER) {
 				{
-				this.state = 157;
+				this.state = 143;
 				this.identifierList();
-				this.state = 158;
+				this.state = 144;
 				this.type_();
 				}
 			}
@@ -691,19 +680,19 @@ export class SimpleParser extends GoParserBase {
 		try {
 			this.enterOuterAlt(_localctx, 1);
 			{
-			this.state = 162;
+			this.state = 148;
 			this.match(SimpleParser.L_CURLY);
-			this.state = 164;
+			this.state = 150;
 			this._errHandler.sync(this);
 			switch ( this.interpreter.adaptivePredict(this._input, 13, this._ctx) ) {
 			case 1:
 				{
-				this.state = 163;
+				this.state = 149;
 				this.statementList();
 				}
 				break;
 			}
-			this.state = 166;
+			this.state = 152;
 			this.match(SimpleParser.R_CURLY);
 			}
 		}
@@ -725,33 +714,48 @@ export class SimpleParser extends GoParserBase {
 	public varDecl(): VarDeclContext {
 		let _localctx: VarDeclContext = new VarDeclContext(this._ctx, this.state);
 		this.enterRule(_localctx, 20, SimpleParser.RULE_varDecl);
+		let _la: number;
 		try {
-			this.state = 171;
+			this.enterOuterAlt(_localctx, 1);
+			{
+			this.state = 154;
+			this.match(SimpleParser.VAR);
+			this.state = 166;
 			this._errHandler.sync(this);
-			switch ( this.interpreter.adaptivePredict(this._input, 14, this._ctx) ) {
-			case 1:
-				this.enterOuterAlt(_localctx, 1);
+			switch (this._input.LA(1)) {
+			case SimpleParser.IDENTIFIER:
 				{
-				this.state = 168;
-				this.varMutexDecl();
+				this.state = 155;
+				this.varSpec();
 				}
 				break;
-
-			case 2:
-				this.enterOuterAlt(_localctx, 2);
+			case SimpleParser.L_PAREN:
 				{
-				this.state = 169;
-				this.varWaitGroupDecl();
+				this.state = 156;
+				this.match(SimpleParser.L_PAREN);
+				this.state = 162;
+				this._errHandler.sync(this);
+				_la = this._input.LA(1);
+				while (_la === SimpleParser.IDENTIFIER) {
+					{
+					{
+					this.state = 157;
+					this.varSpec();
+					this.state = 158;
+					this.eos();
+					}
+					}
+					this.state = 164;
+					this._errHandler.sync(this);
+					_la = this._input.LA(1);
+				}
+				this.state = 165;
+				this.match(SimpleParser.R_PAREN);
 				}
 				break;
-
-			case 3:
-				this.enterOuterAlt(_localctx, 3);
-				{
-				this.state = 170;
-				this.regVarDecl();
-				}
-				break;
+			default:
+				throw new NoViableAltException(this);
+			}
 			}
 		}
 		catch (re) {
@@ -769,88 +773,20 @@ export class SimpleParser extends GoParserBase {
 		return _localctx;
 	}
 	// @RuleVersion(0)
-	public regVarDecl(): RegVarDeclContext {
-		let _localctx: RegVarDeclContext = new RegVarDeclContext(this._ctx, this.state);
-		this.enterRule(_localctx, 22, SimpleParser.RULE_regVarDecl);
+	public varSpec(): VarSpecContext {
+		let _localctx: VarSpecContext = new VarSpecContext(this._ctx, this.state);
+		this.enterRule(_localctx, 22, SimpleParser.RULE_varSpec);
 		try {
 			this.enterOuterAlt(_localctx, 1);
 			{
-			this.state = 173;
-			this.match(SimpleParser.VAR);
-			this.state = 174;
+			this.state = 168;
 			this.identifierList();
-			this.state = 175;
+			this.state = 169;
 			this.type_();
-			this.state = 178;
-			this._errHandler.sync(this);
-			switch ( this.interpreter.adaptivePredict(this._input, 15, this._ctx) ) {
-			case 1:
-				{
-				this.state = 176;
-				this.match(SimpleParser.ASSIGN);
-				this.state = 177;
-				this.expressionList();
-				}
-				break;
-			}
-			}
-		}
-		catch (re) {
-			if (re instanceof RecognitionException) {
-				_localctx.exception = re;
-				this._errHandler.reportError(this, re);
-				this._errHandler.recover(this, re);
-			} else {
-				throw re;
-			}
-		}
-		finally {
-			this.exitRule();
-		}
-		return _localctx;
-	}
-	// @RuleVersion(0)
-	public varMutexDecl(): VarMutexDeclContext {
-		let _localctx: VarMutexDeclContext = new VarMutexDeclContext(this._ctx, this.state);
-		this.enterRule(_localctx, 24, SimpleParser.RULE_varMutexDecl);
-		try {
-			this.enterOuterAlt(_localctx, 1);
-			{
-			this.state = 180;
-			this.match(SimpleParser.VAR);
-			this.state = 181;
-			this.identifierList();
-			this.state = 182;
-			this.match(SimpleParser.MUTEX);
-			}
-		}
-		catch (re) {
-			if (re instanceof RecognitionException) {
-				_localctx.exception = re;
-				this._errHandler.reportError(this, re);
-				this._errHandler.recover(this, re);
-			} else {
-				throw re;
-			}
-		}
-		finally {
-			this.exitRule();
-		}
-		return _localctx;
-	}
-	// @RuleVersion(0)
-	public varWaitGroupDecl(): VarWaitGroupDeclContext {
-		let _localctx: VarWaitGroupDeclContext = new VarWaitGroupDeclContext(this._ctx, this.state);
-		this.enterRule(_localctx, 26, SimpleParser.RULE_varWaitGroupDecl);
-		try {
-			this.enterOuterAlt(_localctx, 1);
-			{
-			this.state = 184;
-			this.match(SimpleParser.VAR);
-			this.state = 185;
-			this.identifierList();
-			this.state = 186;
-			this.match(SimpleParser.WAITGROUP);
+			this.state = 170;
+			this.match(SimpleParser.ASSIGN);
+			this.state = 171;
+			this.expressionList();
 			}
 		}
 		catch (re) {
@@ -870,17 +806,17 @@ export class SimpleParser extends GoParserBase {
 	// @RuleVersion(0)
 	public shortVarDecl(): ShortVarDeclContext {
 		let _localctx: ShortVarDeclContext = new ShortVarDeclContext(this._ctx, this.state);
-		this.enterRule(_localctx, 28, SimpleParser.RULE_shortVarDecl);
+		this.enterRule(_localctx, 24, SimpleParser.RULE_shortVarDecl);
 		try {
 			this.enterOuterAlt(_localctx, 1);
 			{
-			this.state = 188;
+			this.state = 173;
 			this.identifierList();
-			this.state = 189;
+			this.state = 174;
 			this.type_();
-			this.state = 190;
+			this.state = 175;
 			this.match(SimpleParser.DECLARE_ASSIGN);
-			this.state = 191;
+			this.state = 176;
 			this.expressionList();
 			}
 		}
@@ -901,44 +837,58 @@ export class SimpleParser extends GoParserBase {
 	// @RuleVersion(0)
 	public type_(): Type_Context {
 		let _localctx: Type_Context = new Type_Context(this._ctx, this.state);
-		this.enterRule(_localctx, 30, SimpleParser.RULE_type_);
+		this.enterRule(_localctx, 26, SimpleParser.RULE_type_);
 		try {
-			this.state = 198;
+			this.state = 185;
 			this._errHandler.sync(this);
 			switch (this._input.LA(1)) {
 			case SimpleParser.INT:
 				this.enterOuterAlt(_localctx, 1);
 				{
-				this.state = 193;
+				this.state = 178;
 				this.match(SimpleParser.INT);
 				}
 				break;
 			case SimpleParser.BOOL:
 				this.enterOuterAlt(_localctx, 2);
 				{
-				this.state = 194;
+				this.state = 179;
 				this.match(SimpleParser.BOOL);
 				}
 				break;
 			case SimpleParser.STRING:
 				this.enterOuterAlt(_localctx, 3);
 				{
-				this.state = 195;
+				this.state = 180;
 				this.match(SimpleParser.STRING);
 				}
 				break;
 			case SimpleParser.FLOAT:
 				this.enterOuterAlt(_localctx, 4);
 				{
-				this.state = 196;
+				this.state = 181;
 				this.match(SimpleParser.FLOAT);
 				}
 				break;
 			case SimpleParser.CHAN:
 				this.enterOuterAlt(_localctx, 5);
 				{
-				this.state = 197;
+				this.state = 182;
 				this.channelType();
+				}
+				break;
+			case SimpleParser.MUTEX:
+				this.enterOuterAlt(_localctx, 6);
+				{
+				this.state = 183;
+				this.match(SimpleParser.MUTEX);
+				}
+				break;
+			case SimpleParser.WAITGROUP:
+				this.enterOuterAlt(_localctx, 7);
+				{
+				this.state = 184;
+				this.match(SimpleParser.WAITGROUP);
 				}
 				break;
 			default:
@@ -962,13 +912,13 @@ export class SimpleParser extends GoParserBase {
 	// @RuleVersion(0)
 	public channelType(): ChannelTypeContext {
 		let _localctx: ChannelTypeContext = new ChannelTypeContext(this._ctx, this.state);
-		this.enterRule(_localctx, 32, SimpleParser.RULE_channelType);
+		this.enterRule(_localctx, 28, SimpleParser.RULE_channelType);
 		try {
 			this.enterOuterAlt(_localctx, 1);
 			{
-			this.state = 200;
+			this.state = 187;
 			this.match(SimpleParser.CHAN);
-			this.state = 201;
+			this.state = 188;
 			this.type_();
 			}
 		}
@@ -989,15 +939,15 @@ export class SimpleParser extends GoParserBase {
 	// @RuleVersion(0)
 	public assignment(): AssignmentContext {
 		let _localctx: AssignmentContext = new AssignmentContext(this._ctx, this.state);
-		this.enterRule(_localctx, 34, SimpleParser.RULE_assignment);
+		this.enterRule(_localctx, 30, SimpleParser.RULE_assignment);
 		try {
 			this.enterOuterAlt(_localctx, 1);
 			{
-			this.state = 203;
+			this.state = 190;
 			this.identifierList();
-			this.state = 204;
+			this.state = 191;
 			this.assign_op();
-			this.state = 205;
+			this.state = 192;
 			this.expressionList();
 			}
 		}
@@ -1018,11 +968,11 @@ export class SimpleParser extends GoParserBase {
 	// @RuleVersion(0)
 	public assign_op(): Assign_opContext {
 		let _localctx: Assign_opContext = new Assign_opContext(this._ctx, this.state);
-		this.enterRule(_localctx, 36, SimpleParser.RULE_assign_op);
+		this.enterRule(_localctx, 32, SimpleParser.RULE_assign_op);
 		try {
 			this.enterOuterAlt(_localctx, 1);
 			{
-			this.state = 207;
+			this.state = 194;
 			this.match(SimpleParser.ASSIGN);
 			}
 		}
@@ -1043,11 +993,11 @@ export class SimpleParser extends GoParserBase {
 	// @RuleVersion(0)
 	public expressionStmt(): ExpressionStmtContext {
 		let _localctx: ExpressionStmtContext = new ExpressionStmtContext(this._ctx, this.state);
-		this.enterRule(_localctx, 38, SimpleParser.RULE_expressionStmt);
+		this.enterRule(_localctx, 34, SimpleParser.RULE_expressionStmt);
 		try {
 			this.enterOuterAlt(_localctx, 1);
 			{
-			this.state = 209;
+			this.state = 196;
 			this.expression(0);
 			}
 		}
@@ -1078,14 +1028,14 @@ export class SimpleParser extends GoParserBase {
 		let _parentState: number = this.state;
 		let _localctx: ExpressionContext = new ExpressionContext(this._ctx, _parentState);
 		let _prevctx: ExpressionContext = _localctx;
-		let _startState: number = 40;
-		this.enterRecursionRule(_localctx, 40, SimpleParser.RULE_expression, _p);
+		let _startState: number = 36;
+		this.enterRecursionRule(_localctx, 36, SimpleParser.RULE_expression, _p);
 		let _la: number;
 		try {
 			let _alt: number;
 			this.enterOuterAlt(_localctx, 1);
 			{
-			this.state = 219;
+			this.state = 206;
 			this._errHandler.sync(this);
 			switch ( this.interpreter.adaptivePredict(this._input, 17, this._ctx) ) {
 			case 1:
@@ -1094,7 +1044,7 @@ export class SimpleParser extends GoParserBase {
 				this._ctx = _localctx;
 				_prevctx = _localctx;
 
-				this.state = 212;
+				this.state = 199;
 				this.makeExpr();
 				}
 				break;
@@ -1104,7 +1054,7 @@ export class SimpleParser extends GoParserBase {
 				_localctx = new FUNCAPPContext(_localctx);
 				this._ctx = _localctx;
 				_prevctx = _localctx;
-				this.state = 213;
+				this.state = 200;
 				this.funcApp();
 				}
 				break;
@@ -1114,7 +1064,7 @@ export class SimpleParser extends GoParserBase {
 				_localctx = new UNARYOPContext(_localctx);
 				this._ctx = _localctx;
 				_prevctx = _localctx;
-				this.state = 214;
+				this.state = 201;
 				(_localctx as UNARYOPContext)._unary_op = this._input.LT(1);
 				_la = this._input.LA(1);
 				if (!(_la === SimpleParser.EXCLAMATION || _la === SimpleParser.MINUS)) {
@@ -1127,7 +1077,7 @@ export class SimpleParser extends GoParserBase {
 					this._errHandler.reportMatch(this);
 					this.consume();
 				}
-				this.state = 215;
+				this.state = 202;
 				this.expression(8);
 				}
 				break;
@@ -1137,7 +1087,7 @@ export class SimpleParser extends GoParserBase {
 				_localctx = new PRIMARYContext(_localctx);
 				this._ctx = _localctx;
 				_prevctx = _localctx;
-				this.state = 216;
+				this.state = 203;
 				this.primaryExpr();
 				}
 				break;
@@ -1147,15 +1097,15 @@ export class SimpleParser extends GoParserBase {
 				_localctx = new RECVOPContext(_localctx);
 				this._ctx = _localctx;
 				_prevctx = _localctx;
-				this.state = 217;
+				this.state = 204;
 				this.match(SimpleParser.RECEIVE);
-				this.state = 218;
+				this.state = 205;
 				this.expression(1);
 				}
 				break;
 			}
 			this._ctx._stop = this._input.tryLT(-1);
-			this.state = 238;
+			this.state = 225;
 			this._errHandler.sync(this);
 			_alt = this.interpreter.adaptivePredict(this._input, 19, this._ctx);
 			while (_alt !== 2 && _alt !== ATN.INVALID_ALT_NUMBER) {
@@ -1165,21 +1115,21 @@ export class SimpleParser extends GoParserBase {
 					}
 					_prevctx = _localctx;
 					{
-					this.state = 236;
+					this.state = 223;
 					this._errHandler.sync(this);
 					switch ( this.interpreter.adaptivePredict(this._input, 18, this._ctx) ) {
 					case 1:
 						{
 						_localctx = new BINOPContext(new ExpressionContext(_parentctx, _parentState));
 						this.pushNewRecursionContext(_localctx, _startState, SimpleParser.RULE_expression);
-						this.state = 221;
+						this.state = 208;
 						if (!(this.precpred(this._ctx, 7))) {
 							throw this.createFailedPredicateException("this.precpred(this._ctx, 7)");
 						}
-						this.state = 222;
+						this.state = 209;
 						(_localctx as BINOPContext)._bin_op = this._input.LT(1);
 						_la = this._input.LA(1);
-						if (!(((((_la - 61)) & ~0x1F) === 0 && ((1 << (_la - 61)) & ((1 << (SimpleParser.DIV - 61)) | (1 << (SimpleParser.MOD - 61)) | (1 << (SimpleParser.STAR - 61)))) !== 0))) {
+						if (!(((((_la - 59)) & ~0x1F) === 0 && ((1 << (_la - 59)) & ((1 << (SimpleParser.DIV - 59)) | (1 << (SimpleParser.MOD - 59)) | (1 << (SimpleParser.STAR - 59)))) !== 0))) {
 							(_localctx as BINOPContext)._bin_op = this._errHandler.recoverInline(this);
 						} else {
 							if (this._input.LA(1) === Token.EOF) {
@@ -1189,7 +1139,7 @@ export class SimpleParser extends GoParserBase {
 							this._errHandler.reportMatch(this);
 							this.consume();
 						}
-						this.state = 223;
+						this.state = 210;
 						this.expression(8);
 						}
 						break;
@@ -1198,11 +1148,11 @@ export class SimpleParser extends GoParserBase {
 						{
 						_localctx = new BINOPContext(new ExpressionContext(_parentctx, _parentState));
 						this.pushNewRecursionContext(_localctx, _startState, SimpleParser.RULE_expression);
-						this.state = 224;
+						this.state = 211;
 						if (!(this.precpred(this._ctx, 6))) {
 							throw this.createFailedPredicateException("this.precpred(this._ctx, 6)");
 						}
-						this.state = 225;
+						this.state = 212;
 						(_localctx as BINOPContext)._bin_op = this._input.LT(1);
 						_la = this._input.LA(1);
 						if (!(_la === SimpleParser.PLUS || _la === SimpleParser.MINUS)) {
@@ -1215,7 +1165,7 @@ export class SimpleParser extends GoParserBase {
 							this._errHandler.reportMatch(this);
 							this.consume();
 						}
-						this.state = 226;
+						this.state = 213;
 						this.expression(7);
 						}
 						break;
@@ -1224,14 +1174,14 @@ export class SimpleParser extends GoParserBase {
 						{
 						_localctx = new RELOPContext(new ExpressionContext(_parentctx, _parentState));
 						this.pushNewRecursionContext(_localctx, _startState, SimpleParser.RULE_expression);
-						this.state = 227;
+						this.state = 214;
 						if (!(this.precpred(this._ctx, 5))) {
 							throw this.createFailedPredicateException("this.precpred(this._ctx, 5)");
 						}
-						this.state = 228;
+						this.state = 215;
 						(_localctx as RELOPContext)._rel_op = this._input.LT(1);
 						_la = this._input.LA(1);
-						if (!(((((_la - 54)) & ~0x1F) === 0 && ((1 << (_la - 54)) & ((1 << (SimpleParser.EQUALS - 54)) | (1 << (SimpleParser.NOT_EQUALS - 54)) | (1 << (SimpleParser.LESS - 54)) | (1 << (SimpleParser.LESS_OR_EQUALS - 54)) | (1 << (SimpleParser.GREATER - 54)) | (1 << (SimpleParser.GREATER_OR_EQUALS - 54)))) !== 0))) {
+						if (!(((((_la - 52)) & ~0x1F) === 0 && ((1 << (_la - 52)) & ((1 << (SimpleParser.EQUALS - 52)) | (1 << (SimpleParser.NOT_EQUALS - 52)) | (1 << (SimpleParser.LESS - 52)) | (1 << (SimpleParser.LESS_OR_EQUALS - 52)) | (1 << (SimpleParser.GREATER - 52)) | (1 << (SimpleParser.GREATER_OR_EQUALS - 52)))) !== 0))) {
 							(_localctx as RELOPContext)._rel_op = this._errHandler.recoverInline(this);
 						} else {
 							if (this._input.LA(1) === Token.EOF) {
@@ -1241,7 +1191,7 @@ export class SimpleParser extends GoParserBase {
 							this._errHandler.reportMatch(this);
 							this.consume();
 						}
-						this.state = 229;
+						this.state = 216;
 						this.expression(6);
 						}
 						break;
@@ -1250,13 +1200,13 @@ export class SimpleParser extends GoParserBase {
 						{
 						_localctx = new LOGOPContext(new ExpressionContext(_parentctx, _parentState));
 						this.pushNewRecursionContext(_localctx, _startState, SimpleParser.RULE_expression);
-						this.state = 230;
+						this.state = 217;
 						if (!(this.precpred(this._ctx, 4))) {
 							throw this.createFailedPredicateException("this.precpred(this._ctx, 4)");
 						}
-						this.state = 231;
+						this.state = 218;
 						this.match(SimpleParser.LOGICAL_AND);
-						this.state = 232;
+						this.state = 219;
 						this.expression(5);
 						}
 						break;
@@ -1265,20 +1215,20 @@ export class SimpleParser extends GoParserBase {
 						{
 						_localctx = new LOGOPContext(new ExpressionContext(_parentctx, _parentState));
 						this.pushNewRecursionContext(_localctx, _startState, SimpleParser.RULE_expression);
-						this.state = 233;
+						this.state = 220;
 						if (!(this.precpred(this._ctx, 3))) {
 							throw this.createFailedPredicateException("this.precpred(this._ctx, 3)");
 						}
-						this.state = 234;
+						this.state = 221;
 						this.match(SimpleParser.LOGICAL_OR);
-						this.state = 235;
+						this.state = 222;
 						this.expression(4);
 						}
 						break;
 					}
 					}
 				}
-				this.state = 240;
+				this.state = 227;
 				this._errHandler.sync(this);
 				_alt = this.interpreter.adaptivePredict(this._input, 19, this._ctx);
 			}
@@ -1301,11 +1251,11 @@ export class SimpleParser extends GoParserBase {
 	// @RuleVersion(0)
 	public primaryExpr(): PrimaryExprContext {
 		let _localctx: PrimaryExprContext = new PrimaryExprContext(this._ctx, this.state);
-		this.enterRule(_localctx, 42, SimpleParser.RULE_primaryExpr);
+		this.enterRule(_localctx, 38, SimpleParser.RULE_primaryExpr);
 		try {
 			this.enterOuterAlt(_localctx, 1);
 			{
-			this.state = 241;
+			this.state = 228;
 			this.operand();
 			}
 		}
@@ -1326,14 +1276,12 @@ export class SimpleParser extends GoParserBase {
 	// @RuleVersion(0)
 	public operand(): OperandContext {
 		let _localctx: OperandContext = new OperandContext(this._ctx, this.state);
-		this.enterRule(_localctx, 44, SimpleParser.RULE_operand);
+		this.enterRule(_localctx, 40, SimpleParser.RULE_operand);
 		try {
-			this.state = 249;
+			this.state = 236;
 			this._errHandler.sync(this);
 			switch (this._input.LA(1)) {
 			case SimpleParser.FUNC:
-			case SimpleParser.TRUE:
-			case SimpleParser.FALSE:
 			case SimpleParser.NIL_LIT:
 			case SimpleParser.DECIMAL_LIT:
 			case SimpleParser.FLOAT_LIT:
@@ -1341,25 +1289,25 @@ export class SimpleParser extends GoParserBase {
 			case SimpleParser.INTERPRETED_STRING_LIT:
 				this.enterOuterAlt(_localctx, 1);
 				{
-				this.state = 243;
+				this.state = 230;
 				this.literal();
 				}
 				break;
 			case SimpleParser.IDENTIFIER:
 				this.enterOuterAlt(_localctx, 2);
 				{
-				this.state = 244;
+				this.state = 231;
 				this.operandName();
 				}
 				break;
 			case SimpleParser.L_PAREN:
 				this.enterOuterAlt(_localctx, 3);
 				{
-				this.state = 245;
+				this.state = 232;
 				this.match(SimpleParser.L_PAREN);
-				this.state = 246;
+				this.state = 233;
 				this.expression(0);
-				this.state = 247;
+				this.state = 234;
 				this.match(SimpleParser.R_PAREN);
 				}
 				break;
@@ -1384,11 +1332,11 @@ export class SimpleParser extends GoParserBase {
 	// @RuleVersion(0)
 	public operandName(): OperandNameContext {
 		let _localctx: OperandNameContext = new OperandNameContext(this._ctx, this.state);
-		this.enterRule(_localctx, 46, SimpleParser.RULE_operandName);
+		this.enterRule(_localctx, 42, SimpleParser.RULE_operandName);
 		try {
 			this.enterOuterAlt(_localctx, 1);
 			{
-			this.state = 251;
+			this.state = 238;
 			this.match(SimpleParser.IDENTIFIER);
 			}
 		}
@@ -1409,58 +1357,44 @@ export class SimpleParser extends GoParserBase {
 	// @RuleVersion(0)
 	public literal(): LiteralContext {
 		let _localctx: LiteralContext = new LiteralContext(this._ctx, this.state);
-		this.enterRule(_localctx, 48, SimpleParser.RULE_literal);
+		this.enterRule(_localctx, 44, SimpleParser.RULE_literal);
 		try {
-			this.state = 260;
+			this.state = 245;
 			this._errHandler.sync(this);
 			switch (this._input.LA(1)) {
 			case SimpleParser.NIL_LIT:
 				this.enterOuterAlt(_localctx, 1);
 				{
-				this.state = 253;
+				this.state = 240;
 				this.match(SimpleParser.NIL_LIT);
 				}
 				break;
 			case SimpleParser.DECIMAL_LIT:
 				this.enterOuterAlt(_localctx, 2);
 				{
-				this.state = 254;
+				this.state = 241;
 				this.match(SimpleParser.DECIMAL_LIT);
 				}
 				break;
 			case SimpleParser.FLOAT_LIT:
 				this.enterOuterAlt(_localctx, 3);
 				{
-				this.state = 255;
+				this.state = 242;
 				this.match(SimpleParser.FLOAT_LIT);
-				}
-				break;
-			case SimpleParser.TRUE:
-				this.enterOuterAlt(_localctx, 4);
-				{
-				this.state = 256;
-				this.match(SimpleParser.TRUE);
-				}
-				break;
-			case SimpleParser.FALSE:
-				this.enterOuterAlt(_localctx, 5);
-				{
-				this.state = 257;
-				this.match(SimpleParser.FALSE);
 				}
 				break;
 			case SimpleParser.RAW_STRING_LIT:
 			case SimpleParser.INTERPRETED_STRING_LIT:
-				this.enterOuterAlt(_localctx, 6);
+				this.enterOuterAlt(_localctx, 4);
 				{
-				this.state = 258;
+				this.state = 243;
 				this.string_();
 				}
 				break;
 			case SimpleParser.FUNC:
-				this.enterOuterAlt(_localctx, 7);
+				this.enterOuterAlt(_localctx, 5);
 				{
-				this.state = 259;
+				this.state = 244;
 				this.functionLit();
 				}
 				break;
@@ -1485,13 +1419,13 @@ export class SimpleParser extends GoParserBase {
 	// @RuleVersion(0)
 	public statementList(): StatementListContext {
 		let _localctx: StatementListContext = new StatementListContext(this._ctx, this.state);
-		this.enterRule(_localctx, 50, SimpleParser.RULE_statementList);
+		this.enterRule(_localctx, 46, SimpleParser.RULE_statementList);
 		let _la: number;
 		try {
 			let _alt: number;
 			this.enterOuterAlt(_localctx, 1);
 			{
-			this.state = 274;
+			this.state = 259;
 			this._errHandler.sync(this);
 			_alt = 1;
 			do {
@@ -1499,17 +1433,17 @@ export class SimpleParser extends GoParserBase {
 				case 1:
 					{
 					{
-					this.state = 269;
+					this.state = 254;
 					this._errHandler.sync(this);
 					switch ( this.interpreter.adaptivePredict(this._input, 24, this._ctx) ) {
 					case 1:
 						{
-						this.state = 263;
+						this.state = 248;
 						this._errHandler.sync(this);
 						_la = this._input.LA(1);
 						if (_la === SimpleParser.SEMI) {
 							{
-							this.state = 262;
+							this.state = 247;
 							this.match(SimpleParser.SEMI);
 							}
 						}
@@ -1519,12 +1453,12 @@ export class SimpleParser extends GoParserBase {
 
 					case 2:
 						{
-						this.state = 266;
+						this.state = 251;
 						this._errHandler.sync(this);
 						_la = this._input.LA(1);
 						if (_la === SimpleParser.EOS) {
 							{
-							this.state = 265;
+							this.state = 250;
 							this.match(SimpleParser.EOS);
 							}
 						}
@@ -1534,16 +1468,16 @@ export class SimpleParser extends GoParserBase {
 
 					case 3:
 						{
-						this.state = 268;
+						this.state = 253;
 						if (!(this.closingBracket())) {
 							throw this.createFailedPredicateException("this.closingBracket()");
 						}
 						}
 						break;
 					}
-					this.state = 271;
+					this.state = 256;
 					this.statement();
-					this.state = 272;
+					this.state = 257;
 					this.eos();
 					}
 					}
@@ -1551,7 +1485,7 @@ export class SimpleParser extends GoParserBase {
 				default:
 					throw new NoViableAltException(this);
 				}
-				this.state = 276;
+				this.state = 261;
 				this._errHandler.sync(this);
 				_alt = this.interpreter.adaptivePredict(this._input, 25, this._ctx);
 			} while (_alt !== 2 && _alt !== ATN.INVALID_ALT_NUMBER);
@@ -1574,36 +1508,34 @@ export class SimpleParser extends GoParserBase {
 	// @RuleVersion(0)
 	public statement(): StatementContext {
 		let _localctx: StatementContext = new StatementContext(this._ctx, this.state);
-		this.enterRule(_localctx, 52, SimpleParser.RULE_statement);
+		this.enterRule(_localctx, 48, SimpleParser.RULE_statement);
 		try {
-			this.state = 284;
+			this.state = 269;
 			this._errHandler.sync(this);
 			switch (this._input.LA(1)) {
 			case SimpleParser.FOR:
 				this.enterOuterAlt(_localctx, 1);
 				{
-				this.state = 278;
+				this.state = 263;
 				this.forStmt();
 				}
 				break;
 			case SimpleParser.IF:
 				this.enterOuterAlt(_localctx, 2);
 				{
-				this.state = 279;
+				this.state = 264;
 				this.ifStmt();
 				}
 				break;
 			case SimpleParser.RETURN:
 				this.enterOuterAlt(_localctx, 3);
 				{
-				this.state = 280;
+				this.state = 265;
 				this.returnStmt();
 				}
 				break;
 			case SimpleParser.FUNC:
 			case SimpleParser.VAR:
-			case SimpleParser.TRUE:
-			case SimpleParser.FALSE:
 			case SimpleParser.MAKE:
 			case SimpleParser.NIL_LIT:
 			case SimpleParser.IDENTIFIER:
@@ -1617,21 +1549,21 @@ export class SimpleParser extends GoParserBase {
 			case SimpleParser.INTERPRETED_STRING_LIT:
 				this.enterOuterAlt(_localctx, 4);
 				{
-				this.state = 281;
+				this.state = 266;
 				this.simpleStmt();
 				}
 				break;
 			case SimpleParser.L_CURLY:
 				this.enterOuterAlt(_localctx, 5);
 				{
-				this.state = 282;
+				this.state = 267;
 				this.block();
 				}
 				break;
 			case SimpleParser.GO:
 				this.enterOuterAlt(_localctx, 6);
 				{
-				this.state = 283;
+				this.state = 268;
 				this.goStmt();
 				}
 				break;
@@ -1656,15 +1588,15 @@ export class SimpleParser extends GoParserBase {
 	// @RuleVersion(0)
 	public simpleStmt(): SimpleStmtContext {
 		let _localctx: SimpleStmtContext = new SimpleStmtContext(this._ctx, this.state);
-		this.enterRule(_localctx, 54, SimpleParser.RULE_simpleStmt);
+		this.enterRule(_localctx, 50, SimpleParser.RULE_simpleStmt);
 		try {
-			this.state = 292;
+			this.state = 277;
 			this._errHandler.sync(this);
 			switch ( this.interpreter.adaptivePredict(this._input, 27, this._ctx) ) {
 			case 1:
 				this.enterOuterAlt(_localctx, 1);
 				{
-				this.state = 286;
+				this.state = 271;
 				this.sendStmt();
 				}
 				break;
@@ -1672,7 +1604,7 @@ export class SimpleParser extends GoParserBase {
 			case 2:
 				this.enterOuterAlt(_localctx, 2);
 				{
-				this.state = 287;
+				this.state = 272;
 				this.varDecl();
 				}
 				break;
@@ -1680,7 +1612,7 @@ export class SimpleParser extends GoParserBase {
 			case 3:
 				this.enterOuterAlt(_localctx, 3);
 				{
-				this.state = 288;
+				this.state = 273;
 				this.funcDecl();
 				}
 				break;
@@ -1688,7 +1620,7 @@ export class SimpleParser extends GoParserBase {
 			case 4:
 				this.enterOuterAlt(_localctx, 4);
 				{
-				this.state = 289;
+				this.state = 274;
 				this.assignment();
 				}
 				break;
@@ -1696,7 +1628,7 @@ export class SimpleParser extends GoParserBase {
 			case 5:
 				this.enterOuterAlt(_localctx, 5);
 				{
-				this.state = 290;
+				this.state = 275;
 				this.expressionStmt();
 				}
 				break;
@@ -1704,7 +1636,7 @@ export class SimpleParser extends GoParserBase {
 			case 6:
 				this.enterOuterAlt(_localctx, 6);
 				{
-				this.state = 291;
+				this.state = 276;
 				this.shortVarDecl();
 				}
 				break;
@@ -1727,175 +1659,16 @@ export class SimpleParser extends GoParserBase {
 	// @RuleVersion(0)
 	public sendStmt(): SendStmtContext {
 		let _localctx: SendStmtContext = new SendStmtContext(this._ctx, this.state);
-		this.enterRule(_localctx, 56, SimpleParser.RULE_sendStmt);
+		this.enterRule(_localctx, 52, SimpleParser.RULE_sendStmt);
 		try {
 			this.enterOuterAlt(_localctx, 1);
 			{
-			this.state = 294;
+			this.state = 279;
 			_localctx._channel = this.expression(0);
-			this.state = 295;
+			this.state = 280;
 			this.match(SimpleParser.RECEIVE);
-			this.state = 296;
+			this.state = 281;
 			this.expression(0);
-			}
-		}
-		catch (re) {
-			if (re instanceof RecognitionException) {
-				_localctx.exception = re;
-				this._errHandler.reportError(this, re);
-				this._errHandler.recover(this, re);
-			} else {
-				throw re;
-			}
-		}
-		finally {
-			this.exitRule();
-		}
-		return _localctx;
-	}
-	// @RuleVersion(0)
-	public lockStmt(): LockStmtContext {
-		let _localctx: LockStmtContext = new LockStmtContext(this._ctx, this.state);
-		this.enterRule(_localctx, 58, SimpleParser.RULE_lockStmt);
-		try {
-			this.enterOuterAlt(_localctx, 1);
-			{
-			this.state = 298;
-			_localctx._mutexLock = this.match(SimpleParser.LOCK);
-			this.state = 299;
-			this.match(SimpleParser.L_PAREN);
-			this.state = 300;
-			this.match(SimpleParser.IDENTIFIER);
-			this.state = 301;
-			this.match(SimpleParser.R_PAREN);
-			}
-		}
-		catch (re) {
-			if (re instanceof RecognitionException) {
-				_localctx.exception = re;
-				this._errHandler.reportError(this, re);
-				this._errHandler.recover(this, re);
-			} else {
-				throw re;
-			}
-		}
-		finally {
-			this.exitRule();
-		}
-		return _localctx;
-	}
-	// @RuleVersion(0)
-	public unlockStmt(): UnlockStmtContext {
-		let _localctx: UnlockStmtContext = new UnlockStmtContext(this._ctx, this.state);
-		this.enterRule(_localctx, 60, SimpleParser.RULE_unlockStmt);
-		try {
-			this.enterOuterAlt(_localctx, 1);
-			{
-			this.state = 303;
-			_localctx._mutexUnlock = this.match(SimpleParser.UNLOCK);
-			this.state = 304;
-			this.match(SimpleParser.L_PAREN);
-			this.state = 305;
-			this.match(SimpleParser.IDENTIFIER);
-			this.state = 306;
-			this.match(SimpleParser.R_PAREN);
-			}
-		}
-		catch (re) {
-			if (re instanceof RecognitionException) {
-				_localctx.exception = re;
-				this._errHandler.reportError(this, re);
-				this._errHandler.recover(this, re);
-			} else {
-				throw re;
-			}
-		}
-		finally {
-			this.exitRule();
-		}
-		return _localctx;
-	}
-	// @RuleVersion(0)
-	public addStmt(): AddStmtContext {
-		let _localctx: AddStmtContext = new AddStmtContext(this._ctx, this.state);
-		this.enterRule(_localctx, 62, SimpleParser.RULE_addStmt);
-		try {
-			this.enterOuterAlt(_localctx, 1);
-			{
-			this.state = 308;
-			_localctx._waitgroupAdd = this.match(SimpleParser.ADD);
-			this.state = 309;
-			this.match(SimpleParser.L_PAREN);
-			this.state = 310;
-			this.match(SimpleParser.IDENTIFIER);
-			this.state = 311;
-			this.match(SimpleParser.COMMA);
-			this.state = 312;
-			this.expression(0);
-			this.state = 313;
-			this.match(SimpleParser.R_PAREN);
-			}
-		}
-		catch (re) {
-			if (re instanceof RecognitionException) {
-				_localctx.exception = re;
-				this._errHandler.reportError(this, re);
-				this._errHandler.recover(this, re);
-			} else {
-				throw re;
-			}
-		}
-		finally {
-			this.exitRule();
-		}
-		return _localctx;
-	}
-	// @RuleVersion(0)
-	public doneStmt(): DoneStmtContext {
-		let _localctx: DoneStmtContext = new DoneStmtContext(this._ctx, this.state);
-		this.enterRule(_localctx, 64, SimpleParser.RULE_doneStmt);
-		try {
-			this.enterOuterAlt(_localctx, 1);
-			{
-			this.state = 315;
-			_localctx._waitgroupDone = this.match(SimpleParser.DONE);
-			this.state = 316;
-			this.match(SimpleParser.L_PAREN);
-			this.state = 317;
-			this.match(SimpleParser.IDENTIFIER);
-			this.state = 318;
-			this.match(SimpleParser.R_PAREN);
-			}
-		}
-		catch (re) {
-			if (re instanceof RecognitionException) {
-				_localctx.exception = re;
-				this._errHandler.reportError(this, re);
-				this._errHandler.recover(this, re);
-			} else {
-				throw re;
-			}
-		}
-		finally {
-			this.exitRule();
-		}
-		return _localctx;
-	}
-	// @RuleVersion(0)
-	public waitStmt(): WaitStmtContext {
-		let _localctx: WaitStmtContext = new WaitStmtContext(this._ctx, this.state);
-		this.enterRule(_localctx, 66, SimpleParser.RULE_waitStmt);
-		try {
-			this.enterOuterAlt(_localctx, 1);
-			{
-			this.state = 320;
-			_localctx._waitgroupwait = this.match(SimpleParser.WAIT);
-			this.state = 321;
-			this.match(SimpleParser.L_PAREN);
-			this.state = 322;
-			this.match(SimpleParser.IDENTIFIER);
-			this.state = 323;
-			this.match(SimpleParser.R_PAREN);
 			}
 		}
 		catch (re) {
@@ -1915,30 +1688,30 @@ export class SimpleParser extends GoParserBase {
 	// @RuleVersion(0)
 	public makeExpr(): MakeExprContext {
 		let _localctx: MakeExprContext = new MakeExprContext(this._ctx, this.state);
-		this.enterRule(_localctx, 68, SimpleParser.RULE_makeExpr);
+		this.enterRule(_localctx, 54, SimpleParser.RULE_makeExpr);
 		let _la: number;
 		try {
 			this.enterOuterAlt(_localctx, 1);
 			{
-			this.state = 325;
+			this.state = 283;
 			this.match(SimpleParser.MAKE);
-			this.state = 326;
+			this.state = 284;
 			this.match(SimpleParser.L_PAREN);
-			this.state = 327;
+			this.state = 285;
 			this.channelType();
-			this.state = 330;
+			this.state = 288;
 			this._errHandler.sync(this);
 			_la = this._input.LA(1);
 			if (_la === SimpleParser.COMMA) {
 				{
-				this.state = 328;
+				this.state = 286;
 				this.match(SimpleParser.COMMA);
-				this.state = 329;
+				this.state = 287;
 				this.match(SimpleParser.DECIMAL_LIT);
 				}
 			}
 
-			this.state = 332;
+			this.state = 290;
 			this.match(SimpleParser.R_PAREN);
 			}
 		}
@@ -1959,28 +1732,28 @@ export class SimpleParser extends GoParserBase {
 	// @RuleVersion(0)
 	public expressionList(): ExpressionListContext {
 		let _localctx: ExpressionListContext = new ExpressionListContext(this._ctx, this.state);
-		this.enterRule(_localctx, 70, SimpleParser.RULE_expressionList);
+		this.enterRule(_localctx, 56, SimpleParser.RULE_expressionList);
 		try {
 			let _alt: number;
 			this.enterOuterAlt(_localctx, 1);
 			{
-			this.state = 334;
+			this.state = 292;
 			this.expression(0);
-			this.state = 339;
+			this.state = 297;
 			this._errHandler.sync(this);
 			_alt = this.interpreter.adaptivePredict(this._input, 29, this._ctx);
 			while (_alt !== 2 && _alt !== ATN.INVALID_ALT_NUMBER) {
 				if (_alt === 1) {
 					{
 					{
-					this.state = 335;
+					this.state = 293;
 					this.match(SimpleParser.COMMA);
-					this.state = 336;
+					this.state = 294;
 					this.expression(0);
 					}
 					}
 				}
-				this.state = 341;
+				this.state = 299;
 				this._errHandler.sync(this);
 				_alt = this.interpreter.adaptivePredict(this._input, 29, this._ctx);
 			}
@@ -2003,15 +1776,15 @@ export class SimpleParser extends GoParserBase {
 	// @RuleVersion(0)
 	public eos(): EosContext {
 		let _localctx: EosContext = new EosContext(this._ctx, this.state);
-		this.enterRule(_localctx, 72, SimpleParser.RULE_eos);
+		this.enterRule(_localctx, 58, SimpleParser.RULE_eos);
 		try {
-			this.state = 346;
+			this.state = 304;
 			this._errHandler.sync(this);
 			switch ( this.interpreter.adaptivePredict(this._input, 30, this._ctx) ) {
 			case 1:
 				this.enterOuterAlt(_localctx, 1);
 				{
-				this.state = 342;
+				this.state = 300;
 				this.match(SimpleParser.SEMI);
 				}
 				break;
@@ -2019,7 +1792,7 @@ export class SimpleParser extends GoParserBase {
 			case 2:
 				this.enterOuterAlt(_localctx, 2);
 				{
-				this.state = 343;
+				this.state = 301;
 				this.match(SimpleParser.EOF);
 				}
 				break;
@@ -2027,7 +1800,7 @@ export class SimpleParser extends GoParserBase {
 			case 3:
 				this.enterOuterAlt(_localctx, 3);
 				{
-				this.state = 344;
+				this.state = 302;
 				this.match(SimpleParser.EOS);
 				}
 				break;
@@ -2035,7 +1808,7 @@ export class SimpleParser extends GoParserBase {
 			case 4:
 				this.enterOuterAlt(_localctx, 4);
 				{
-				this.state = 345;
+				this.state = 303;
 				if (!(this.closingBracket())) {
 					throw this.createFailedPredicateException("this.closingBracket()");
 				}
@@ -2060,26 +1833,26 @@ export class SimpleParser extends GoParserBase {
 	// @RuleVersion(0)
 	public identifierList(): IdentifierListContext {
 		let _localctx: IdentifierListContext = new IdentifierListContext(this._ctx, this.state);
-		this.enterRule(_localctx, 74, SimpleParser.RULE_identifierList);
+		this.enterRule(_localctx, 60, SimpleParser.RULE_identifierList);
 		let _la: number;
 		try {
 			this.enterOuterAlt(_localctx, 1);
 			{
-			this.state = 348;
+			this.state = 306;
 			this.match(SimpleParser.IDENTIFIER);
-			this.state = 353;
+			this.state = 311;
 			this._errHandler.sync(this);
 			_la = this._input.LA(1);
 			while (_la === SimpleParser.COMMA) {
 				{
 				{
-				this.state = 349;
+				this.state = 307;
 				this.match(SimpleParser.COMMA);
-				this.state = 350;
+				this.state = 308;
 				this.match(SimpleParser.IDENTIFIER);
 				}
 				}
-				this.state = 355;
+				this.state = 313;
 				this._errHandler.sync(this);
 				_la = this._input.LA(1);
 			}
@@ -2102,35 +1875,35 @@ export class SimpleParser extends GoParserBase {
 	// @RuleVersion(0)
 	public ifStmt(): IfStmtContext {
 		let _localctx: IfStmtContext = new IfStmtContext(this._ctx, this.state);
-		this.enterRule(_localctx, 76, SimpleParser.RULE_ifStmt);
+		this.enterRule(_localctx, 62, SimpleParser.RULE_ifStmt);
 		try {
 			this.enterOuterAlt(_localctx, 1);
 			{
-			this.state = 356;
+			this.state = 314;
 			this.match(SimpleParser.IF);
-			this.state = 357;
+			this.state = 315;
 			this.expression(0);
-			this.state = 358;
+			this.state = 316;
 			this.block();
-			this.state = 364;
+			this.state = 322;
 			this._errHandler.sync(this);
 			switch ( this.interpreter.adaptivePredict(this._input, 33, this._ctx) ) {
 			case 1:
 				{
-				this.state = 359;
+				this.state = 317;
 				this.match(SimpleParser.ELSE);
-				this.state = 362;
+				this.state = 320;
 				this._errHandler.sync(this);
 				switch (this._input.LA(1)) {
 				case SimpleParser.IF:
 					{
-					this.state = 360;
+					this.state = 318;
 					this.ifStmt();
 					}
 					break;
 				case SimpleParser.L_CURLY:
 					{
-					this.state = 361;
+					this.state = 319;
 					this.block();
 					}
 					break;
@@ -2159,18 +1932,18 @@ export class SimpleParser extends GoParserBase {
 	// @RuleVersion(0)
 	public returnStmt(): ReturnStmtContext {
 		let _localctx: ReturnStmtContext = new ReturnStmtContext(this._ctx, this.state);
-		this.enterRule(_localctx, 78, SimpleParser.RULE_returnStmt);
+		this.enterRule(_localctx, 64, SimpleParser.RULE_returnStmt);
 		try {
 			this.enterOuterAlt(_localctx, 1);
 			{
-			this.state = 366;
+			this.state = 324;
 			this.match(SimpleParser.RETURN);
-			this.state = 368;
+			this.state = 326;
 			this._errHandler.sync(this);
 			switch ( this.interpreter.adaptivePredict(this._input, 34, this._ctx) ) {
 			case 1:
 				{
-				this.state = 367;
+				this.state = 325;
 				this.expressionList();
 				}
 				break;
@@ -2194,15 +1967,15 @@ export class SimpleParser extends GoParserBase {
 	// @RuleVersion(0)
 	public forStmt(): ForStmtContext {
 		let _localctx: ForStmtContext = new ForStmtContext(this._ctx, this.state);
-		this.enterRule(_localctx, 80, SimpleParser.RULE_forStmt);
+		this.enterRule(_localctx, 66, SimpleParser.RULE_forStmt);
 		try {
 			this.enterOuterAlt(_localctx, 1);
 			{
-			this.state = 370;
+			this.state = 328;
 			this.match(SimpleParser.FOR);
-			this.state = 371;
+			this.state = 329;
 			this.expression(0);
-			this.state = 372;
+			this.state = 330;
 			this.block();
 			}
 		}
@@ -2223,12 +1996,12 @@ export class SimpleParser extends GoParserBase {
 	// @RuleVersion(0)
 	public string_(): String_Context {
 		let _localctx: String_Context = new String_Context(this._ctx, this.state);
-		this.enterRule(_localctx, 82, SimpleParser.RULE_string_);
+		this.enterRule(_localctx, 68, SimpleParser.RULE_string_);
 		let _la: number;
 		try {
 			this.enterOuterAlt(_localctx, 1);
 			{
-			this.state = 374;
+			this.state = 332;
 			_la = this._input.LA(1);
 			if (!(_la === SimpleParser.RAW_STRING_LIT || _la === SimpleParser.INTERPRETED_STRING_LIT)) {
 			this._errHandler.recoverInline(this);
@@ -2259,15 +2032,15 @@ export class SimpleParser extends GoParserBase {
 	// @RuleVersion(0)
 	public functionLit(): FunctionLitContext {
 		let _localctx: FunctionLitContext = new FunctionLitContext(this._ctx, this.state);
-		this.enterRule(_localctx, 84, SimpleParser.RULE_functionLit);
+		this.enterRule(_localctx, 70, SimpleParser.RULE_functionLit);
 		try {
 			this.enterOuterAlt(_localctx, 1);
 			{
-			this.state = 376;
+			this.state = 334;
 			this.match(SimpleParser.FUNC);
-			this.state = 377;
+			this.state = 335;
 			this.signature();
-			this.state = 378;
+			this.state = 336;
 			this.block();
 			}
 		}
@@ -2288,13 +2061,13 @@ export class SimpleParser extends GoParserBase {
 	// @RuleVersion(0)
 	public goStmt(): GoStmtContext {
 		let _localctx: GoStmtContext = new GoStmtContext(this._ctx, this.state);
-		this.enterRule(_localctx, 86, SimpleParser.RULE_goStmt);
+		this.enterRule(_localctx, 72, SimpleParser.RULE_goStmt);
 		try {
 			this.enterOuterAlt(_localctx, 1);
 			{
-			this.state = 380;
+			this.state = 338;
 			this.match(SimpleParser.GO);
-			this.state = 381;
+			this.state = 339;
 			this.funcApp();
 			}
 		}
@@ -2315,13 +2088,13 @@ export class SimpleParser extends GoParserBase {
 
 	public sempred(_localctx: RuleContext, ruleIndex: number, predIndex: number): boolean {
 		switch (ruleIndex) {
-		case 20:
+		case 18:
 			return this.expression_sempred(_localctx as ExpressionContext, predIndex);
 
-		case 25:
+		case 23:
 			return this.statementList_sempred(_localctx as StatementListContext, predIndex);
 
-		case 36:
+		case 29:
 			return this.eos_sempred(_localctx as EosContext, predIndex);
 		}
 		return true;
@@ -2361,184 +2134,166 @@ export class SimpleParser extends GoParserBase {
 	}
 
 	public static readonly _serializedATN: string =
-		"\x03\uC91D\uCABA\u058D\uAFBA\u4F53\u0607\uEA8B\uC241\x03i\u0182\x04\x02" +
+		"\x03\uC91D\uCABA\u058D\uAFBA\u4F53\u0607\uEA8B\uC241\x03b\u0158\x04\x02" +
 		"\t\x02\x04\x03\t\x03\x04\x04\t\x04\x04\x05\t\x05\x04\x06\t\x06\x04\x07" +
 		"\t\x07\x04\b\t\b\x04\t\t\t\x04\n\t\n\x04\v\t\v\x04\f\t\f\x04\r\t\r\x04" +
 		"\x0E\t\x0E\x04\x0F\t\x0F\x04\x10\t\x10\x04\x11\t\x11\x04\x12\t\x12\x04" +
 		"\x13\t\x13\x04\x14\t\x14\x04\x15\t\x15\x04\x16\t\x16\x04\x17\t\x17\x04" +
 		"\x18\t\x18\x04\x19\t\x19\x04\x1A\t\x1A\x04\x1B\t\x1B\x04\x1C\t\x1C\x04" +
 		"\x1D\t\x1D\x04\x1E\t\x1E\x04\x1F\t\x1F\x04 \t \x04!\t!\x04\"\t\"\x04#" +
-		"\t#\x04$\t$\x04%\t%\x04&\t&\x04\'\t\'\x04(\t(\x04)\t)\x04*\t*\x04+\t+" +
-		"\x04,\t,\x04-\t-\x03\x02\x03\x02\x05\x02]\n\x02\x03\x02\x03\x02\x07\x02" +
-		"a\n\x02\f\x02\x0E\x02d\v\x02\x03\x03\x03\x03\x05\x03h\n\x03\x03\x03\x03" +
-		"\x03\x03\x04\x03\x04\x03\x04\x03\x04\x03\x04\x05\x04q\n\x04\x03\x05\x03" +
-		"\x05\x03\x05\x03\x05\x03\x05\x03\x06\x03\x06\x03\x06\x03\x06\x05\x06|" +
-		"\n\x06\x03\x07\x03\x07\x03\x07\x03\x07\x03\x07\x05\x07\x83\n\x07\x03\b" +
-		"\x03\b\x05\b\x87\n\b\x03\b\x03\b\x03\b\x05\b\x8C\n\b\x07\b\x8E\n\b\f\b" +
-		"\x0E\b\x91\v\b\x03\t\x03\t\x03\t\x07\t\x96\n\t\f\t\x0E\t\x99\v\t\x03\t" +
-		"\x05\t\x9C\n\t\x05\t\x9E\n\t\x03\n\x03\n\x03\n\x05\n\xA3\n\n\x03\v\x03" +
-		"\v\x05\v\xA7\n\v\x03\v\x03\v\x03\f\x03\f\x03\f\x05\f\xAE\n\f\x03\r\x03" +
-		"\r\x03\r\x03\r\x03\r\x05\r\xB5\n\r\x03\x0E\x03\x0E\x03\x0E\x03\x0E\x03" +
-		"\x0F\x03\x0F\x03\x0F\x03\x0F\x03\x10\x03\x10\x03\x10\x03\x10\x03\x10\x03" +
-		"\x11\x03\x11\x03\x11\x03\x11\x03\x11\x05\x11\xC9\n\x11\x03\x12\x03\x12" +
-		"\x03\x12\x03\x13\x03\x13\x03\x13\x03\x13\x03\x14\x03\x14\x03\x15\x03\x15" +
-		"\x03\x16\x03\x16\x03\x16\x03\x16\x03\x16\x03\x16\x03\x16\x03\x16\x05\x16" +
-		"\xDE\n\x16\x03\x16\x03\x16\x03\x16\x03\x16\x03\x16\x03\x16\x03\x16\x03" +
-		"\x16\x03\x16\x03\x16\x03\x16\x03\x16\x03\x16\x03\x16\x03\x16\x07\x16\xEF" +
-		"\n\x16\f\x16\x0E\x16\xF2\v\x16\x03\x17\x03\x17\x03\x18\x03\x18\x03\x18" +
-		"\x03\x18\x03\x18\x03\x18\x05\x18\xFC\n\x18\x03\x19\x03\x19\x03\x1A\x03" +
-		"\x1A\x03\x1A\x03\x1A\x03\x1A\x03\x1A\x03\x1A\x05\x1A\u0107\n\x1A\x03\x1B" +
-		"\x05\x1B\u010A\n\x1B\x03\x1B\x05\x1B\u010D\n\x1B\x03\x1B\x05\x1B\u0110" +
-		"\n\x1B\x03\x1B\x03\x1B\x03\x1B\x06\x1B\u0115\n\x1B\r\x1B\x0E\x1B\u0116" +
-		"\x03\x1C\x03\x1C\x03\x1C\x03\x1C\x03\x1C\x03\x1C\x05\x1C\u011F\n\x1C\x03" +
-		"\x1D\x03\x1D\x03\x1D\x03\x1D\x03\x1D\x03\x1D\x05\x1D\u0127\n\x1D\x03\x1E" +
-		"\x03\x1E\x03\x1E\x03\x1E\x03\x1F\x03\x1F\x03\x1F\x03\x1F\x03\x1F\x03 " +
-		"\x03 \x03 \x03 \x03 \x03!\x03!\x03!\x03!\x03!\x03!\x03!\x03\"\x03\"\x03" +
-		"\"\x03\"\x03\"\x03#\x03#\x03#\x03#\x03#\x03$\x03$\x03$\x03$\x03$\x05$" +
-		"\u014D\n$\x03$\x03$\x03%\x03%\x03%\x07%\u0154\n%\f%\x0E%\u0157\v%\x03" +
-		"&\x03&\x03&\x03&\x05&\u015D\n&\x03\'\x03\'\x03\'\x07\'\u0162\n\'\f\'\x0E" +
-		"\'\u0165\v\'\x03(\x03(\x03(\x03(\x03(\x03(\x05(\u016D\n(\x05(\u016F\n" +
-		"(\x03)\x03)\x05)\u0173\n)\x03*\x03*\x03*\x03*\x03+\x03+\x03,\x03,\x03" +
-		",\x03,\x03-\x03-\x03-\x03-\x02\x02\x03*.\x02\x02\x04\x02\x06\x02\b\x02" +
-		"\n\x02\f\x02\x0E\x02\x10\x02\x12\x02\x14\x02\x16\x02\x18\x02\x1A\x02\x1C" +
-		"\x02\x1E\x02 \x02\"\x02$\x02&\x02(\x02*\x02,\x02.\x020\x022\x024\x026" +
-		"\x028\x02:\x02<\x02>\x02@\x02B\x02D\x02F\x02H\x02J\x02L\x02N\x02P\x02" +
-		"R\x02T\x02V\x02X\x02\x02\x07\x04\x02EEGG\x04\x02?@II\x03\x02FG\x03\x02" +
-		"8=\x03\x02Z[\x02\u0193\x02b\x03\x02\x02\x02\x04e\x03\x02\x02\x02\x06p" +
-		"\x03\x02\x02\x02\br\x03\x02\x02\x02\nw\x03\x02\x02\x02\f\x82\x03\x02\x02" +
-		"\x02\x0E\x86\x03\x02\x02\x02\x10\x9D\x03\x02\x02\x02\x12\xA2\x03\x02\x02" +
-		"\x02\x14\xA4\x03\x02\x02\x02\x16\xAD\x03\x02\x02\x02\x18\xAF\x03\x02\x02" +
-		"\x02\x1A\xB6\x03\x02\x02\x02\x1C\xBA\x03\x02\x02\x02\x1E\xBE\x03\x02\x02" +
-		"\x02 \xC8\x03\x02\x02\x02\"\xCA\x03\x02\x02\x02$\xCD\x03\x02\x02\x02&" +
-		"\xD1\x03\x02\x02\x02(\xD3\x03\x02\x02\x02*\xDD\x03\x02\x02\x02,\xF3\x03" +
-		"\x02\x02\x02.\xFB\x03\x02\x02\x020\xFD\x03\x02\x02\x022\u0106\x03\x02" +
-		"\x02\x024\u0114\x03\x02\x02\x026\u011E\x03\x02\x02\x028\u0126\x03\x02" +
-		"\x02\x02:\u0128\x03\x02\x02\x02<\u012C\x03\x02\x02\x02>\u0131\x03\x02" +
-		"\x02\x02@\u0136\x03\x02\x02\x02B\u013D\x03\x02\x02\x02D\u0142\x03\x02" +
-		"\x02\x02F\u0147\x03\x02\x02\x02H\u0150\x03\x02\x02\x02J\u015C\x03\x02" +
-		"\x02\x02L\u015E\x03\x02\x02\x02N\u0166\x03\x02\x02\x02P\u0170\x03\x02" +
-		"\x02\x02R\u0174\x03\x02\x02\x02T\u0178\x03\x02\x02\x02V\u017A\x03\x02" +
-		"\x02\x02X\u017E\x03\x02\x02\x02Z]\x05\x16\f\x02[]\x05\b\x05\x02\\Z\x03" +
-		"\x02\x02\x02\\[\x03\x02\x02\x02]^\x03\x02\x02\x02^_\x05J&\x02_a\x03\x02" +
-		"\x02\x02`\\\x03\x02\x02\x02ad\x03\x02\x02\x02b`\x03\x02\x02\x02bc\x03" +
-		"\x02\x02\x02c\x03\x03\x02\x02\x02db\x03\x02\x02\x02eg\x07\'\x02\x02fh" +
-		"\x05H%\x02gf\x03\x02\x02\x02gh\x03\x02\x02\x02hi\x03\x02\x02\x02ij\x07" +
-		"(\x02\x02j\x05\x03\x02\x02\x02kl\x07&\x02\x02lq\x05\x04\x03\x02mn\x05" +
-		"V,\x02no\x05\x04\x03\x02oq\x03\x02\x02\x02pk\x03\x02\x02\x02pm\x03\x02" +
-		"\x02\x02q\x07\x03\x02\x02\x02rs\x07\x05\x02\x02st\x07&\x02\x02tu\x05\n" +
-		"\x06\x02uv\x05\x14\v\x02v\t\x03\x02\x02\x02wx\x07\'\x02\x02xy\x05\x10" +
-		"\t\x02y{\x07(\x02\x02z|\x05\f\x07\x02{z\x03\x02\x02\x02{|\x03\x02\x02" +
-		"\x02|\v\x03\x02\x02\x02}~\x07\'\x02\x02~\x7F\x05\x0E\b\x02\x7F\x80\x07" +
-		"(\x02\x02\x80\x83\x03\x02\x02\x02\x81\x83\x05 \x11\x02\x82}\x03\x02\x02" +
-		"\x02\x82\x81\x03\x02\x02\x02\x83\r\x03\x02\x02\x02\x84\x87\x05 \x11\x02" +
-		"\x85\x87\x07%\x02\x02\x86\x84\x03\x02\x02\x02\x86\x85\x03\x02\x02\x02" +
-		"\x87\x8F\x03\x02\x02\x02\x88\x8B\x07.\x02\x02\x89\x8C\x05 \x11\x02\x8A" +
-		"\x8C\x07%\x02\x02\x8B\x89\x03\x02\x02\x02\x8B\x8A\x03\x02\x02\x02\x8C" +
-		"\x8E\x03\x02\x02\x02\x8D\x88\x03\x02\x02\x02\x8E\x91\x03\x02\x02\x02\x8F" +
-		"\x8D\x03\x02\x02\x02\x8F\x90\x03\x02\x02\x02\x90\x0F\x03\x02\x02\x02\x91" +
-		"\x8F\x03\x02\x02\x02\x92\x97\x05\x12\n\x02\x93\x94\x07.\x02\x02\x94\x96" +
-		"\x05\x12\n\x02\x95\x93\x03\x02\x02\x02\x96\x99\x03\x02\x02\x02\x97\x95" +
-		"\x03\x02\x02\x02\x97\x98\x03\x02\x02\x02\x98\x9B\x03\x02\x02\x02\x99\x97" +
-		"\x03\x02\x02\x02\x9A\x9C\x07.\x02\x02\x9B\x9A\x03\x02\x02\x02\x9B\x9C" +
-		"\x03\x02\x02\x02\x9C\x9E\x03\x02\x02\x02\x9D\x92\x03\x02\x02\x02\x9D\x9E" +
-		"\x03\x02\x02\x02\x9E\x11\x03\x02\x02\x02\x9F\xA0\x05L\'\x02\xA0\xA1\x05" +
-		" \x11\x02\xA1\xA3\x03\x02\x02\x02\xA2\x9F\x03\x02\x02\x02\xA2\xA3\x03" +
-		"\x02\x02\x02\xA3\x13\x03\x02\x02\x02\xA4\xA6\x07)\x02\x02\xA5\xA7\x05" +
-		"4\x1B\x02\xA6\xA5\x03\x02\x02\x02\xA6\xA7\x03\x02\x02\x02\xA7\xA8\x03" +
-		"\x02\x02\x02\xA8\xA9\x07*\x02\x02\xA9\x15\x03\x02\x02\x02\xAA\xAE\x05" +
-		"\x1A\x0E\x02\xAB\xAE\x05\x1C\x0F\x02\xAC\xAE\x05\x18\r\x02\xAD\xAA\x03" +
-		"\x02\x02\x02\xAD\xAB\x03\x02\x02\x02\xAD\xAC\x03\x02\x02\x02\xAE\x17\x03" +
-		"\x02\x02\x02\xAF\xB0\x07\x1B\x02\x02\xB0\xB1\x05L\'\x02\xB1\xB4\x05 \x11" +
-		"\x02\xB2\xB3\x07-\x02\x02\xB3\xB5\x05H%\x02\xB4\xB2\x03\x02\x02\x02\xB4" +
-		"\xB5\x03\x02\x02\x02\xB5\x19\x03\x02\x02\x02\xB6\xB7\x07\x1B\x02\x02\xB7" +
-		"\xB8\x05L\'\x02\xB8\xB9\x07\x1F\x02\x02\xB9\x1B\x03\x02\x02\x02\xBA\xBB" +
-		"\x07\x1B\x02\x02\xBB\xBC\x05L\'\x02\xBC\xBD\x07 \x02\x02\xBD\x1D\x03\x02" +
-		"\x02\x02\xBE\xBF\x05L\'\x02\xBF\xC0\x05 \x11\x02\xC0\xC1\x074\x02\x02" +
-		"\xC1\xC2\x05H%\x02\xC2\x1F\x03\x02\x02\x02\xC3\xC9\x07!\x02\x02\xC4\xC9" +
-		"\x07\"\x02\x02\xC5\xC9\x07#\x02\x02\xC6\xC9\x07$\x02\x02\xC7\xC9\x05\"" +
-		"\x12\x02\xC8\xC3\x03\x02\x02\x02\xC8\xC4\x03\x02\x02\x02\xC8\xC5\x03\x02" +
-		"\x02\x02\xC8\xC6\x03\x02\x02\x02\xC8\xC7\x03\x02\x02\x02\xC9!\x03\x02" +
-		"\x02\x02\xCA\xCB\x07\r\x02\x02\xCB\xCC\x05 \x11\x02\xCC#\x03\x02\x02\x02" +
-		"\xCD\xCE\x05L\'\x02\xCE\xCF\x05&\x14\x02\xCF\xD0\x05H%\x02\xD0%\x03\x02" +
-		"\x02\x02\xD1\xD2\x07-\x02\x02\xD2\'\x03\x02\x02\x02\xD3\xD4\x05*\x16\x02" +
-		"\xD4)\x03\x02\x02\x02\xD5\xD6\b\x16\x01\x02\xD6\xDE\x05F$\x02\xD7\xDE" +
-		"\x05\x06\x04\x02\xD8\xD9\t\x02\x02\x02\xD9\xDE\x05*\x16\n\xDA\xDE\x05" +
-		",\x17\x02\xDB\xDC\x07K\x02\x02\xDC\xDE\x05*\x16\x03\xDD\xD5\x03\x02\x02" +
-		"\x02\xDD\xD7\x03\x02\x02\x02\xDD\xD8\x03\x02\x02\x02\xDD\xDA\x03\x02\x02" +
-		"\x02\xDD\xDB\x03\x02\x02\x02\xDE\xF0\x03\x02\x02\x02\xDF\xE0\f\t\x02\x02" +
-		"\xE0\xE1\t\x03\x02\x02\xE1\xEF\x05*\x16\n\xE2\xE3\f\b\x02\x02\xE3\xE4" +
-		"\t\x04\x02\x02\xE4\xEF\x05*\x16\t\xE5\xE6\f\x07\x02\x02\xE6\xE7\t\x05" +
-		"\x02\x02\xE7\xEF\x05*\x16\b\xE8\xE9\f\x06\x02\x02\xE9\xEA\x077\x02\x02" +
-		"\xEA\xEF\x05*\x16\x07\xEB\xEC\f\x05\x02\x02\xEC\xED\x076\x02\x02\xED\xEF" +
-		"\x05*\x16\x06\xEE\xDF\x03\x02\x02\x02\xEE\xE2\x03\x02\x02\x02\xEE\xE5" +
-		"\x03\x02\x02\x02\xEE\xE8\x03\x02\x02\x02\xEE\xEB\x03\x02\x02\x02\xEF\xF2" +
-		"\x03\x02\x02\x02\xF0\xEE\x03\x02\x02\x02\xF0\xF1\x03\x02\x02\x02\xF1+" +
-		"\x03\x02\x02\x02\xF2\xF0\x03\x02\x02\x02\xF3\xF4\x05.\x18\x02\xF4-\x03" +
-		"\x02\x02\x02\xF5\xFC\x052\x1A\x02\xF6\xFC\x050\x19\x02\xF7\xF8\x07\'\x02" +
-		"\x02\xF8\xF9\x05*\x16\x02\xF9\xFA\x07(\x02\x02\xFA\xFC\x03\x02\x02\x02" +
-		"\xFB\xF5\x03\x02\x02\x02\xFB\xF6\x03\x02\x02\x02\xFB\xF7\x03\x02\x02\x02" +
-		"\xFC/\x03\x02\x02\x02\xFD\xFE\x07&\x02\x02\xFE1\x03\x02\x02\x02\xFF\u0107" +
-		"\x07%\x02\x02\u0100\u0107\x07L\x02\x02\u0101\u0107\x07P\x02\x02\u0102" +
-		"\u0107\x07\x1C\x02\x02\u0103\u0107\x07\x1D\x02\x02\u0104\u0107\x05T+\x02" +
-		"\u0105\u0107\x05V,\x02\u0106\xFF\x03\x02\x02\x02\u0106\u0100\x03\x02\x02" +
-		"\x02\u0106\u0101\x03\x02\x02\x02\u0106\u0102\x03\x02\x02\x02\u0106\u0103" +
-		"\x03\x02\x02\x02\u0106\u0104\x03\x02\x02\x02\u0106\u0105\x03\x02\x02\x02" +
-		"\u01073\x03\x02\x02\x02\u0108\u010A\x07/\x02\x02\u0109\u0108\x03\x02\x02" +
-		"\x02\u0109\u010A\x03\x02\x02\x02\u010A\u0110\x03\x02\x02\x02\u010B\u010D" +
-		"\x07c\x02\x02\u010C\u010B\x03\x02\x02\x02\u010C\u010D\x03\x02\x02\x02" +
-		"\u010D\u0110\x03\x02\x02\x02\u010E\u0110\x06\x1B\x07\x02\u010F\u0109\x03" +
-		"\x02\x02\x02\u010F\u010C\x03\x02\x02\x02\u010F\u010E\x03\x02\x02\x02\u0110" +
-		"\u0111\x03\x02\x02\x02\u0111\u0112\x056\x1C\x02\u0112\u0113\x05J&\x02" +
-		"\u0113\u0115\x03\x02\x02\x02\u0114\u010F\x03\x02\x02\x02\u0115\u0116\x03" +
-		"\x02\x02\x02\u0116\u0114\x03\x02\x02\x02\u0116\u0117\x03\x02\x02\x02\u0117" +
-		"5\x03\x02\x02\x02\u0118\u011F\x05R*\x02\u0119\u011F\x05N(\x02\u011A\u011F" +
-		"\x05P)\x02\u011B\u011F\x058\x1D\x02\u011C\u011F\x05\x14\v\x02\u011D\u011F" +
-		"\x05X-\x02\u011E\u0118\x03\x02\x02\x02\u011E\u0119\x03\x02\x02\x02\u011E" +
-		"\u011A\x03\x02\x02\x02\u011E\u011B\x03\x02\x02\x02\u011E\u011C\x03\x02" +
-		"\x02\x02\u011E\u011D\x03\x02\x02\x02\u011F7\x03\x02\x02\x02\u0120\u0127" +
-		"\x05:\x1E\x02\u0121\u0127\x05\x16\f\x02\u0122\u0127\x05\b\x05\x02\u0123" +
-		"\u0127\x05$\x13\x02\u0124\u0127\x05(\x15\x02\u0125\u0127\x05\x1E\x10\x02" +
-		"\u0126\u0120\x03\x02\x02\x02\u0126\u0121\x03\x02\x02\x02\u0126\u0122\x03" +
-		"\x02\x02\x02\u0126\u0123\x03\x02\x02\x02\u0126\u0124\x03\x02\x02\x02\u0126" +
-		"\u0125\x03\x02\x02\x02\u01279\x03\x02\x02\x02\u0128\u0129\x05*\x16\x02" +
-		"\u0129\u012A\x07K\x02\x02\u012A\u012B\x05*\x16\x02\u012B;\x03\x02\x02" +
-		"\x02\u012C\u012D\x07e\x02\x02\u012D\u012E\x07\'\x02\x02\u012E\u012F\x07" +
-		"&\x02\x02\u012F\u0130\x07(\x02\x02\u0130=\x03\x02\x02\x02\u0131\u0132" +
-		"\x07f\x02\x02\u0132\u0133\x07\'\x02\x02\u0133\u0134\x07&\x02\x02\u0134" +
-		"\u0135\x07(\x02\x02\u0135?\x03\x02\x02\x02\u0136\u0137\x07g\x02\x02\u0137" +
-		"\u0138\x07\'\x02\x02\u0138\u0139\x07&\x02\x02\u0139\u013A\x07.\x02\x02" +
-		"\u013A\u013B\x05*\x16\x02\u013B\u013C\x07(\x02\x02\u013CA\x03\x02\x02" +
-		"\x02\u013D\u013E\x07h\x02\x02\u013E\u013F\x07\'\x02\x02\u013F\u0140\x07" +
-		"&\x02\x02\u0140\u0141\x07(\x02\x02\u0141C\x03\x02\x02\x02\u0142\u0143" +
-		"\x07i\x02\x02\u0143\u0144\x07\'\x02\x02\u0144\u0145\x07&\x02\x02\u0145" +
-		"\u0146\x07(\x02\x02\u0146E\x03\x02\x02\x02\u0147\u0148\x07\x1E\x02\x02" +
-		"\u0148\u0149\x07\'\x02\x02\u0149\u014C\x05\"\x12\x02\u014A\u014B\x07." +
-		"\x02\x02\u014B\u014D\x07L\x02\x02\u014C\u014A\x03\x02\x02\x02\u014C\u014D" +
-		"\x03\x02\x02\x02\u014D\u014E\x03\x02\x02\x02\u014E\u014F\x07(\x02\x02" +
-		"\u014FG\x03\x02\x02\x02\u0150\u0155\x05*\x16\x02\u0151\u0152\x07.\x02" +
-		"\x02\u0152\u0154\x05*\x16\x02\u0153\u0151\x03\x02\x02\x02\u0154\u0157" +
-		"\x03\x02\x02\x02\u0155\u0153\x03\x02\x02\x02\u0155\u0156\x03\x02\x02\x02" +
-		"\u0156I\x03\x02\x02\x02\u0157\u0155\x03\x02\x02\x02\u0158\u015D\x07/\x02" +
-		"\x02\u0159\u015D\x07\x02\x02\x03\u015A\u015D\x07c\x02\x02\u015B\u015D" +
-		"\x06&\b\x02\u015C\u0158\x03\x02\x02\x02\u015C\u0159\x03\x02\x02\x02\u015C" +
-		"\u015A\x03\x02\x02\x02\u015C\u015B\x03\x02\x02\x02\u015DK\x03\x02\x02" +
-		"\x02\u015E\u0163\x07&\x02\x02\u015F\u0160\x07.\x02\x02\u0160\u0162\x07" +
-		"&\x02\x02\u0161\u015F\x03\x02\x02\x02\u0162\u0165\x03\x02\x02\x02\u0163" +
-		"\u0161\x03\x02\x02\x02\u0163\u0164\x03\x02\x02\x02\u0164M\x03\x02\x02" +
-		"\x02\u0165\u0163\x03\x02\x02\x02\u0166\u0167\x07\x14\x02\x02\u0167\u0168" +
-		"\x05*\x16\x02\u0168\u016E\x05\x14\v\x02\u0169\u016C\x07\x0E\x02\x02\u016A" +
-		"\u016D\x05N(\x02\u016B\u016D\x05\x14\v\x02\u016C\u016A\x03\x02\x02\x02" +
-		"\u016C\u016B\x03\x02\x02\x02\u016D\u016F\x03\x02\x02\x02\u016E\u0169\x03" +
-		"\x02\x02\x02\u016E\u016F\x03\x02\x02\x02\u016FO\x03\x02\x02\x02\u0170" +
-		"\u0172\x07\x1A\x02\x02\u0171\u0173\x05H%\x02\u0172\u0171\x03\x02\x02\x02" +
-		"\u0172\u0173\x03\x02\x02\x02\u0173Q\x03\x02\x02\x02\u0174\u0175\x07\x18" +
-		"\x02\x02\u0175\u0176\x05*\x16\x02\u0176\u0177\x05\x14\v\x02\u0177S\x03" +
-		"\x02\x02\x02\u0178\u0179\t\x06\x02\x02\u0179U\x03\x02\x02\x02\u017A\u017B" +
-		"\x07\x05\x02\x02\u017B\u017C\x05\n\x06\x02\u017C\u017D\x05\x14\v\x02\u017D" +
-		"W\x03\x02\x02\x02\u017E\u017F\x07\n\x02\x02\u017F\u0180\x05\x06\x04\x02" +
-		"\u0180Y\x03\x02\x02\x02%\\bgp{\x82\x86\x8B\x8F\x97\x9B\x9D\xA2\xA6\xAD" +
-		"\xB4\xC8\xDD\xEE\xF0\xFB\u0106\u0109\u010C\u010F\u0116\u011E\u0126\u014C" +
-		"\u0155\u015C\u0163\u016C\u016E\u0172";
+		"\t#\x04$\t$\x04%\t%\x04&\t&\x03\x02\x03\x02\x05\x02O\n\x02\x03\x02\x03" +
+		"\x02\x07\x02S\n\x02\f\x02\x0E\x02V\v\x02\x03\x03\x03\x03\x05\x03Z\n\x03" +
+		"\x03\x03\x03\x03\x03\x04\x03\x04\x03\x04\x03\x04\x03\x04\x05\x04c\n\x04" +
+		"\x03\x05\x03\x05\x03\x05\x03\x05\x03\x05\x03\x06\x03\x06\x03\x06\x03\x06" +
+		"\x05\x06n\n\x06\x03\x07\x03\x07\x03\x07\x03\x07\x03\x07\x05\x07u\n\x07" +
+		"\x03\b\x03\b\x05\by\n\b\x03\b\x03\b\x03\b\x05\b~\n\b\x07\b\x80\n\b\f\b" +
+		"\x0E\b\x83\v\b\x03\t\x03\t\x03\t\x07\t\x88\n\t\f\t\x0E\t\x8B\v\t\x03\t" +
+		"\x05\t\x8E\n\t\x05\t\x90\n\t\x03\n\x03\n\x03\n\x05\n\x95\n\n\x03\v\x03" +
+		"\v\x05\v\x99\n\v\x03\v\x03\v\x03\f\x03\f\x03\f\x03\f\x03\f\x03\f\x07\f" +
+		"\xA3\n\f\f\f\x0E\f\xA6\v\f\x03\f\x05\f\xA9\n\f\x03\r\x03\r\x03\r\x03\r" +
+		"\x03\r\x03\x0E\x03\x0E\x03\x0E\x03\x0E\x03\x0E\x03\x0F\x03\x0F\x03\x0F" +
+		"\x03\x0F\x03\x0F\x03\x0F\x03\x0F\x05\x0F\xBC\n\x0F\x03\x10\x03\x10\x03" +
+		"\x10\x03\x11\x03\x11\x03\x11\x03\x11\x03\x12\x03\x12\x03\x13\x03\x13\x03" +
+		"\x14\x03\x14\x03\x14\x03\x14\x03\x14\x03\x14\x03\x14\x03\x14\x05\x14\xD1" +
+		"\n\x14\x03\x14\x03\x14\x03\x14\x03\x14\x03\x14\x03\x14\x03\x14\x03\x14" +
+		"\x03\x14\x03\x14\x03\x14\x03\x14\x03\x14\x03\x14\x03\x14\x07\x14\xE2\n" +
+		"\x14\f\x14\x0E\x14\xE5\v\x14\x03\x15\x03\x15\x03\x16\x03\x16\x03\x16\x03" +
+		"\x16\x03\x16\x03\x16\x05\x16\xEF\n\x16\x03\x17\x03\x17\x03\x18\x03\x18" +
+		"\x03\x18\x03\x18\x03\x18\x05\x18\xF8\n\x18\x03\x19\x05\x19\xFB\n\x19\x03" +
+		"\x19\x05\x19\xFE\n\x19\x03\x19\x05\x19\u0101\n\x19\x03\x19\x03\x19\x03" +
+		"\x19\x06\x19\u0106\n\x19\r\x19\x0E\x19\u0107\x03\x1A\x03\x1A\x03\x1A\x03" +
+		"\x1A\x03\x1A\x03\x1A\x05\x1A\u0110\n\x1A\x03\x1B\x03\x1B\x03\x1B\x03\x1B" +
+		"\x03\x1B\x03\x1B\x05\x1B\u0118\n\x1B\x03\x1C\x03\x1C\x03\x1C\x03\x1C\x03" +
+		"\x1D\x03\x1D\x03\x1D\x03\x1D\x03\x1D\x05\x1D\u0123\n\x1D\x03\x1D\x03\x1D" +
+		"\x03\x1E\x03\x1E\x03\x1E\x07\x1E\u012A\n\x1E\f\x1E\x0E\x1E\u012D\v\x1E" +
+		"\x03\x1F\x03\x1F\x03\x1F\x03\x1F\x05\x1F\u0133\n\x1F\x03 \x03 \x03 \x07" +
+		" \u0138\n \f \x0E \u013B\v \x03!\x03!\x03!\x03!\x03!\x03!\x05!\u0143\n" +
+		"!\x05!\u0145\n!\x03\"\x03\"\x05\"\u0149\n\"\x03#\x03#\x03#\x03#\x03$\x03" +
+		"$\x03%\x03%\x03%\x03%\x03&\x03&\x03&\x03&\x02\x02\x03&\'\x02\x02\x04\x02" +
+		"\x06\x02\b\x02\n\x02\f\x02\x0E\x02\x10\x02\x12\x02\x14\x02\x16\x02\x18" +
+		"\x02\x1A\x02\x1C\x02\x1E\x02 \x02\"\x02$\x02&\x02(\x02*\x02,\x02.\x02" +
+		"0\x022\x024\x026\x028\x02:\x02<\x02>\x02@\x02B\x02D\x02F\x02H\x02J\x02" +
+		"\x02\x07\x04\x02CCEE\x04\x02=>GG\x03\x02DE\x03\x026;\x03\x02XY\x02\u016F" +
+		"\x02T\x03\x02\x02\x02\x04W\x03\x02\x02\x02\x06b\x03\x02\x02\x02\bd\x03" +
+		"\x02\x02\x02\ni\x03\x02\x02\x02\ft\x03\x02\x02\x02\x0Ex\x03\x02\x02\x02" +
+		"\x10\x8F\x03\x02\x02\x02\x12\x94\x03\x02\x02\x02\x14\x96\x03\x02\x02\x02" +
+		"\x16\x9C\x03\x02\x02\x02\x18\xAA\x03\x02\x02\x02\x1A\xAF\x03\x02\x02\x02" +
+		"\x1C\xBB\x03\x02\x02\x02\x1E\xBD\x03\x02\x02\x02 \xC0\x03\x02\x02\x02" +
+		"\"\xC4\x03\x02\x02\x02$\xC6\x03\x02\x02\x02&\xD0\x03\x02\x02\x02(\xE6" +
+		"\x03\x02\x02\x02*\xEE\x03\x02\x02\x02,\xF0\x03\x02\x02\x02.\xF7\x03\x02" +
+		"\x02\x020\u0105\x03\x02\x02\x022\u010F\x03\x02\x02\x024\u0117\x03\x02" +
+		"\x02\x026\u0119\x03\x02\x02\x028\u011D\x03\x02\x02\x02:\u0126\x03\x02" +
+		"\x02\x02<\u0132\x03\x02\x02\x02>\u0134\x03\x02\x02\x02@\u013C\x03\x02" +
+		"\x02\x02B\u0146\x03\x02\x02\x02D\u014A\x03\x02\x02\x02F\u014E\x03\x02" +
+		"\x02\x02H\u0150\x03\x02\x02\x02J\u0154\x03\x02\x02\x02LO\x05\x16\f\x02" +
+		"MO\x05\b\x05\x02NL\x03\x02\x02\x02NM\x03\x02\x02\x02OP\x03\x02\x02\x02" +
+		"PQ\x05<\x1F\x02QS\x03\x02\x02\x02RN\x03\x02\x02\x02SV\x03\x02\x02\x02" +
+		"TR\x03\x02\x02\x02TU\x03\x02\x02\x02U\x03\x03\x02\x02\x02VT\x03\x02\x02" +
+		"\x02WY\x07%\x02\x02XZ\x05:\x1E\x02YX\x03\x02\x02\x02YZ\x03\x02\x02\x02" +
+		"Z[\x03\x02\x02\x02[\\\x07&\x02\x02\\\x05\x03\x02\x02\x02]^\x07$\x02\x02" +
+		"^c\x05\x04\x03\x02_`\x05H%\x02`a\x05\x04\x03\x02ac\x03\x02\x02\x02b]\x03" +
+		"\x02\x02\x02b_\x03\x02\x02\x02c\x07\x03\x02\x02\x02de\x07\x05\x02\x02" +
+		"ef\x07$\x02\x02fg\x05\n\x06\x02gh\x05\x14\v\x02h\t\x03\x02\x02\x02ij\x07" +
+		"%\x02\x02jk\x05\x10\t\x02km\x07&\x02\x02ln\x05\f\x07\x02ml\x03\x02\x02" +
+		"\x02mn\x03\x02\x02\x02n\v\x03\x02\x02\x02op\x07%\x02\x02pq\x05\x0E\b\x02" +
+		"qr\x07&\x02\x02ru\x03\x02\x02\x02su\x05\x1C\x0F\x02to\x03\x02\x02\x02" +
+		"ts\x03\x02\x02\x02u\r\x03\x02\x02\x02vy\x05\x1C\x0F\x02wy\x07#\x02\x02" +
+		"xv\x03\x02\x02\x02xw\x03\x02\x02\x02y\x81\x03\x02\x02\x02z}\x07,\x02\x02" +
+		"{~\x05\x1C\x0F\x02|~\x07#\x02\x02}{\x03\x02\x02\x02}|\x03\x02\x02\x02" +
+		"~\x80\x03\x02\x02\x02\x7Fz\x03\x02\x02\x02\x80\x83\x03\x02\x02\x02\x81" +
+		"\x7F\x03\x02\x02\x02\x81\x82\x03\x02\x02\x02\x82\x0F\x03\x02\x02\x02\x83" +
+		"\x81\x03\x02\x02\x02\x84\x89\x05\x12\n\x02\x85\x86\x07,\x02\x02\x86\x88" +
+		"\x05\x12\n\x02\x87\x85\x03\x02\x02\x02\x88\x8B\x03\x02\x02\x02\x89\x87" +
+		"\x03\x02\x02\x02\x89\x8A\x03\x02\x02\x02\x8A\x8D\x03\x02\x02\x02\x8B\x89" +
+		"\x03\x02\x02\x02\x8C\x8E\x07,\x02\x02\x8D\x8C\x03\x02\x02\x02\x8D\x8E" +
+		"\x03\x02\x02\x02\x8E\x90\x03\x02\x02\x02\x8F\x84\x03\x02\x02\x02\x8F\x90" +
+		"\x03\x02\x02\x02\x90\x11\x03\x02\x02\x02\x91\x92\x05> \x02\x92\x93\x05" +
+		"\x1C\x0F\x02\x93\x95\x03\x02\x02\x02\x94\x91\x03\x02\x02\x02\x94\x95\x03" +
+		"\x02\x02\x02\x95\x13\x03\x02\x02\x02\x96\x98\x07\'\x02\x02\x97\x99\x05" +
+		"0\x19\x02\x98\x97\x03\x02\x02\x02\x98\x99\x03\x02\x02\x02\x99\x9A\x03" +
+		"\x02\x02\x02\x9A\x9B\x07(\x02\x02\x9B\x15\x03\x02\x02\x02\x9C\xA8\x07" +
+		"\x1B\x02\x02\x9D\xA9\x05\x18\r\x02\x9E\xA4\x07%\x02\x02\x9F\xA0\x05\x18" +
+		"\r\x02\xA0\xA1\x05<\x1F\x02\xA1\xA3\x03\x02\x02\x02\xA2\x9F\x03\x02\x02" +
+		"\x02\xA3\xA6\x03\x02\x02\x02\xA4\xA2\x03\x02\x02\x02\xA4\xA5\x03\x02\x02" +
+		"\x02\xA5\xA7\x03\x02\x02\x02\xA6\xA4\x03\x02\x02\x02\xA7\xA9\x07&\x02" +
+		"\x02\xA8\x9D\x03\x02\x02\x02\xA8\x9E\x03\x02\x02\x02\xA9\x17\x03\x02\x02" +
+		"\x02\xAA\xAB\x05> \x02\xAB\xAC\x05\x1C\x0F\x02\xAC\xAD\x07+\x02\x02\xAD" +
+		"\xAE\x05:\x1E\x02\xAE\x19\x03\x02\x02\x02\xAF\xB0\x05> \x02\xB0\xB1\x05" +
+		"\x1C\x0F\x02\xB1\xB2\x072\x02\x02\xB2\xB3\x05:\x1E\x02\xB3\x1B\x03\x02" +
+		"\x02\x02\xB4\xBC\x07\x1D\x02\x02\xB5\xBC\x07\x1E\x02\x02\xB6\xBC\x07\x1F" +
+		"\x02\x02\xB7\xBC\x07 \x02\x02\xB8\xBC\x05\x1E\x10\x02\xB9\xBC\x07!\x02" +
+		"\x02\xBA\xBC\x07\"\x02\x02\xBB\xB4\x03\x02\x02\x02\xBB\xB5\x03\x02\x02" +
+		"\x02\xBB\xB6\x03\x02\x02\x02\xBB\xB7\x03\x02\x02\x02\xBB\xB8\x03\x02\x02" +
+		"\x02\xBB\xB9\x03\x02\x02\x02\xBB\xBA\x03\x02\x02\x02\xBC\x1D\x03\x02\x02" +
+		"\x02\xBD\xBE\x07\r\x02\x02\xBE\xBF\x05\x1C\x0F\x02\xBF\x1F\x03\x02\x02" +
+		"\x02\xC0\xC1\x05> \x02\xC1\xC2\x05\"\x12\x02\xC2\xC3\x05:\x1E\x02\xC3" +
+		"!\x03\x02\x02\x02\xC4\xC5\x07+\x02\x02\xC5#\x03\x02\x02\x02\xC6\xC7\x05" +
+		"&\x14\x02\xC7%\x03\x02\x02\x02\xC8\xC9\b\x14\x01\x02\xC9\xD1\x058\x1D" +
+		"\x02\xCA\xD1\x05\x06\x04\x02\xCB\xCC\t\x02\x02\x02\xCC\xD1\x05&\x14\n" +
+		"\xCD\xD1\x05(\x15\x02\xCE\xCF\x07I\x02\x02\xCF\xD1\x05&\x14\x03\xD0\xC8" +
+		"\x03\x02\x02\x02\xD0\xCA\x03\x02\x02\x02\xD0\xCB\x03\x02\x02\x02\xD0\xCD" +
+		"\x03\x02\x02\x02\xD0\xCE\x03\x02\x02\x02\xD1\xE3\x03\x02\x02\x02\xD2\xD3" +
+		"\f\t\x02\x02\xD3\xD4\t\x03\x02\x02\xD4\xE2\x05&\x14\n\xD5\xD6\f\b\x02" +
+		"\x02\xD6\xD7\t\x04\x02\x02\xD7\xE2\x05&\x14\t\xD8\xD9\f\x07\x02\x02\xD9" +
+		"\xDA\t\x05\x02\x02\xDA\xE2\x05&\x14\b\xDB\xDC\f\x06\x02\x02\xDC\xDD\x07" +
+		"5\x02\x02\xDD\xE2\x05&\x14\x07\xDE\xDF\f\x05\x02\x02\xDF\xE0\x074\x02" +
+		"\x02\xE0\xE2\x05&\x14\x06\xE1\xD2\x03\x02\x02\x02\xE1\xD5\x03\x02\x02" +
+		"\x02\xE1\xD8\x03\x02\x02\x02\xE1\xDB\x03\x02\x02\x02\xE1\xDE\x03\x02\x02" +
+		"\x02\xE2\xE5\x03\x02\x02\x02\xE3\xE1\x03\x02\x02\x02\xE3\xE4\x03\x02\x02" +
+		"\x02\xE4\'\x03\x02\x02\x02\xE5\xE3\x03\x02\x02\x02\xE6\xE7\x05*\x16\x02" +
+		"\xE7)\x03\x02\x02\x02\xE8\xEF\x05.\x18\x02\xE9\xEF\x05,\x17\x02\xEA\xEB" +
+		"\x07%\x02\x02\xEB\xEC\x05&\x14\x02\xEC\xED\x07&\x02\x02\xED\xEF\x03\x02" +
+		"\x02\x02\xEE\xE8\x03\x02\x02\x02\xEE\xE9\x03\x02\x02\x02\xEE\xEA\x03\x02" +
+		"\x02\x02\xEF+\x03\x02\x02\x02\xF0\xF1\x07$\x02\x02\xF1-\x03\x02\x02\x02" +
+		"\xF2\xF8\x07#\x02\x02\xF3\xF8\x07J\x02\x02\xF4\xF8\x07N\x02\x02\xF5\xF8" +
+		"\x05F$\x02\xF6\xF8\x05H%\x02\xF7\xF2\x03\x02\x02\x02\xF7\xF3\x03\x02\x02" +
+		"\x02\xF7\xF4\x03\x02\x02\x02\xF7\xF5\x03\x02\x02\x02\xF7\xF6\x03\x02\x02" +
+		"\x02\xF8/\x03\x02\x02\x02\xF9\xFB\x07-\x02\x02\xFA\xF9\x03\x02\x02\x02" +
+		"\xFA\xFB\x03\x02\x02\x02\xFB\u0101\x03\x02\x02\x02\xFC\xFE\x07a\x02\x02" +
+		"\xFD\xFC\x03\x02\x02\x02\xFD\xFE\x03\x02\x02\x02\xFE\u0101\x03\x02\x02" +
+		"\x02\xFF\u0101\x06\x19\x07\x02\u0100\xFA\x03\x02\x02\x02\u0100\xFD\x03" +
+		"\x02\x02\x02\u0100\xFF\x03\x02\x02\x02\u0101\u0102\x03\x02\x02\x02\u0102" +
+		"\u0103\x052\x1A\x02\u0103\u0104\x05<\x1F\x02\u0104\u0106\x03\x02\x02\x02" +
+		"\u0105\u0100\x03\x02\x02\x02\u0106\u0107\x03\x02\x02\x02\u0107\u0105\x03" +
+		"\x02\x02\x02\u0107\u0108\x03\x02\x02\x02\u01081\x03\x02\x02\x02\u0109" +
+		"\u0110\x05D#\x02\u010A\u0110\x05@!\x02\u010B\u0110\x05B\"\x02\u010C\u0110" +
+		"\x054\x1B\x02\u010D\u0110\x05\x14\v\x02\u010E\u0110\x05J&\x02\u010F\u0109" +
+		"\x03\x02\x02\x02\u010F\u010A\x03\x02\x02\x02\u010F\u010B\x03\x02\x02\x02" +
+		"\u010F\u010C\x03\x02\x02\x02\u010F\u010D\x03\x02\x02\x02\u010F\u010E\x03" +
+		"\x02\x02\x02\u01103\x03\x02\x02\x02\u0111\u0118\x056\x1C\x02\u0112\u0118" +
+		"\x05\x16\f\x02\u0113\u0118\x05\b\x05\x02\u0114\u0118\x05 \x11\x02\u0115" +
+		"\u0118\x05$\x13\x02\u0116\u0118\x05\x1A\x0E\x02\u0117\u0111\x03\x02\x02" +
+		"\x02\u0117\u0112\x03\x02\x02\x02\u0117\u0113\x03\x02\x02\x02\u0117\u0114" +
+		"\x03\x02\x02\x02\u0117\u0115\x03\x02\x02\x02\u0117\u0116\x03\x02\x02\x02" +
+		"\u01185\x03\x02\x02\x02\u0119\u011A\x05&\x14\x02\u011A\u011B\x07I\x02" +
+		"\x02\u011B\u011C\x05&\x14\x02\u011C7\x03\x02\x02\x02\u011D\u011E\x07\x1C" +
+		"\x02\x02\u011E\u011F\x07%\x02\x02\u011F\u0122\x05\x1E\x10\x02\u0120\u0121" +
+		"\x07,\x02\x02\u0121\u0123\x07J\x02\x02\u0122\u0120\x03\x02\x02\x02\u0122" +
+		"\u0123\x03\x02\x02\x02\u0123\u0124\x03\x02\x02\x02\u0124\u0125\x07&\x02" +
+		"\x02\u01259\x03\x02\x02\x02\u0126\u012B\x05&\x14\x02\u0127\u0128\x07," +
+		"\x02\x02\u0128\u012A\x05&\x14\x02\u0129\u0127\x03\x02\x02\x02\u012A\u012D" +
+		"\x03\x02\x02\x02\u012B\u0129\x03\x02\x02\x02\u012B\u012C\x03\x02\x02\x02" +
+		"\u012C;\x03\x02\x02\x02\u012D\u012B\x03\x02\x02\x02\u012E\u0133\x07-\x02" +
+		"\x02\u012F\u0133\x07\x02\x02\x03\u0130\u0133\x07a\x02\x02\u0131\u0133" +
+		"\x06\x1F\b\x02\u0132\u012E\x03\x02\x02\x02\u0132\u012F\x03\x02\x02\x02" +
+		"\u0132\u0130\x03\x02\x02\x02\u0132\u0131\x03\x02\x02\x02\u0133=\x03\x02" +
+		"\x02\x02\u0134\u0139\x07$\x02\x02\u0135\u0136\x07,\x02\x02\u0136\u0138" +
+		"\x07$\x02\x02\u0137\u0135\x03\x02\x02\x02\u0138\u013B\x03\x02\x02\x02" +
+		"\u0139\u0137\x03\x02\x02\x02\u0139\u013A\x03\x02\x02\x02\u013A?\x03\x02" +
+		"\x02\x02\u013B\u0139\x03\x02\x02\x02\u013C\u013D\x07\x14\x02\x02\u013D" +
+		"\u013E\x05&\x14\x02\u013E\u0144\x05\x14\v\x02\u013F\u0142\x07\x0E\x02" +
+		"\x02\u0140\u0143\x05@!\x02\u0141\u0143\x05\x14\v\x02\u0142\u0140\x03\x02" +
+		"\x02\x02\u0142\u0141\x03\x02\x02\x02\u0143\u0145\x03\x02\x02\x02\u0144" +
+		"\u013F\x03\x02\x02\x02\u0144\u0145\x03\x02\x02\x02\u0145A\x03\x02\x02" +
+		"\x02\u0146\u0148\x07\x1A\x02\x02\u0147\u0149\x05:\x1E\x02\u0148\u0147" +
+		"\x03\x02\x02\x02\u0148\u0149\x03\x02\x02\x02\u0149C\x03\x02\x02\x02\u014A" +
+		"\u014B\x07\x18\x02\x02\u014B\u014C\x05&\x14\x02\u014C\u014D\x05\x14\v" +
+		"\x02\u014DE\x03\x02\x02\x02\u014E\u014F\t\x06\x02\x02\u014FG\x03\x02\x02" +
+		"\x02\u0150\u0151\x07\x05\x02\x02\u0151\u0152\x05\n\x06\x02\u0152\u0153" +
+		"\x05\x14\v\x02\u0153I\x03\x02\x02\x02\u0154\u0155\x07\n\x02\x02\u0155" +
+		"\u0156\x05\x06\x04\x02\u0156K\x03\x02\x02\x02%NTYbmtx}\x81\x89\x8D\x8F" +
+		"\x94\x98\xA4\xA8\xBB\xD0\xE1\xE3\xEE\xF7\xFA\xFD\u0100\u0107\u010F\u0117" +
+		"\u0122\u012B\u0132\u0139\u0142\u0144\u0148";
 	public static __ATN: ATN;
 	public static get _ATN(): ATN {
 		if (!SimpleParser.__ATN) {
@@ -2960,14 +2715,26 @@ export class BlockContext extends ParserRuleContext {
 
 
 export class VarDeclContext extends ParserRuleContext {
-	public varMutexDecl(): VarMutexDeclContext | undefined {
-		return this.tryGetRuleContext(0, VarMutexDeclContext);
+	public VAR(): TerminalNode { return this.getToken(SimpleParser.VAR, 0); }
+	public varSpec(): VarSpecContext[];
+	public varSpec(i: number): VarSpecContext;
+	public varSpec(i?: number): VarSpecContext | VarSpecContext[] {
+		if (i === undefined) {
+			return this.getRuleContexts(VarSpecContext);
+		} else {
+			return this.getRuleContext(i, VarSpecContext);
+		}
 	}
-	public varWaitGroupDecl(): VarWaitGroupDeclContext | undefined {
-		return this.tryGetRuleContext(0, VarWaitGroupDeclContext);
-	}
-	public regVarDecl(): RegVarDeclContext | undefined {
-		return this.tryGetRuleContext(0, RegVarDeclContext);
+	public L_PAREN(): TerminalNode | undefined { return this.tryGetToken(SimpleParser.L_PAREN, 0); }
+	public R_PAREN(): TerminalNode | undefined { return this.tryGetToken(SimpleParser.R_PAREN, 0); }
+	public eos(): EosContext[];
+	public eos(i: number): EosContext;
+	public eos(i?: number): EosContext | EosContext[] {
+		if (i === undefined) {
+			return this.getRuleContexts(EosContext);
+		} else {
+			return this.getRuleContext(i, EosContext);
+		}
 	}
 	constructor(parent: ParserRuleContext | undefined, invokingState: number) {
 		super(parent, invokingState);
@@ -2997,107 +2764,38 @@ export class VarDeclContext extends ParserRuleContext {
 }
 
 
-export class RegVarDeclContext extends ParserRuleContext {
-	public VAR(): TerminalNode { return this.getToken(SimpleParser.VAR, 0); }
+export class VarSpecContext extends ParserRuleContext {
 	public identifierList(): IdentifierListContext {
 		return this.getRuleContext(0, IdentifierListContext);
 	}
 	public type_(): Type_Context {
 		return this.getRuleContext(0, Type_Context);
 	}
-	public ASSIGN(): TerminalNode | undefined { return this.tryGetToken(SimpleParser.ASSIGN, 0); }
-	public expressionList(): ExpressionListContext | undefined {
-		return this.tryGetRuleContext(0, ExpressionListContext);
+	public ASSIGN(): TerminalNode { return this.getToken(SimpleParser.ASSIGN, 0); }
+	public expressionList(): ExpressionListContext {
+		return this.getRuleContext(0, ExpressionListContext);
 	}
 	constructor(parent: ParserRuleContext | undefined, invokingState: number) {
 		super(parent, invokingState);
 	}
 	// @Override
-	public get ruleIndex(): number { return SimpleParser.RULE_regVarDecl; }
+	public get ruleIndex(): number { return SimpleParser.RULE_varSpec; }
 	// @Override
 	public enterRule(listener: SimpleParserListener): void {
-		if (listener.enterRegVarDecl) {
-			listener.enterRegVarDecl(this);
+		if (listener.enterVarSpec) {
+			listener.enterVarSpec(this);
 		}
 	}
 	// @Override
 	public exitRule(listener: SimpleParserListener): void {
-		if (listener.exitRegVarDecl) {
-			listener.exitRegVarDecl(this);
+		if (listener.exitVarSpec) {
+			listener.exitVarSpec(this);
 		}
 	}
 	// @Override
 	public accept<Result>(visitor: SimpleParserVisitor<Result>): Result {
-		if (visitor.visitRegVarDecl) {
-			return visitor.visitRegVarDecl(this);
-		} else {
-			return visitor.visitChildren(this);
-		}
-	}
-}
-
-
-export class VarMutexDeclContext extends ParserRuleContext {
-	public VAR(): TerminalNode { return this.getToken(SimpleParser.VAR, 0); }
-	public identifierList(): IdentifierListContext {
-		return this.getRuleContext(0, IdentifierListContext);
-	}
-	public MUTEX(): TerminalNode { return this.getToken(SimpleParser.MUTEX, 0); }
-	constructor(parent: ParserRuleContext | undefined, invokingState: number) {
-		super(parent, invokingState);
-	}
-	// @Override
-	public get ruleIndex(): number { return SimpleParser.RULE_varMutexDecl; }
-	// @Override
-	public enterRule(listener: SimpleParserListener): void {
-		if (listener.enterVarMutexDecl) {
-			listener.enterVarMutexDecl(this);
-		}
-	}
-	// @Override
-	public exitRule(listener: SimpleParserListener): void {
-		if (listener.exitVarMutexDecl) {
-			listener.exitVarMutexDecl(this);
-		}
-	}
-	// @Override
-	public accept<Result>(visitor: SimpleParserVisitor<Result>): Result {
-		if (visitor.visitVarMutexDecl) {
-			return visitor.visitVarMutexDecl(this);
-		} else {
-			return visitor.visitChildren(this);
-		}
-	}
-}
-
-
-export class VarWaitGroupDeclContext extends ParserRuleContext {
-	public VAR(): TerminalNode { return this.getToken(SimpleParser.VAR, 0); }
-	public identifierList(): IdentifierListContext {
-		return this.getRuleContext(0, IdentifierListContext);
-	}
-	public WAITGROUP(): TerminalNode { return this.getToken(SimpleParser.WAITGROUP, 0); }
-	constructor(parent: ParserRuleContext | undefined, invokingState: number) {
-		super(parent, invokingState);
-	}
-	// @Override
-	public get ruleIndex(): number { return SimpleParser.RULE_varWaitGroupDecl; }
-	// @Override
-	public enterRule(listener: SimpleParserListener): void {
-		if (listener.enterVarWaitGroupDecl) {
-			listener.enterVarWaitGroupDecl(this);
-		}
-	}
-	// @Override
-	public exitRule(listener: SimpleParserListener): void {
-		if (listener.exitVarWaitGroupDecl) {
-			listener.exitVarWaitGroupDecl(this);
-		}
-	}
-	// @Override
-	public accept<Result>(visitor: SimpleParserVisitor<Result>): Result {
-		if (visitor.visitVarWaitGroupDecl) {
-			return visitor.visitVarWaitGroupDecl(this);
+		if (visitor.visitVarSpec) {
+			return visitor.visitVarSpec(this);
 		} else {
 			return visitor.visitChildren(this);
 		}
@@ -3152,6 +2850,8 @@ export class Type_Context extends ParserRuleContext {
 	public channelType(): ChannelTypeContext | undefined {
 		return this.tryGetRuleContext(0, ChannelTypeContext);
 	}
+	public MUTEX(): TerminalNode | undefined { return this.tryGetToken(SimpleParser.MUTEX, 0); }
+	public WAITGROUP(): TerminalNode | undefined { return this.tryGetToken(SimpleParser.WAITGROUP, 0); }
 	constructor(parent: ParserRuleContext | undefined, invokingState: number) {
 		super(parent, invokingState);
 	}
@@ -3700,8 +3400,6 @@ export class LiteralContext extends ParserRuleContext {
 	public NIL_LIT(): TerminalNode | undefined { return this.tryGetToken(SimpleParser.NIL_LIT, 0); }
 	public DECIMAL_LIT(): TerminalNode | undefined { return this.tryGetToken(SimpleParser.DECIMAL_LIT, 0); }
 	public FLOAT_LIT(): TerminalNode | undefined { return this.tryGetToken(SimpleParser.FLOAT_LIT, 0); }
-	public TRUE(): TerminalNode | undefined { return this.tryGetToken(SimpleParser.TRUE, 0); }
-	public FALSE(): TerminalNode | undefined { return this.tryGetToken(SimpleParser.FALSE, 0); }
 	public string_(): String_Context | undefined {
 		return this.tryGetRuleContext(0, String_Context);
 	}
@@ -3928,180 +3626,6 @@ export class SendStmtContext extends ParserRuleContext {
 	public accept<Result>(visitor: SimpleParserVisitor<Result>): Result {
 		if (visitor.visitSendStmt) {
 			return visitor.visitSendStmt(this);
-		} else {
-			return visitor.visitChildren(this);
-		}
-	}
-}
-
-
-export class LockStmtContext extends ParserRuleContext {
-	public _mutexLock!: Token;
-	public L_PAREN(): TerminalNode { return this.getToken(SimpleParser.L_PAREN, 0); }
-	public IDENTIFIER(): TerminalNode { return this.getToken(SimpleParser.IDENTIFIER, 0); }
-	public R_PAREN(): TerminalNode { return this.getToken(SimpleParser.R_PAREN, 0); }
-	public LOCK(): TerminalNode { return this.getToken(SimpleParser.LOCK, 0); }
-	constructor(parent: ParserRuleContext | undefined, invokingState: number) {
-		super(parent, invokingState);
-	}
-	// @Override
-	public get ruleIndex(): number { return SimpleParser.RULE_lockStmt; }
-	// @Override
-	public enterRule(listener: SimpleParserListener): void {
-		if (listener.enterLockStmt) {
-			listener.enterLockStmt(this);
-		}
-	}
-	// @Override
-	public exitRule(listener: SimpleParserListener): void {
-		if (listener.exitLockStmt) {
-			listener.exitLockStmt(this);
-		}
-	}
-	// @Override
-	public accept<Result>(visitor: SimpleParserVisitor<Result>): Result {
-		if (visitor.visitLockStmt) {
-			return visitor.visitLockStmt(this);
-		} else {
-			return visitor.visitChildren(this);
-		}
-	}
-}
-
-
-export class UnlockStmtContext extends ParserRuleContext {
-	public _mutexUnlock!: Token;
-	public L_PAREN(): TerminalNode { return this.getToken(SimpleParser.L_PAREN, 0); }
-	public IDENTIFIER(): TerminalNode { return this.getToken(SimpleParser.IDENTIFIER, 0); }
-	public R_PAREN(): TerminalNode { return this.getToken(SimpleParser.R_PAREN, 0); }
-	public UNLOCK(): TerminalNode { return this.getToken(SimpleParser.UNLOCK, 0); }
-	constructor(parent: ParserRuleContext | undefined, invokingState: number) {
-		super(parent, invokingState);
-	}
-	// @Override
-	public get ruleIndex(): number { return SimpleParser.RULE_unlockStmt; }
-	// @Override
-	public enterRule(listener: SimpleParserListener): void {
-		if (listener.enterUnlockStmt) {
-			listener.enterUnlockStmt(this);
-		}
-	}
-	// @Override
-	public exitRule(listener: SimpleParserListener): void {
-		if (listener.exitUnlockStmt) {
-			listener.exitUnlockStmt(this);
-		}
-	}
-	// @Override
-	public accept<Result>(visitor: SimpleParserVisitor<Result>): Result {
-		if (visitor.visitUnlockStmt) {
-			return visitor.visitUnlockStmt(this);
-		} else {
-			return visitor.visitChildren(this);
-		}
-	}
-}
-
-
-export class AddStmtContext extends ParserRuleContext {
-	public _waitgroupAdd!: Token;
-	public L_PAREN(): TerminalNode { return this.getToken(SimpleParser.L_PAREN, 0); }
-	public IDENTIFIER(): TerminalNode { return this.getToken(SimpleParser.IDENTIFIER, 0); }
-	public COMMA(): TerminalNode { return this.getToken(SimpleParser.COMMA, 0); }
-	public expression(): ExpressionContext {
-		return this.getRuleContext(0, ExpressionContext);
-	}
-	public R_PAREN(): TerminalNode { return this.getToken(SimpleParser.R_PAREN, 0); }
-	public ADD(): TerminalNode { return this.getToken(SimpleParser.ADD, 0); }
-	constructor(parent: ParserRuleContext | undefined, invokingState: number) {
-		super(parent, invokingState);
-	}
-	// @Override
-	public get ruleIndex(): number { return SimpleParser.RULE_addStmt; }
-	// @Override
-	public enterRule(listener: SimpleParserListener): void {
-		if (listener.enterAddStmt) {
-			listener.enterAddStmt(this);
-		}
-	}
-	// @Override
-	public exitRule(listener: SimpleParserListener): void {
-		if (listener.exitAddStmt) {
-			listener.exitAddStmt(this);
-		}
-	}
-	// @Override
-	public accept<Result>(visitor: SimpleParserVisitor<Result>): Result {
-		if (visitor.visitAddStmt) {
-			return visitor.visitAddStmt(this);
-		} else {
-			return visitor.visitChildren(this);
-		}
-	}
-}
-
-
-export class DoneStmtContext extends ParserRuleContext {
-	public _waitgroupDone!: Token;
-	public L_PAREN(): TerminalNode { return this.getToken(SimpleParser.L_PAREN, 0); }
-	public IDENTIFIER(): TerminalNode { return this.getToken(SimpleParser.IDENTIFIER, 0); }
-	public R_PAREN(): TerminalNode { return this.getToken(SimpleParser.R_PAREN, 0); }
-	public DONE(): TerminalNode { return this.getToken(SimpleParser.DONE, 0); }
-	constructor(parent: ParserRuleContext | undefined, invokingState: number) {
-		super(parent, invokingState);
-	}
-	// @Override
-	public get ruleIndex(): number { return SimpleParser.RULE_doneStmt; }
-	// @Override
-	public enterRule(listener: SimpleParserListener): void {
-		if (listener.enterDoneStmt) {
-			listener.enterDoneStmt(this);
-		}
-	}
-	// @Override
-	public exitRule(listener: SimpleParserListener): void {
-		if (listener.exitDoneStmt) {
-			listener.exitDoneStmt(this);
-		}
-	}
-	// @Override
-	public accept<Result>(visitor: SimpleParserVisitor<Result>): Result {
-		if (visitor.visitDoneStmt) {
-			return visitor.visitDoneStmt(this);
-		} else {
-			return visitor.visitChildren(this);
-		}
-	}
-}
-
-
-export class WaitStmtContext extends ParserRuleContext {
-	public _waitgroupwait!: Token;
-	public L_PAREN(): TerminalNode { return this.getToken(SimpleParser.L_PAREN, 0); }
-	public IDENTIFIER(): TerminalNode { return this.getToken(SimpleParser.IDENTIFIER, 0); }
-	public R_PAREN(): TerminalNode { return this.getToken(SimpleParser.R_PAREN, 0); }
-	public WAIT(): TerminalNode { return this.getToken(SimpleParser.WAIT, 0); }
-	constructor(parent: ParserRuleContext | undefined, invokingState: number) {
-		super(parent, invokingState);
-	}
-	// @Override
-	public get ruleIndex(): number { return SimpleParser.RULE_waitStmt; }
-	// @Override
-	public enterRule(listener: SimpleParserListener): void {
-		if (listener.enterWaitStmt) {
-			listener.enterWaitStmt(this);
-		}
-	}
-	// @Override
-	public exitRule(listener: SimpleParserListener): void {
-		if (listener.exitWaitStmt) {
-			listener.exitWaitStmt(this);
-		}
-	}
-	// @Override
-	public accept<Result>(visitor: SimpleParserVisitor<Result>): Result {
-		if (visitor.visitWaitStmt) {
-			return visitor.visitWaitStmt(this);
 		} else {
 			return visitor.visitChildren(this);
 		}
