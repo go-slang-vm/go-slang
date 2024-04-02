@@ -874,4 +874,39 @@ describe('Basic parser test', () => {
     console.dir(outputAst, {depth: 100})
     expect(outputAst).toStrictEqual(expectedAst) 
   })
+
+  test('parse mutex and waitgroup in global scope', async () => {
+    const program = `
+    var z WaitGroup = inc2()
+    var y Mutex = s
+    `;
+    const expectedAst = {
+      tag: 'blk',
+      body: {
+        tag: 'seq',
+        stmts: [
+          {
+            tag: 'waitgroup',
+            syms: { tag: 'idents', IDENTS: [ 'z' ] },
+            assignments: { tag: 'exprlist', list: [] },
+            type: 'waitgroup'
+          },
+          {
+            tag: 'mut',
+            syms: { tag: 'idents', IDENTS: [ 'y' ] },
+            assignments: { tag: 'exprlist', list: [] },
+            type: 'mutex'
+          },
+          {
+            tag: 'app',
+            fun: { tag: 'nam', sym: 'main' },
+            args: [],
+            _arity: 0
+          }
+        ]
+      }
+    }
+    const outputAst: ASTNode = parse(program)
+    expect(outputAst).toStrictEqual(expectedAst) 
+  })
 })

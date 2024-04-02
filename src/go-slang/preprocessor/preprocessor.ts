@@ -7,7 +7,7 @@
 // use adj list and map to map variable name to stmt number
 
 import { Pair } from "../../stdlib/list";
-import { ASTNode, AssignNode, BinOpNode, BlockNode, ConstDeclNode, ForStmtNode, FuncAppNode, FuncDeclNode, GoStmtNode, IfStmtNode, LambdaStmtNode, LiteralNode, LogicalNode, NameNode, ReturnStmtNode, SequenceNode, StmtNode, UnOpNode, VarDeclNode } from "../ast/AST";
+import { ASTNode, AssignNode, BinOpNode, BlockNode, ConstDeclNode, ForStmtNode, FuncAppNode, FuncDeclNode, GoStmtNode, IfStmtNode, LambdaStmtNode, LiteralNode, LogicalNode, MakeAppNode, NameNode, RecvExprNode, ReturnStmtNode, SendStmtNode, SequenceNode, StmtNode, UnOpNode, VarDeclNode } from "../ast/AST";
 import { CompileTimeEnvironment, Frame, compile_time_environment_extend, compile_time_environment_position, global_compile_environment, scan_for_locals } from "../utils";
 
 const varNameToStmtNumber: Map<string, Pair<number, string>> = new Map();
@@ -110,7 +110,36 @@ const create_graph = {
   },
   go: (comp: GoStmtNode, ce: CompileTimeEnvironment, stmtNum: number) => {
     createGraph(comp.funcApp, ce, stmtNum);
-  }
+  },
+  // NOTE for now make takes in a decimal lit for capacity, not expr yet
+  make: (comp: MakeAppNode, ce: CompileTimeEnvironment, stmtNum: number) => {},
+  send: (comp: SendStmtNode, ce: CompileTimeEnvironment, stmtNum: number) => {
+    createGraph(comp.frst, ce, stmtNum);
+    createGraph(comp.scnd, ce, stmtNum); 
+  },
+  recv: (comp: RecvExprNode, ce: CompileTimeEnvironment, stmtNum: number) => {
+    createGraph(comp.frst, ce, stmtNum); 
+  },
+  lock: (comp: FuncAppNode, ce: CompileTimeEnvironment, stmtNum: number) => {
+    createGraph(comp.args[0], ce, stmtNum); 
+  },
+  unlock: (comp: FuncAppNode, ce: CompileTimeEnvironment, stmtNum: number) => {
+    createGraph(comp.args[0], ce, stmtNum); 
+  },
+  // these 2 do not have expressions on RHS
+  mut: (comp: VarDeclNode, ce: CompileTimeEnvironment, stmtNum: number) => {},
+  waitgroup: (comp: VarDeclNode, ce: CompileTimeEnvironment, stmtNum: number) => {},
+  add: (comp: FuncAppNode, ce: CompileTimeEnvironment, stmtNum: number) => {
+    for (const arg of comp.args) {
+      createGraph(arg, ce, stmtNum);
+    }
+  },
+  done: (comp: FuncAppNode, ce: CompileTimeEnvironment, stmtNum: number) => {
+    createGraph(comp.args[0], ce, stmtNum);  
+  },
+  wait: (comp: FuncAppNode, ce: CompileTimeEnvironment, stmtNum: number) => {
+    createGraph(comp.args[0], ce, stmtNum); 
+  },
 }
 
 
@@ -196,15 +225,8 @@ const populateAdjList = (seq: SequenceNode) => {
   const base_compile_env = compile_time_environment_extend(locals, global_compile_environment);
   // NOTE THAT FOR MULTI VAR DECL, WE REQUIRE THAT THEY DO NOT CYCLICALLY REFER TO VARS IN THE SAME STATEMENT FOR NOW
   for (let i = 0; i < stmts.length - 1; ++i) {
-    // // dont have to reorder function unless it was referenced in a var declaration
-    // if(stmts[i].tag == "fun") continue;
     createGraph(stmts[i], base_compile_env, i);
   }
-  // for(let i = 0; i < adjList.length; ++i) {
-  //   for(const j of adjList[i]) {
-  //     console.log("i: "+ i + " j: " + j);
-  //   }
-  // }
 }
 
 const compressGraph = (stmts: StmtNode[]): Pair<Set<number>[], number> => {
