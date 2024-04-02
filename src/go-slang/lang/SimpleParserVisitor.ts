@@ -22,9 +22,7 @@ import { ParametersContext } from "./SimpleParser";
 import { ParameterDeclContext } from "./SimpleParser";
 import { BlockContext } from "./SimpleParser";
 import { VarDeclContext } from "./SimpleParser";
-import { RegVarDeclContext } from "./SimpleParser";
-import { VarMutexDeclContext } from "./SimpleParser";
-import { VarWaitGroupDeclContext } from "./SimpleParser";
+import { VarSpecContext } from "./SimpleParser";
 import { ShortVarDeclContext } from "./SimpleParser";
 import { Type_Context } from "./SimpleParser";
 import { ChannelTypeContext } from "./SimpleParser";
@@ -40,11 +38,6 @@ import { StatementListContext } from "./SimpleParser";
 import { StatementContext } from "./SimpleParser";
 import { SimpleStmtContext } from "./SimpleParser";
 import { SendStmtContext } from "./SimpleParser";
-import { LockStmtContext } from "./SimpleParser";
-import { UnlockStmtContext } from "./SimpleParser";
-import { AddStmtContext } from "./SimpleParser";
-import { DoneStmtContext } from "./SimpleParser";
-import { WaitStmtContext } from "./SimpleParser";
 import { MakeExprContext } from "./SimpleParser";
 import { ExpressionListContext } from "./SimpleParser";
 import { EosContext } from "./SimpleParser";
@@ -207,25 +200,11 @@ export interface SimpleParserVisitor<Result> extends ParseTreeVisitor<Result> {
 	visitVarDecl?: (ctx: VarDeclContext) => Result;
 
 	/**
-	 * Visit a parse tree produced by `SimpleParser.regVarDecl`.
+	 * Visit a parse tree produced by `SimpleParser.varSpec`.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	visitRegVarDecl?: (ctx: RegVarDeclContext) => Result;
-
-	/**
-	 * Visit a parse tree produced by `SimpleParser.varMutexDecl`.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	visitVarMutexDecl?: (ctx: VarMutexDeclContext) => Result;
-
-	/**
-	 * Visit a parse tree produced by `SimpleParser.varWaitGroupDecl`.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	visitVarWaitGroupDecl?: (ctx: VarWaitGroupDeclContext) => Result;
+	visitVarSpec?: (ctx: VarSpecContext) => Result;
 
 	/**
 	 * Visit a parse tree produced by `SimpleParser.shortVarDecl`.
@@ -331,41 +310,6 @@ export interface SimpleParserVisitor<Result> extends ParseTreeVisitor<Result> {
 	 * @return the visitor result
 	 */
 	visitSendStmt?: (ctx: SendStmtContext) => Result;
-
-	/**
-	 * Visit a parse tree produced by `SimpleParser.lockStmt`.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	visitLockStmt?: (ctx: LockStmtContext) => Result;
-
-	/**
-	 * Visit a parse tree produced by `SimpleParser.unlockStmt`.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	visitUnlockStmt?: (ctx: UnlockStmtContext) => Result;
-
-	/**
-	 * Visit a parse tree produced by `SimpleParser.addStmt`.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	visitAddStmt?: (ctx: AddStmtContext) => Result;
-
-	/**
-	 * Visit a parse tree produced by `SimpleParser.doneStmt`.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	visitDoneStmt?: (ctx: DoneStmtContext) => Result;
-
-	/**
-	 * Visit a parse tree produced by `SimpleParser.waitStmt`.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	visitWaitStmt?: (ctx: WaitStmtContext) => Result;
 
 	/**
 	 * Visit a parse tree produced by `SimpleParser.makeExpr`.
