@@ -684,6 +684,7 @@ describe('Runner tests', () => {
       go func() {
         Add(wg1, 1)
         x = 1
+        Wait(wg1)
         Done(wg2)
       }()
 
@@ -692,9 +693,10 @@ describe('Runner tests', () => {
       go func() {
         Add(wg2, 1)
         y = 2
+        Wait(wg2)
         Done(wg1)
       }()
-      Wait(wg1)
+      
 
       return x + y
     }`
