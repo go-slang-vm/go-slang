@@ -9,24 +9,24 @@ import { is_string } from "../vm/utils"
 // Type frames are JavaScript objects that map 
 // symbols (strings) to types.
 const unary_arith_type =
-    { tag: "fun", args: ["number"], 
-      res: "number" }
+    { tag: "fun", paramTypes: ["int"], 
+    returnTypes: ["int"] }
     
 const binary_arith_type =
-    { tag: "fun", args: ["number", "number"], 
-      res: "number" }
+    { tag: "fun", paramTypes: ["int", "int"], 
+    returnTypes: ["int"] }
 
 const number_comparison_type =
-    { tag: "fun", args: ["number", "number"], 
-      res: "bool" }
+    { tag: "fun", paramTypes: ["int", "int"], 
+    returnTypes: ["bool"] }
 // should be bool bool instead of just bool
 const binary_bool_type =
-    { tag: "fun", args: ["bool", "bool"], 
-      res: "bool" }
+    { tag: "fun", paramTypes: ["bool", "bool"], 
+    returnTypes: ["bool"] }
       
 const unary_bool_type =
-    { tag: "fun", args: ["bool"], 
-      res: "bool" }
+    { tag: "fun", paramTypes: ["bool"], 
+    returnTypes: ["bool"] }
 
 // what else should i include in this? for Go?
 // Println can take anything
@@ -61,7 +61,6 @@ const global_type_frame = {
 }
 
 export type TypeFrame = {} | null
-export type TypeValue = string | FuncType
 
 // A type environment is null or a pair 
 // whose head is a frame and whose tail 
@@ -70,14 +69,14 @@ export const empty_type_environment: TypeFrame = null
 export const global_type_environment: any = 
     pair(global_type_frame, empty_type_environment)
 
-export const lookup_type = (x: string, e: any): string =>
+export const lookup_type = (x: any, e: any): string =>
     is_null(e)
     ? Error("unbound name: " + x)
     : head(e).hasOwnProperty(x) 
     ? head(e)[x]
     : lookup_type(x, tail(e))
 
-export const extend_type_environment = (xs: string[], ts: TypeValue[], e: any) => {
+export const extend_type_environment = (xs: any, ts: any, e: any) => {
     if (ts.length > xs.length) 
         throw new Error('too few parameters in function declaration')
     if (ts.length < xs.length) 
@@ -88,21 +87,37 @@ export const extend_type_environment = (xs: string[], ts: TypeValue[], e: any) =
     return pair(new_frame, e)
 }
 
-export const unparse_types = (ts:TypeValue[]): any =>
+export const unparse_types = (ts: any): any =>
    ts.length === 0 
    ? "null"
-   : ts.reduce((s, t) => s === "" 
+   : ts.reduce((s: string, t: any) => s === "" 
                          ? unparse_type(t) 
                          : s + ", " + unparse_type(t), "")
-export const unparse_type = (t: TypeValue | TypeValue[]): any =>
+
+export const unparse_type = (t: any): any =>
    is_string(t) 
    ? t 
    : // t is function type
      "(" + unparse_types((t as FuncType).paramTypes) + " > " + 
      unparse_types((t as FuncType).returnTypes) + ")"
 
-export const equal_types = (ts1: TypeValue[], ts2: TypeValue[]) =>
+export const equal_array_types = (ts1: any, ts2: any) => {
+    if(ts1.length != ts2.length) {
+        return false;
+    }
+    for(let i = 0; i < ts1.length; ++i) {
+        if(unparse_type(ts1[i]) != unparse_type(ts2[i])) {
+            return false;
+        }
+    }
+    return true;
+}
+
+export const equal_types = (ts1: any, ts2: any) => 
    unparse_types(ts1) === unparse_types(ts2)
    
-export const equal_type = (t1: TypeValue, t2:TypeValue) =>
-   unparse_type(t1) === unparse_type(t2)
+export const equal_type = (t1: any, t2:any) => {
+    console.dir(t1, {depth: 100})
+    console.dir(t2, {depth: 100})
+   return unparse_type(t1) === unparse_type(t2)
+}
