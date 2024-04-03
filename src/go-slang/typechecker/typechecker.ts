@@ -292,7 +292,8 @@ const type_fun_body_stmt = {
                     return stmt_type
                 }
             }
-            return "undefined"
+            // TODO check if i should return undefined or empty
+            return []
         },
     blk:
         (comp: BlockNode, te: any, func_ctx: any) => {

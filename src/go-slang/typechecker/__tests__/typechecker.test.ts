@@ -183,7 +183,7 @@ describe('Basic typecheck test', () => {
         }
           `
         const outputAst: ASTNode = parse(program)
-        expect(()=>typecheck(outputAst)).toThrow("type error in function declaration; expected return type: int, int, int actual return type: undefined")
+        expect(()=>typecheck(outputAst)).toThrow("type error in function declaration; expected return type: int, int, int actual return type: null")
       });
       test('basic conditional statement non terminating but correct return', async () => {
         const program = `
@@ -289,6 +289,27 @@ describe('Basic typecheck test', () => {
           `
         const outputAst: ASTNode = parse(program)
         //console.dir(outputAst, {depth: 100})
-        expect(()=>typecheck(outputAst)).toThrow("type error in function declaration; expected return type: int, int, int actual return type: undefined");
+        expect(()=>typecheck(outputAst)).toThrow("type error in function declaration; expected return type: int, int, int actual return type: null");
+      });
+      test('basic conditional statement make sure it is non terminating with else branch but correct return', async () => {
+        const program = `
+        func inc() (int, int, int) {
+            x int:= 1      
+            return 1, 2, 3
+            if x < 1 {
+                return 11, 22, 33
+            } else {
+              y int := x
+            }
+        }
+        func main() {
+          var x, y, z int = inc()
+          a string := "hello"
+          var f float = 1.1
+        }
+          `
+        const outputAst: ASTNode = parse(program)
+        //console.dir(outputAst, {depth: 100})
+        expect(()=>typecheck(outputAst)).toThrow("type error in function declaration; expected return type: int, int, int actual return type: null");
       });
 })
