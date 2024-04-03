@@ -26,3 +26,4 @@ export const Pair_tag = 11
 export const Builtin_tag = 12
 export const String_tag = 13
 export const Channel_tag = 14
+export const Waitgroup_tag = 14

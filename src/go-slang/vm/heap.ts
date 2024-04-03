@@ -15,7 +15,8 @@ import {
   Pair_tag,
   Builtin_tag,
   String_tag,
-  Channel_tag
+  Channel_tag,
+  Waitgroup_tag
 } from './constants'
 
 export class Heap {
@@ -233,25 +234,44 @@ export class Heap {
 
   is_Number = (address: number): boolean => this.heap_get_tag(address) === Number_tag
 
+  // waitgroup
+  // [1 byte tag, 4 bytes waitgroup idx,
+  //  2 bytes #children, 1 byte unused]
+  // followed by the internal counter, one word
+  // note: #children is 0
+
+  heap_allocate_Waitgroup = (): number => {
+    const waitgroup_address = this.heap_allocate(Waitgroup_tag, 2)
+    this.heap_set(waitgroup_address + 1, 0)
+    this.heap_set_4_bytes_at_offset(waitgroup_address, 1, globalState.WAITGROUPS_COUNT)
+    globalState.WAITGROUPS_COUNT++
+    return waitgroup_address
+  }
+
+  heap_get_waitgroup_idx = (address: number): number => this.heap_get_4_bytes_at_offset(address, 1)
+
+  is_Waitgroup = (address: number): boolean => this.heap_get_tag(address) === Waitgroup_tag
+
   // channel
   // [1 byte tag, 4 bytes channel idx,
   //  2 bytes #children, 1 byte unused]
   // followed by the counter
   // followed by the capacity
   // CHANNEL TYPES: 0 = unbuffered, 1 = buffered, 2 = mutex
+  // note: #children is 0
   TYPE_OFFSET: number = 7
   heap_allocate_Channel = (
     capacity: number,
     type: number,
     elemType: string,
-    idx: number,
+    idx: number
   ): number => {
     const address = this.heap_allocate(Channel_tag, 3)
     this.heap_set_4_bytes_at_offset(address, 1, idx)
 
     this.heap_set_channel_type(address, type)
     // mutex start counter at 1
-    const initialCounter = type === 2 ? 1 : 0;
+    const initialCounter = type === 2 ? 1 : 0
     this.heap_set_channel_counter(address, initialCounter)
     this.heap_set_channel_capacity(address, capacity)
     return address
@@ -263,13 +283,15 @@ export class Heap {
 
   heap_get_channel_capacity = (address: number): number => this.heap_get_child(address, 1)
 
-  heap_get_channel_type = (address: number): number => this.heap_get_byte_at_offset(address, this.TYPE_OFFSET)
+  heap_get_channel_type = (address: number): number =>
+    this.heap_get_byte_at_offset(address, this.TYPE_OFFSET)
 
   heap_set_channel_counter = (address: number, val: number) => this.heap_set_child(address, 0, val)
 
   heap_set_channel_capacity = (address: number, val: number) => this.heap_set_child(address, 1, val)
 
-  heap_set_channel_type = (address: number, type: number) => this.heap_set_byte_at_offset(address, this.TYPE_OFFSET, type)
+  heap_set_channel_type = (address: number, type: number) =>
+    this.heap_set_byte_at_offset(address, this.TYPE_OFFSET, type)
 
   is_Channel = (address: number): boolean => this.heap_get_tag(address) === Channel_tag
 
@@ -336,7 +358,11 @@ export class Heap {
   }
 
   private heap_get_number_of_children(address: number): number {
-    return this.heap_get_tag(address) === Number_tag ? 0 : this.heap_get_size(address) - 1
+    if (new Set([Number_tag, Waitgroup_tag, Channel_tag]).has(this.heap_get_tag(address))) {
+      return 0
+    }
+
+    return this.heap_get_size(address) - 1
   }
 
   private heap_set_byte_at_offset(address: number, offset: number, value: number): void {
@@ -390,7 +416,7 @@ export class Heap {
       this.mark(roots[i])
     }
     // rest of the threads
-    for(const thread of globalState.THREADQUEUE) {
+    for (const thread of globalState.THREADQUEUE) {
       // no allocating
       roots = [...thread.OS, thread.E, ...thread.RTS]
       for (let i = 0; i < roots.length; i++) {
@@ -399,21 +425,29 @@ export class Heap {
     }
 
     // blocked threads
-    for(const channel of globalState.CHANNELARRAY) {
-      for(const thread of channel.getRecvQueue()) {
+    for (const channel of globalState.CHANNELARRAY) {
+      for (const thread of channel.getRecvQueue()) {
         // no allocating
         roots = [...thread.OS, thread.E, ...thread.RTS]
         for (let i = 0; i < roots.length; i++) {
           this.mark(roots[i])
         }
       }
-      for(const thread of channel.getSendQueue()) {
+      for (const thread of channel.getSendQueue()) {
         // no allocating
         roots = [...thread.OS, thread.E, ...thread.RTS]
         for (let i = 0; i < roots.length; i++) {
           this.mark(roots[i])
         }
-      } 
+      }
+    }
+    for (const key in globalState.BLOCKEDQUEUE) {
+      for (const thread of globalState.BLOCKEDQUEUE[key]) {
+        roots = [...thread.OS, thread.E, ...thread.RTS]
+        for (let i = 0; i < roots.length; i++) {
+          this.mark(roots[i])
+        }
+      }
     }
 
     this.sweep()

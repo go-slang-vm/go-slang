@@ -8,7 +8,6 @@ export class Thread {
   sleepEndTime: number // denotes the time that the thread will sleep until (inclusive)
   isMainThread: boolean
 
-  // sleepEndTime is not in the constructor because it should only be updated in the sleep() builtin function
   constructor(
     OS: number[],
     E: number,
@@ -16,6 +15,7 @@ export class Thread {
     PC: number,
     wakeTime: number,
     sleepStartTime: number,
+    sleepEndTime: number,
     isMainThread: boolean = false
   ) {
     this.OS = OS
@@ -24,6 +24,7 @@ export class Thread {
     this.PC = PC
     this.wakeTime = wakeTime
     this.sleepStartTime = sleepStartTime
+    this.sleepEndTime = sleepEndTime
     this.isMainThread = isMainThread
   }
 }

@@ -20,9 +20,7 @@ describe('Runner tests', () => {
         }
         return y
       }`
-
     const result = await goRunner(code, createContext())
-
     boilerplateAssert(result, 1)
   })
   test('variable declaration in a new block scope 2', async () => {
@@ -34,9 +32,7 @@ describe('Runner tests', () => {
           return y
         }
       }`
-
     const result = await goRunner(code, createContext())
-
     boilerplateAssert(result, 2)
   })
   test('function', async () => {
@@ -44,18 +40,14 @@ describe('Runner tests', () => {
     func g(x, y int) {
       return x - y
     }
-
     func f(x, y int) {
       return g(x, y)
     }
-
     func main() {
       result int := f(33, 22)
       return result
     }`
-
     const result = await goRunner(code, createContext())
-
     boilerplateAssert(result, 11)
   })
   test('function 2', async () => {
@@ -70,7 +62,6 @@ describe('Runner tests', () => {
         return x
       }`
     const result = await goRunner(code, createContext())
-
     boilerplateAssert(result, 1)
   })
   test('function 3', async () => {
@@ -86,7 +77,6 @@ describe('Runner tests', () => {
         return x
       }`
     const result = await goRunner(code, createContext())
-
     boilerplateAssert(result, 0)
   })
   test('factorial function (recursion) with memory management', async () => {
@@ -104,12 +94,9 @@ describe('Runner tests', () => {
     func main() (int) {
       return fact(5)
     }`
-
     const result = await goRunner(code, createContext(), 1200)
-
     boilerplateAssert(result, 120)
   })
-
   test('while loop', async () => {
     const code = `
       func main() (int) {
@@ -122,7 +109,6 @@ describe('Runner tests', () => {
         return y
       }`
     const result = await goRunner(code, createContext())
-
     boilerplateAssert(result, 55)
   })
   test('while loop 2', async () => {
@@ -142,7 +128,6 @@ describe('Runner tests', () => {
         return x
       }`
     const result = await goRunner(code, createContext())
-
     boilerplateAssert(result, 990100)
   })
   test('if statement with nesting and empty else', async () => {
@@ -161,7 +146,6 @@ describe('Runner tests', () => {
         return x
       }`
     const result = await goRunner(code, createContext())
-
     boilerplateAssert(result, 20)
   })
   test('empty return', async () => {
@@ -179,7 +163,6 @@ describe('Runner tests', () => {
         }
       }`
     const result = await goRunner(code, createContext())
-
     boilerplateAssert(result, undefined)
   })
   test('string', async () => {
@@ -189,7 +172,6 @@ describe('Runner tests', () => {
         return x
       }`
     const result = await goRunner(code, createContext())
-
     boilerplateAssert(result, 'this is a string')
   })
   test('string 2', async () => {
@@ -198,7 +180,6 @@ describe('Runner tests', () => {
         return "aaa" + "bbb"
       }`
     const result = await goRunner(code, createContext())
-
     boilerplateAssert(result, 'aaabbb')
   })
   test('go statement', async () => {
@@ -212,7 +193,6 @@ describe('Runner tests', () => {
         return x
       }`
     const result = await goRunner(code, createContext())
-
     boilerplateAssert(result, 0)
   })
   test('go statement 2', async () => {
@@ -227,7 +207,6 @@ describe('Runner tests', () => {
         sleep(20)
       }`
     const result = await goRunner(code, createContext())
-
     boilerplateAssert(result, undefined)
   })
   test('go statement 3', async () => {
@@ -243,7 +222,6 @@ describe('Runner tests', () => {
         return x
       }`
     const result = await goRunner(code, createContext())
-
     boilerplateAssert(result, 0)
   })
   test('go statement 4', async () => {
@@ -254,10 +232,8 @@ describe('Runner tests', () => {
       }(1);
     }`
     const result = await goRunner(code, createContext())
-
     boilerplateAssert(result, undefined)
   })
-
   // this fails
   test('basic buffered channel test', async () => {
     const code = `
@@ -283,7 +259,6 @@ describe('Runner tests', () => {
     const result = await goRunner(code, createContext())
     boilerplateAssert(result, undefined)
   })
-
   // but this passes
   test('basic buffered channel test', async () => {
     const code = `
@@ -298,19 +273,18 @@ describe('Runner tests', () => {
       go inc(input)
       go inc(input)
       go inc(input)
-      go inc(input) 
+      go inc(input)
       i = 0
       for i < 5 {
         input <- i
         i=i+1
       }
-      sleep(500000) 
+      sleep(500000)
     }
     `
     const result = await goRunner(code, createContext())
     boilerplateAssert(result, undefined)
   })
-
   test('go call in loop buffered channels', async () => {
     const code = `
     func inc(x int) {
@@ -329,23 +303,22 @@ describe('Runner tests', () => {
     const result = await goRunner(code, createContext())
     boilerplateAssert(result, undefined)
   })
-
   test('test buffered channel deadlock detection', async () => {
     const code = `
     func inc() {
       x int := 1
       Println(x)
     }
-    
     func main() {
       c chan int := make(chan int, 1)
       go inc()
       c <- 1
       c <- 2
     }`
-    expect(()=>goRunner(code, createContext())).rejects.toThrow("fatal error: all goroutines are asleep - deadlock!")
+    expect(() => goRunner(code, createContext())).rejects.toThrow(
+      'fatal error: all goroutines are asleep - deadlock!'
+    )
   })
-
   test('go call in loop unbuffered', async () => {
     const code = `
     func inc(output chan int) {
@@ -369,43 +342,38 @@ describe('Runner tests', () => {
     const result = await goRunner(code, createContext())
     boilerplateAssert(result, undefined)
   })
-
   // should print { value: 'Hello World' }
-  test("unbuffered channels", async () => {
+  test('unbuffered channels', async () => {
     const code = `
       func hello(output chan string) {
         output <- "Hello World"
       }
-
       func main() {
         input chan string := make(chan string)
         go hello(input)
         text string := <-input
         Println(text)
-      }`;
-      const result = await goRunner(code, createContext())
+      }`
+    const result = await goRunner(code, createContext())
     boilerplateAssert(result, undefined)
-  });
-
-  
-  test("unbuffered channels deadlock detection", async () => {
+  })
+  test('unbuffered channels deadlock detection', async () => {
     const code = `
       func hello(output chan string) {
         output <- "Hello World"
       }
-
       func main() {
         input chan string := make(chan string)
         go hello(input)
         <-input
         text string := <-input
         Println(text)
-      }`;
-      expect(()=>goRunner(code, createContext())).rejects.toThrow("fatal error: all goroutines are asleep - deadlock!")
-  });
-
-  // should print { value: 7 }
-  test("basic rel ops test", async() => {
+      }`
+    expect(() => goRunner(code, createContext())).rejects.toThrow(
+      'fatal error: all goroutines are asleep - deadlock!'
+    )
+  })
+  test('basic rel ops test', async () => {
     const code = `
     func main() {
       x int := 1
@@ -427,46 +395,59 @@ describe('Runner tests', () => {
       if x < 10 {
         x = x + 1
       }
-      Println(x)
+      return x
     }`
     const result = await goRunner(code, createContext())
-    boilerplateAssert(result, undefined)
+    boilerplateAssert(result, 7)
   })
-
-  // should print { value: 1 }
-  test("basic bin ops test", async() => {
+  test('basic bin ops test', async () => {
     const code = `
     func main() {
       x int := 1
-      Println(x + x - 4 * 3 / 2 % 5)
+      return x + x - 4 * 3 / 2 % 5
     }`
     const result = await goRunner(code, createContext())
-    boilerplateAssert(result, undefined)
+    boilerplateAssert(result, 1)
   })
-
-  // should print { value: 4 }
-  test("basic bin op precedence test should print 4 instead of 6", async() => {
+  test('basic bin op precedence test should print 4 instead of 6', async () => {
     const code = `
     func main() {
       x int := 1
-      Println(x + x * 3)
+      return x + x * 3
     }`
     const result = await goRunner(code, createContext())
-    boilerplateAssert(result, undefined)
+    boilerplateAssert(result, 4)
   })
-
-  // should print { value: 3 }
-  test("basic bin op precedence test should print 3 instead of 2", async() => {
+  test('basic bin op precedence test should print 3 instead of 2', async () => {
     const code = `
     func main() {
       x int := 2
-      Println(x + x / 2)
+      return x + x / 2
     }`
     const result = await goRunner(code, createContext())
-    boilerplateAssert(result, undefined)
+    boilerplateAssert(result, 3)
   })
-
-  test("basic mutex test", async() => {
+  test('sleep', async () => {
+    const code = `
+    func worker(id int) {
+      sleep(500)
+      return id * 2
+    }
+    func main() {
+      res int := 0
+      i int := 0
+      for i < 3 {
+        i = i + 1
+        go func() {
+          res = res + worker(i)
+        }()
+      }
+      return res
+    }`
+    const result = await goRunner(code, createContext())
+    boilerplateAssert(result, 0)
+  })
+  test('basic mutex test', async () => {
     const code = `
     func main() {
       var x Mutex = mutex
@@ -477,8 +458,7 @@ describe('Runner tests', () => {
     const result = await goRunner(code, createContext())
     boilerplateAssert(result, undefined)
   })
-
-  test("basic mutex test unlocking unlocked channel should throw an error", async() => {
+  test('basic mutex test unlocking unlocked channel should throw an error', async () => {
     const code = `
     func main() {
       var x Mutex = mutex
@@ -487,10 +467,9 @@ describe('Runner tests', () => {
       Unlock(x)
       Unlock(b)
     }`
-    expect(()=>goRunner(code, createContext())).rejects.toThrow("unlock of unlocked mutex")
+    expect(() => goRunner(code, createContext())).rejects.toThrow('unlock of unlocked mutex')
   })
-
-  test("basic mutex test on other go routines blocks and deadlocks", async() => {
+  test('basic mutex test on other go routines blocks and deadlocks', async () => {
     const code = `
     func inc(x Mutex, c chan int) {
       Lock(x)
@@ -506,10 +485,11 @@ describe('Runner tests', () => {
       c <- 1
       Unlock(x)
     }`
-    expect(()=>goRunner(code, createContext())).rejects.toThrow("fatal error: all goroutines are asleep - deadlock!")
+    expect(() => goRunner(code, createContext())).rejects.toThrow(
+      'fatal error: all goroutines are asleep - deadlock!'
+    )
   })
-
-  test("basic mutex test on other go routines blocks no deadlocks", async() => {
+  test('basic mutex test on other go routines blocks no deadlocks', async () => {
     const code = `
     func inc(x Mutex, c chan int) {
       Lock(x)
@@ -534,7 +514,7 @@ describe('Runner tests', () => {
   })
 
   // should print { value: 1 }
-  test("basic recursive cycle present should not throw", async() => {
+  test('basic recursive cycle present should not throw', async () => {
     const code = `
     func recurse1(o int) int {
       if o == 0 {
@@ -542,23 +522,23 @@ describe('Runner tests', () => {
       }
       return recurse2(o - 1)
     }
-    
+
     var x int = recurse1(4)
-    
+
     func recurse2(t int) int {
       return recurse1(t - 1)
     }
     func main() {
       Println(x)
     }
-    
+
     var y int = 1
-      `;
+      `
     const result = await goRunner(code, createContext())
     boilerplateAssert(result, undefined)
   })
 
-  test("basic preprocessor test 4 declaration with reordering in func", async() => {
+  test('basic preprocessor test 4 declaration with reordering in func', async () => {
     const code = `
     var x int = inc()
     func inc() {
@@ -568,8 +548,187 @@ describe('Runner tests', () => {
       sz int :=1
     }
     var y int = 3
-    `;
+    `
     const result = await goRunner(code, createContext())
     boilerplateAssert(result, undefined)
+  })
+  test('wait - syntax testing', async () => {
+    const code = `
+    func main() {
+      var x WaitGroup = waitgroup
+      Add(x, 1)
+      Done(x)
+      Wait(x)
+    }`
+    const result = await goRunner(code, createContext())
+    boilerplateAssert(result, undefined)
+  })
+  test('wait - concurrent go routines', async () => {
+    const code = `
+    func worker(id int) {
+      sleep(500)
+      return id * 2
+    }
+    func main() {
+      var wg WaitGroup = waitgroup
+      res int := 0
+      i int := 0
+      for i < 3 {
+        i = i + 1
+        Add(wg, 1)
+        go func() {
+          res = res + worker(i)
+          Done(wg)
+        }()
+        // before starting the next go routine, we wait for the previous one to finish
+        Wait(wg)
+      }
+      return res
+    }`
+    const result = await goRunner(code, createContext(), 3000)
+    boilerplateAssert(result, 12)
+  })
+  test('wait - test Add(wg, 2) functionality', async () => {
+    const code = `
+    func main() {
+      var wg WaitGroup = waitgroup
+      x int := 0
+      y int := 0
+      Add(wg, 2)
+      go func() {
+        sleep(500)
+        x = 1
+        Done(wg)
+      }()
+      go func() {
+        sleep(500)
+        y = 2
+        Done(wg)
+      }()
+
+      Wait(wg)
+
+      return x + y
+    }`
+    const result = await goRunner(code, createContext(), 3000)
+    boilerplateAssert(result, 3)
+  })
+  test('wait - concurrent go routines WITHOUT WaitGroup', async () => {
+    const code = `
+    func main() {
+      x int := 0
+      y int := 0
+
+      go func() {
+        sleep(500)
+        x = 1
+      }()
+      go func() {
+        sleep(500)
+        y = 2
+      }()
+
+      return x + y
+    }`
+    const result = await goRunner(code, createContext(), 3000)
+    boilerplateAssert(result, 0)
+  })
+  test('wait - negative waitgroup counter', async () => {
+    const code = `
+    func main() {
+      var wg WaitGroup = waitgroup
+      x int := 0
+      y int := 0
+      Add(wg, 1)
+      go func() {
+        Done(wg)
+        Done(wg)
+        x = 1
+      }()
+      sleep(500)
+      Wait(wg)
+
+      return x + y
+    }`
+
+    expect(() => goRunner(code, createContext())).rejects.toThrow('negative waitgroup counter')
+  })
+  test('wait - deadlock testing', async () => {
+    const code = `
+    func main() {
+      var wg WaitGroup = waitgroup
+      x int := 0
+      y int := 0
+      Add(wg, 2)
+      go func() {
+        x = 1
+        Done(wg)
+      }()
+      sleep(500)
+      Wait(wg)
+
+      return x + y
+    }`
+    expect(() => goRunner(code, createContext())).rejects.toThrow(
+      'fatal error: all goroutines are asleep - deadlock!'
+    )
+  })
+  test('wait - main thread should still complete even though go routines deadlock', async () => {
+    const code = `
+    func main() {
+      var wg1 WaitGroup = waitgroup
+      var wg2 WaitGroup = waitgroup
+      
+      x int := 0
+      y int := 0
+      go func() {
+        Add(wg1, 1)
+        sleep(500)
+        x = 1
+        Wait(wg1)
+        Done(wg2)
+      }()
+
+      go func() {
+        Add(wg2, 1)
+        sleep(500)
+        y = 2
+        Wait(wg2)
+        Done(wg1)
+      }()
+      
+
+      return x + y
+    }`
+
+    const result = await goRunner(code, createContext(), 3000)
+    boilerplateAssert(result, 0)
+  })
+  test('wait - deadlock testing with multiple waitgroups', async () => {
+    const code = `
+    func main() {
+      var wg1 WaitGroup = waitgroup
+      var wg2 WaitGroup = waitgroup
+      
+      x int := 0
+      y int := 0
+      go func() {
+        Add(wg1, 1)
+        x = 1
+        Wait(wg1)
+        Done(wg2)
+      }()
+
+      Add(wg2, 1)
+      y = 2
+      Wait(wg2)
+      Done(wg1)
+
+      return x + y
+    }`
+
+    expect(() => goRunner(code, createContext())).rejects.toThrow(
+      'fatal error: all goroutines are asleep - deadlock!'
+    )
   })
 })
