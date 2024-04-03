@@ -542,15 +542,7 @@ export class VM {
         this.curThread.PC--
         // add current thread to the blocked queue of the current waitgroup
         globalState.BLOCKEDQUEUE[wg_index].add(this.curThread)
-        let numBlockedThreads = 0
-        for (const key in globalState.BLOCKEDQUEUE) {
-          numBlockedThreads += globalState.BLOCKEDQUEUE[key].size
-        }
-        // '+1' is to account for the current thread that we have just added to the blocked queue
-        // in other words, the total number of threads will always be the number of threads in the thread queue + 1
-        if (numBlockedThreads === globalState.THREADQUEUE.length + 1) {
-          throw new Error('error in waitgroup_wait: deadlock detected')
-        }
+
         this.loadNextThread()
       } else if (curCount < 0) {
         throw new Error('negative waitgroup counter')
