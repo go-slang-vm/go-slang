@@ -441,6 +441,14 @@ export class Heap {
         }
       }
     }
+    for (const key in globalState.BLOCKEDQUEUE) {
+      for (const thread of globalState.BLOCKEDQUEUE[key]) {
+        roots = [...thread.OS, thread.E, ...thread.RTS]
+        for (let i = 0; i < roots.length; i++) {
+          this.mark(roots[i])
+        }
+      }
+    }
 
     this.sweep()
 
