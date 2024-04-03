@@ -1,12 +1,12 @@
 // type_comp has the typing
 
 import { isArray } from "lodash"
-import { ASTNode, BinOpNode, BlockNode, FuncAppNode, FuncDeclNode, IfStmtNode, LiteralNode, LogicalNode, NameNode, ReturnStmtNode, SequenceNode, Tag, UnOpNode, VarDeclNode } from "../ast/AST"
+import { ASTNode, AssignNode, BinOpNode, BlockNode, ForStmtNode, FuncAppNode, FuncDeclNode, IfStmtNode, LiteralNode, LogicalNode, NameNode, ReturnStmtNode, SequenceNode, Tag, UnOpNode, VarDeclNode } from "../ast/AST"
 import { is_boolean, is_number, is_string, is_undefined } from "../vm/utils"
 import { equal_array_types, equal_type, extend_type_environment, global_type_environment, lookup_type, unparse_type, unparse_types } from "./typeenvironment"
 
 // TODO: STILL MISSING GO MAKE ADD DONE LOCK SEND RECV
-// TODO: STILL HAVE NOT IMPLEMENTED ASSIGNMENT STMTS
+// TODO: STILL HAVE NOT IMPLEMENTED ASSIGNMENT STMTS AND FOR STMTS
 
 // functions for each component tag
 const type_comp = {
@@ -158,6 +158,40 @@ const type_comp = {
 
             return "undefined"
         },
+    assmt:
+    (comp: AssignNode, te: any) => {
+        const declared_types = []
+        for(const sym of comp.syms.IDENTS) {
+            declared_types.push(lookup_type(sym, te))
+        }
+        const actual_types = [];
+        for (const assgn of comp.exprs.list) {
+            const res = type(assgn, te)
+            // console.log("assgn: "+ JSON.stringify(assgn) + " res: " + res);
+            if (isArray(res)) {
+                // type of funcApp can be an array
+                actual_types.push(...res)
+            } else {
+                actual_types.push(res)
+            }
+        }
+        // check length
+        if (comp.syms.IDENTS.length > actual_types.length) {
+            throw new Error("Too few expressions on the RHS!")
+        } else if (comp.syms.IDENTS.length < actual_types.length) {
+            throw new Error("Too many expressions on the RHS!")
+        }
+
+        for(let i = 0; i < actual_types.length; ++i) {
+            if (!equal_type(actual_types[i], declared_types[i])) {
+                throw new Error("type error in variable declaration; " +
+                    "declared type: " +
+                    unparse_type(declared_types[i]) + ", " +
+                    "actual type: " +
+                    unparse_type(actual_types[i]))
+            } 
+        }
+    },
     // we ignore the RHS    
     mut:
         (comp: VarDeclNode, te: any) => { },
@@ -310,6 +344,21 @@ const type_fun_body_stmt = {
             } else {
                 throw new Error("expected return types " + unparse_types(func_ctx.retType) + " but got " + unparse_types(returnTypes) + " in function " + func_ctx.name)
             }
+        },
+    while:
+        (comp: ForStmtNode, te: any, func_ctx: any) => {
+            // check this with Go specs
+            // predicate has to be a bool value
+            const t0 = type_fun_body(comp.pred, te, func_ctx)
+            if ((isArray(t0) && t0.length != 1 && t0[0] !== "bool") || (is_string(t0) && t0 !== "bool"))
+                throw new Error("expected predicate type: bool, " +
+                    "actual predicate type: " +
+                    unparse_type(t0))
+            
+            // according to Go Spec, if the loop condition is present, this statement is not terminating so since we enforce the loop condition this statement is not terminating
+            // so we just need to type check the body and do nothing with the result and return undefined
+            type_fun_body(comp.body, te, func_ctx)
+            return "undefined"
         }
 }
 
