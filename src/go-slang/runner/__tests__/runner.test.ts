@@ -522,16 +522,16 @@ describe('Runner tests', () => {
       }
       return recurse2(o - 1)
     }
-    
+
     var x int = recurse1(4)
-    
+
     func recurse2(t int) int {
       return recurse1(t - 1)
     }
     func main() {
       Println(x)
     }
-    
+
     var y int = 1
       `
     const result = await goRunner(code, createContext())
@@ -670,8 +670,39 @@ describe('Runner tests', () => {
       return x + y
     }`
     expect(() => goRunner(code, createContext())).rejects.toThrow(
-      'error in waitgroup_wait: deadlock detected'
+      'fatal error: all goroutines are asleep - deadlock!'
     )
+  })
+  test('wait - main thread should still complete even though go routines deadlock', async () => {
+    const code = `
+    func main() {
+      var wg1 WaitGroup = waitgroup
+      var wg2 WaitGroup = waitgroup
+      
+      x int := 0
+      y int := 0
+      go func() {
+        Add(wg1, 1)
+        sleep(500)
+        x = 1
+        Wait(wg1)
+        Done(wg2)
+      }()
+
+      go func() {
+        Add(wg2, 1)
+        sleep(500)
+        y = 2
+        Wait(wg2)
+        Done(wg1)
+      }()
+      
+
+      return x + y
+    }`
+
+    const result = await goRunner(code, createContext(), 3000)
+    boilerplateAssert(result, 0)
   })
   test('wait - deadlock testing with multiple waitgroups', async () => {
     const code = `
@@ -688,20 +719,16 @@ describe('Runner tests', () => {
         Done(wg2)
       }()
 
-      x int := 0
-      y int := 0
-      go func() {
-        Add(wg2, 1)
-        y = 2
-        Wait(wg2)
-        Done(wg1)
-      }()
-      
+      Add(wg2, 1)
+      y = 2
+      Wait(wg2)
+      Done(wg1)
 
       return x + y
     }`
+
     expect(() => goRunner(code, createContext())).rejects.toThrow(
-      'error in waitgroup_wait: deadlock detected'
+      'fatal error: all goroutines are asleep - deadlock!'
     )
   })
 })
