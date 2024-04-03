@@ -16,13 +16,13 @@ const type_comp = {
     lit:
         (comp: LiteralNode, te: any) => {
             //console.log("val: " + comp.val + " typeof: " + typeof comp.val);
-            if(is_number(comp.val)) {
-                return  Number.isInteger(comp.val) ? "int" : "float"
-            } else if(is_boolean(comp.val)) {
+            if (is_number(comp.val)) {
+                return Number.isInteger(comp.val) ? "int" : "float"
+            } else if (is_boolean(comp.val)) {
                 return "bool"
             } else if (is_string(comp.val)) {
                 return "string"
-            } else if(is_undefined(comp.val)){
+            } else if (is_undefined(comp.val)) {
                 return "undefined"
             } else {
                 throw new Error("unknown literal: " + comp.val)
@@ -93,10 +93,10 @@ const type_comp = {
                 comp.type.paramTypes,
                 te)
             const body = type_fun_body(comp.body, extended_te, { retType: comp.type.returnTypes, name: comp.sym })
-            if(isArray(body) && !equal_array_types(body, comp.type.returnTypes)) {
+            if (isArray(body) && !equal_array_types(body, comp.type.returnTypes)) {
                 throw new Error("type error in function declaration; expected return type: " + unparse_types(comp.type.returnTypes) + " actual return type: " + unparse_types(body))
-            } else if(!isArray(body) && comp.type.returnTypes.length != 0) {
-                throw new Error("type error in function declaration; expected return type: " + unparse_types(comp.type.returnTypes) + " actual return type: " + unparse_type(body)) 
+            } else if (!isArray(body) && comp.type.returnTypes.length != 0) {
+                throw new Error("type error in function declaration; expected return type: " + unparse_types(comp.type.returnTypes) + " actual return type: " + unparse_type(body))
             }
             return "undefined"
         },
@@ -110,8 +110,8 @@ const type_comp = {
                     "actual type: " + unparse_type(fun_type))
             // paramTypes is a list of types                          
             const expected_arg_types = fun_type.paramTypes
-            const actual_arg_types = comp.args.map(e => type(e, te)).map(e=> (isArray(e) && e.length ==1) ? e[0] : e)
-            
+            const actual_arg_types = comp.args.map(e => type(e, te)).map(e => (isArray(e) && e.length == 1) ? e[0] : e)
+
             //console.log(actual_arg_types)
             if (equal_array_types(actual_arg_types, expected_arg_types)) {
                 //console.log("ret type for sym: "+ (comp.fun as NameNode).sym + " " + fun_type.returnTypes)
@@ -130,7 +130,7 @@ const type_comp = {
             const actual_types = [];
             for (const assgn of comp.assignments.list) {
                 const res = type(assgn, te)
-                console.log("assgn: "+ JSON.stringify(assgn) + " res: " + res);
+                console.log("assgn: " + JSON.stringify(assgn) + " res: " + res);
                 if (isArray(res)) {
                     // type of funcApp can be an array
                     actual_types.push(...res)
@@ -159,39 +159,39 @@ const type_comp = {
             return "undefined"
         },
     assmt:
-    (comp: AssignNode, te: any) => {
-        const declared_types = []
-        for(const sym of comp.syms.IDENTS) {
-            declared_types.push(lookup_type(sym, te))
-        }
-        const actual_types = [];
-        for (const assgn of comp.exprs.list) {
-            const res = type(assgn, te)
-            // console.log("assgn: "+ JSON.stringify(assgn) + " res: " + res);
-            if (isArray(res)) {
-                // type of funcApp can be an array
-                actual_types.push(...res)
-            } else {
-                actual_types.push(res)
+        (comp: AssignNode, te: any) => {
+            const declared_types = []
+            for (const sym of comp.syms.IDENTS) {
+                declared_types.push(lookup_type(sym, te))
             }
-        }
-        // check length
-        if (comp.syms.IDENTS.length > actual_types.length) {
-            throw new Error("Too few expressions on the RHS!")
-        } else if (comp.syms.IDENTS.length < actual_types.length) {
-            throw new Error("Too many expressions on the RHS!")
-        }
+            const actual_types = [];
+            for (const assgn of comp.exprs.list) {
+                const res = type(assgn, te)
+                // console.log("assgn: "+ JSON.stringify(assgn) + " res: " + res);
+                if (isArray(res)) {
+                    // type of funcApp can be an array
+                    actual_types.push(...res)
+                } else {
+                    actual_types.push(res)
+                }
+            }
+            // check length
+            if (comp.syms.IDENTS.length > actual_types.length) {
+                throw new Error("Too few expressions on the RHS!")
+            } else if (comp.syms.IDENTS.length < actual_types.length) {
+                throw new Error("Too many expressions on the RHS!")
+            }
 
-        for(let i = 0; i < actual_types.length; ++i) {
-            if (!equal_type(actual_types[i], declared_types[i])) {
-                throw new Error("type error in variable declaration; " +
-                    "declared type: " +
-                    unparse_type(declared_types[i]) + ", " +
-                    "actual type: " +
-                    unparse_type(actual_types[i]))
-            } 
-        }
-    },
+            for (let i = 0; i < actual_types.length; ++i) {
+                if (!equal_type(actual_types[i], declared_types[i])) {
+                    throw new Error("type error in variable declaration; " +
+                        "declared type: " +
+                        unparse_type(declared_types[i]) + ", " +
+                        "actual type: " +
+                        unparse_type(actual_types[i]))
+                }
+            }
+        },
     // we ignore the RHS    
     mut:
         (comp: VarDeclNode, te: any) => { },
@@ -262,11 +262,11 @@ const type_fun_body_stmt = {
                     "actual predicate type: " +
                     unparse_type(t0))
             const t1 = type_fun_body(comp.cons, te, func_ctx)
-            
-            if(comp.alt.tag === Tag.BLOCK) {
-                if((comp.alt as BlockNode).body.tag === "seq") {
+
+            if (comp.alt.tag === Tag.BLOCK) {
+                if ((comp.alt as BlockNode).body.tag === "seq") {
                     // only have if block then this is not a terminating statement
-                    if((((comp.alt as BlockNode).body) as SequenceNode).stmts.length == 0) {
+                    if ((((comp.alt as BlockNode).body) as SequenceNode).stmts.length == 0) {
                         return "undefined"
                     }
                 }
@@ -286,8 +286,8 @@ const type_fun_body_stmt = {
                 const stmt = comp.stmts[i];
                 const stmt_type = type_fun_body(stmt, te, func_ctx)
                 // return values can only be arrays or "undefined" in functions
-                if (!isArray(stmt_type)) {   
-                } else if(i == comp.stmts.length - 1) {
+                if (!isArray(stmt_type)) {
+                } else if (i == comp.stmts.length - 1) {
                     // only if final stmt is terminating then this seq is terminating
                     return stmt_type
                 }
@@ -339,7 +339,7 @@ const type_fun_body_stmt = {
                 }
             }
 
-            if(equal_array_types(func_ctx.retType, returnTypes)) {
+            if (equal_array_types(func_ctx.retType, returnTypes)) {
                 return returnTypes
             } else {
                 throw new Error("expected return types " + unparse_types(func_ctx.retType) + " but got " + unparse_types(returnTypes) + " in function " + func_ctx.name)
@@ -354,7 +354,7 @@ const type_fun_body_stmt = {
                 throw new Error("expected predicate type: bool, " +
                     "actual predicate type: " +
                     unparse_type(t0))
-            
+
             // according to Go Spec, if the loop condition is present, this statement is not terminating so since we enforce the loop condition this statement is not terminating
             // so we just need to type check the body and do nothing with the result and return undefined
             type_fun_body(comp.body, te, func_ctx)
