@@ -27,6 +27,10 @@ const binary_bool_type =
 const unary_bool_type =
     { tag: "fun", paramTypes: ["bool"], 
     returnTypes: ["bool"] }
+// or special case sleep and println? or return empty?
+const unary_arith_void_type = 
+    { tag: "fun", paramTypes: ["int"], 
+    returnTypes: [] }
 
 // what else should i include in this? for Go?
 // Println can take anything
@@ -57,7 +61,8 @@ const global_type_frame = {
     "&&": binary_bool_type,
     "||": binary_bool_type,
     "-unary": unary_arith_type,
-    "!": unary_bool_type
+    "!": unary_bool_type,
+    "sleep": unary_arith_void_type,
 }
 
 export type TypeFrame = {} | null
