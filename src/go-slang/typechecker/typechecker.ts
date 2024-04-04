@@ -1,7 +1,7 @@
 // type_comp has the typing
 
 import { isArray } from "lodash"
-import { ASTNode, AssignNode, BinOpNode, BlockNode, ForStmtNode, FuncAppNode, FuncDeclNode, FunctionLiteralNode, GoStmtNode, IfStmtNode, LiteralNode, LogicalNode, MakeAppNode, NameNode, RecvExprNode, ReturnStmtNode, SequenceNode, Tag, UnOpNode, VarDeclNode } from "../ast/AST"
+import { ASTNode, AssignNode, BinOpNode, BlockNode, ForStmtNode, FuncAppNode, FuncDeclNode, FunctionLiteralNode, GoStmtNode, IfStmtNode, LiteralNode, LogicalNode, MakeAppNode, NameNode, RecvExprNode, ReturnStmtNode, SendStmtNode, SequenceNode, Tag, UnOpNode, VarDeclNode } from "../ast/AST"
 import { is_boolean, is_number, is_string, is_undefined } from "../vm/utils"
 import { equal_array_types, equal_type, extend_type_environment, global_type_environment, lookup_type, unparse_type, unparse_types } from "./typeenvironment"
 
@@ -385,25 +385,69 @@ const type_comp = {
             const res = type(comp.frst, te)
             if(isArray(res)) {
                 if(res.length != 1) {
-                    throw new Error("type error in add; expected type: chan" + " actual type: " + unparse_types(res))
+                    throw new Error("type error in chan recv; expected type: chan" + " actual type: " + unparse_types(res))
                 }
                 const resString = res[0]
                 if(resString.length < 4 || resString.substring(0, 4) !== "chan") {
-                    throw new Error("type error in add; expected type: chan" + " actual type: " + unparse_types(res))
+                    throw new Error("type error in chan recv; expected type: chan" + " actual type: " + unparse_types(res))
                 }
                 return resString.slice(5)
             }
 
             if(is_string(res)) {
                 if(res.length < 4 || res.substring(0, 4) !== "chan") {
-                    throw new Error("type error in add; expected type: chan" + " actual type: " + res)
+                    throw new Error("type error in chan recv; expected type: chan" + " actual type: " + res)
                 }
                 return res.slice(5)
             }
 
             // should never reach here
             return "undefined"
-        }
+        },
+    send:
+        (comp: SendStmtNode, te: any) => {
+            // this has to be a channel
+            const res = type(comp.frst, te)
+            let chanElemType: string | undefined = undefined;
+            if(isArray(res)) {
+                if(res.length != 1) {
+                    throw new Error("type error in chan send; expected type: chan" + ", actual type: " + unparse_types(res))
+                }
+                const resString = res[0]
+                if(resString.length < 4 || resString.substring(0, 4) !== "chan") {
+                    throw new Error("type error in chan send; expected type: chan" + ", actual type: " + unparse_types(res))
+                }
+                chanElemType = resString.slice(5)
+            }
+
+            if(is_string(res)) {
+                if(res.length < 4 || res.substring(0, 4) !== "chan") {
+                    throw new Error("type error in chan send; expected type: chan" + ", actual type: " + res)
+                }
+                chanElemType = res.slice(5)
+            }
+
+            if(chanElemType === undefined) {
+                // should never reach here
+                throw new Error("channel should be typed!")
+            }
+
+            // now we check the right hand side is the same
+            const rhsType = type(comp.scnd, te)
+            if(isArray(rhsType)) {
+               if(!equal_array_types(rhsType, [chanElemType])) {
+                throw new Error("type error in chan send; expected type: " + chanElemType +", actual type: " + unparse_types(rhsType))
+               }
+            }
+
+            if(is_string(rhsType)) {
+                if(!equal_type(rhsType, chanElemType)) {
+                 throw new Error("type error in chan send; expected type: " + chanElemType +", actual type: " + unparse_type(rhsType))
+                }
+             }
+            
+            return "undefined"
+        },
 }
 
 const type = (comp: ASTNode, te: any) =>

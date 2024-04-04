@@ -1013,7 +1013,7 @@ describe('Basic typecheck test', () => {
         }
           `
     const outputAst: ASTNode = parse(program)
-    expect(() => typecheck(outputAst)).toThrow("type error in add; expected type: chan actual type: bool")
+    expect(() => typecheck(outputAst)).toThrow("type error in chan recv; expected type: chan actual type: bool")
   });
 
   test('basic chan recv var decl correct', async () => {
@@ -1062,6 +1062,43 @@ describe('Basic typecheck test', () => {
           `
     const outputAst: ASTNode = parse(program)
     expect(() => typecheck(outputAst)).toThrow("type error in assignment; declared type: bool, actual type: int")
+  });
+
+  test('basic chan send correct', async () => {
+    const program = `
+        func main() {
+          var x chan int = make(chan int)
+          var y int = 1
+          x <- 1
+          x <- y
+        }
+          `
+    const outputAst: ASTNode = parse(program)
+    expect(() => typecheck(outputAst)).not.toThrow()
+  });
+
+  test('basic chan send wrong elem type', async () => {
+    const program = `
+        func main() {
+          var x chan int = make(chan int)
+          var y bool = false
+          x <- y
+        }
+          `
+    const outputAst: ASTNode = parse(program)
+    expect(() => typecheck(outputAst)).toThrow("type error in chan send; expected type: int, actual type: bool")
+  });
+
+  test('basic chan send not chan', async () => {
+    const program = `
+        func main() {
+          var x chan int = make(chan int)
+          var y bool = false
+          y <- y
+        }
+          `
+    const outputAst: ASTNode = parse(program)
+    expect(() => typecheck(outputAst)).toThrow("type error in chan send; expected type: chan, actual type: bool")
   });
   
 })
