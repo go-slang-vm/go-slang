@@ -140,9 +140,9 @@ const type_comp = {
             }
             // check length
             if (comp.syms.IDENTS.length > actual_types.length) {
-                throw new Error("Too few expressions on the RHS!")
+                throw new Error("Too few expressions on the RHS of variable declaration!")
             } else if (comp.syms.IDENTS.length < actual_types.length) {
-                throw new Error("Too many expressions on the RHS!")
+                throw new Error("Too many expressions on the RHS of variable declaration!")
             }
 
             for (const actType of actual_types) {
@@ -177,14 +177,14 @@ const type_comp = {
             }
             // check length
             if (comp.syms.IDENTS.length > actual_types.length) {
-                throw new Error("Too few expressions on the RHS!")
+                throw new Error("Too few expressions on the RHS of assignment!")
             } else if (comp.syms.IDENTS.length < actual_types.length) {
-                throw new Error("Too many expressions on the RHS!")
+                throw new Error("Too many expressions on the RHS of assignment!")
             }
 
             for (let i = 0; i < actual_types.length; ++i) {
                 if (!equal_type(actual_types[i], declared_types[i])) {
-                    throw new Error("type error in variable declaration; " +
+                    throw new Error("type error in assignment; " +
                         "declared type: " +
                         unparse_type(declared_types[i]) + ", " +
                         "actual type: " +
@@ -290,12 +290,14 @@ const type_fun_body_stmt = {
             // else if block present
             const t2 = type_fun_body(comp.alt, te, func_ctx)
             // terminating if both statements are return values and the same
+            // TODO: check correctness of this
             if (isArray(t1) && isArray(t2) && equal_array_types(t1, t2)) {
                 return t1
             } else {
                 return "undefined"
             }
         },
+    // TODO: see if you want to implement unreachable code detection        
     seq:
         (comp: SequenceNode, te: any, func_ctx: any) => {
             for (let i = 0; i < comp.stmts.length; ++i) {
@@ -375,6 +377,7 @@ const type_fun_body_stmt = {
                     unparse_types(t0))
                 }
             }
+
             if (is_string(t0) && t0 !== "bool") {
                 throw new Error("expected predicate type: bool, " +
                     "actual predicate type: " +
