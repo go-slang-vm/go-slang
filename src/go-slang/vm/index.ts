@@ -540,8 +540,16 @@ export class VM {
       if (curCount > 0) {
         // decrease PC by 1 to retry this instruction again later
         this.curThread.PC--
+
+        this.saveThread()
+        // after saveThread is called, the current thread context is at the back of the threadQueue
+        // pop off this thread from the threadQueue and add it to the back of the sem queue
+        // check if pop removes the last or first element
+        // should be safe cast since we just called saveThread
+        const thread = globalState.THREADQUEUE.pop() as Thread
+
         // add current thread to the blocked queue of the current waitgroup
-        globalState.BLOCKEDQUEUE[wg_index].add(this.curThread)
+        globalState.BLOCKEDQUEUE[wg_index].add(thread)
 
         this.loadNextThread()
       } else if (curCount < 0) {
