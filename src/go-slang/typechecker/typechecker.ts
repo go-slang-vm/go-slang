@@ -333,7 +333,6 @@ const type_comp = {
         },
     wait:
         (comp: FuncAppNode, te: any) => {
-            console.log(comp)
             // parser already ensures only 1 arg
             const res = type(comp.args[0], te)
             if(isArray(res)) {
@@ -349,6 +348,38 @@ const type_comp = {
             }
             return "undefined"
         },
+    add:
+        (comp: FuncAppNode, te: any) => {
+            // parser already ensures only 2 args
+            // make sure first is waitgroup
+            const res = type(comp.args[0], te)
+            if(isArray(res)) {
+                if(!equal_array_types(res, ["waitgroup"])) {
+                    throw new Error("type error in add; expected type: waitgroup" + " actual type: " + unparse_types(res))
+                }
+            }
+
+            if(is_string(res)) {
+                if(res !== "waitgroup") {
+                    throw new Error("type error in add; expected type: waitgroup" + " actual type: " + res)
+                } 
+            }
+            
+            // now make sure second is an int
+            const res2 = type(comp.args[1], te)
+            if(isArray(res2)) {
+                if(!equal_array_types(res2, ["int"])) {
+                    throw new Error("type error in add; expected type: int" + " actual type: " + unparse_types(res2))
+                }
+            }
+
+            if(is_string(res2)) {
+                if(res2 !== "int") {
+                    throw new Error("type error in add; expected type: int" + " actual type: " + res2)
+                } 
+            }
+            return "undefined"
+        }, 
 }
 
 const type = (comp: ASTNode, te: any) =>

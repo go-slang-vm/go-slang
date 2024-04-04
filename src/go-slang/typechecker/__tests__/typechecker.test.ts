@@ -953,5 +953,44 @@ describe('Basic typecheck test', () => {
     const outputAst: ASTNode = parse(program)
     expect(() => typecheck(outputAst)).toThrow("Println expects 1 arguement of any type")
   });
+
+  test('basic add test', async () => {
+    const program = `
+        
+        func main() {
+          var x WaitGroup = wg
+          var y int = 1
+          Add(x, y)
+        }
+          `
+    const outputAst: ASTNode = parse(program)
+    expect(() => typecheck(outputAst)).not.toThrow()
+  });
+
+  test('basic wrong add test not waitgroup', async () => {
+    const program = `
+        
+        func main() {
+          var x WaitGroup = wg
+          var y bool = false
+          Add(y, 1)
+        }
+          `
+    const outputAst: ASTNode = parse(program)
+    expect(() => typecheck(outputAst)).toThrow("type error in add; expected type: waitgroup actual type: bool")
+  });
+
+  test('basic wrong add test not int', async () => {
+    const program = `
+        
+        func main() {
+          var x WaitGroup = wg
+          var y bool = false
+          Add(x, y)
+        }
+          `
+    const outputAst: ASTNode = parse(program)
+    expect(() => typecheck(outputAst)).toThrow("type error in add; expected type: int actual type: bool")
+  });
   
 })
