@@ -7,6 +7,7 @@ import { equal_array_types, equal_type, extend_type_environment, global_type_env
 
 // TODO: STILL MISSING GO MAKE ADD DONE LOCK SEND RECV
 // TODO: STILL HAVE NOT IMPLEMENTED ASSIGNMENT STMTS AND FOR STMTS
+// TODO: LAMBDA NOT IMPLEMENTED
 
 // functions for each component tag
 const type_comp = {
