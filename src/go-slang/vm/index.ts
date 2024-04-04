@@ -426,24 +426,24 @@ export class VM {
       )
       // if it is a mutex, we populate it with 1 UNDEFINED
       if (instr.type === 2) {
-        globalState.CHANNELARRAY[idx].pushToItemQueue(this.heapInstance.Undefined)
+        this.heapInstance.heap_push_to_channel(addr, this.heapInstance.Undefined)
       }
       push(this.curThread.OS, addr)
     },
 
     SEND: instr => {
       //OS top should have the address of the channel... maybe change names cus might be mutex instead of channel also
-      const channel = peek(this.curThread.OS, 0)
-      if (this.heapInstance.heap_get_tag(channel) !== Channel_tag) {
+      const channelAddress = peek(this.curThread.OS, 0)
+      if (this.heapInstance.heap_get_tag(channelAddress) !== Channel_tag) {
         throw Error('calling channel operations on non channel')
       }
 
       // this is for buffered Channels
-      const counter = this.heapInstance.heap_get_channel_counter(channel)
+      const counter = this.heapInstance.heap_get_channel_counter(channelAddress)
       // counter == capacity means queue is full
-      if (this.shouldSendBlock(channel)) {
+      if (this.shouldSendBlock(channelAddress)) {
         // add myself to blocked queue for this sem
-        const semId = this.heapInstance.heap_get_channel_idx(channel)
+        const semId = this.heapInstance.heap_get_channel_idx(channelAddress)
         // note that at this point the channel and expr are still at the top of the OS
         this.addCurrentGoRoutineToBlockedQueue('send', semId)
         this.loadNextThread()
@@ -452,34 +452,35 @@ export class VM {
         this.curThread.OS.pop() //pop channel from the top
         // put val in the queue
         const val = this.curThread.OS.pop() // pop val from the top
-        const semId = this.heapInstance.heap_get_channel_idx(channel)
+        const semId = this.heapInstance.heap_get_channel_idx(channelAddress)
         // add item to the channel itemQueue
-        this.addItemToChannel(semId, val as number)
+
+        this.addItemToChannel(semId, val as number, channelAddress)
         // wake up a receiver if any else increment counter
         if (this.hasBlockedGoRoutines('recv', semId)) {
-          this.unblockOne('recv', semId)
+          this.unblockOne('recv', semId, channelAddress)
         } else {
           //increment counter
-          this.heapInstance.heap_set_channel_counter(channel, counter + 1)
+          this.heapInstance.heap_set_channel_counter(channelAddress, counter + 1)
         }
       }
     },
 
     RECV: instr => {
       //OS top should have the address of the channel
-      const channel = peek(this.curThread.OS, 0)
-      if (this.heapInstance.heap_get_tag(channel) !== Channel_tag) {
+      const channelAddress = peek(this.curThread.OS, 0)
+      if (this.heapInstance.heap_get_tag(channelAddress) !== Channel_tag) {
         throw Error('calling channel operations on non channel')
       }
 
       // this is for buffered Channels
-      const counter = this.heapInstance.heap_get_channel_counter(channel)
+      const counter = this.heapInstance.heap_get_channel_counter(channelAddress)
 
       // counter should start at 0 to indicate an empty channel
-      if (this.shouldRecvBlock(channel)) {
+      if (this.shouldRecvBlock(channelAddress)) {
         // the queue is empty
         // add myself to blocked queue for this channel
-        const semId = this.heapInstance.heap_get_channel_idx(channel)
+        const semId = this.heapInstance.heap_get_channel_idx(channelAddress)
         // note that we did PC++ in the main loop and this is fine, when we unblock from this we do not want the PC to come back here and just move on
         // note that at this point we have the channel on the top of the OS
         this.addCurrentGoRoutineToBlockedQueue('recv', semId)
@@ -491,16 +492,16 @@ export class VM {
         // wake up a sender if any else increment counter
         this.curThread.OS.pop() // pop channel from OS
         // read val from the channel
-        const semId = this.heapInstance.heap_get_channel_idx(channel)
+        const semId = this.heapInstance.heap_get_channel_idx(channelAddress)
         if (this.hasBlockedGoRoutines('send', semId)) {
-          this.unblockOne('send', semId)
+          this.unblockOne('send', semId, channelAddress)
         } else {
           // decrement counter
-          this.heapInstance.heap_set_channel_counter(channel, counter - 1)
+          this.heapInstance.heap_set_channel_counter(channelAddress, counter - 1)
         }
         // now as receivers we read from the channel
         // read val from the channel
-        const val = this.getItemFromChannel(semId)
+        const val = this.popItemFromChannel(semId, channelAddress)
         push(this.curThread.OS, val)
       }
     },
@@ -614,7 +615,7 @@ export class VM {
     }
   }
 
-  unblockOne(queue: string, idx: number) {
+  unblockOne(queue: string, idx: number, channelAddress: number) {
     let thread = undefined
     if (queue == 'send') {
       // should be safe cast as we check for non empty before this and since the instruction is atomic, it will not be swapped out for another thread
@@ -624,12 +625,12 @@ export class VM {
       const val = thread.OS.pop() // pop val from this thread's OS
 
       // add item to the channel itemQueue
-      this.addItemToChannel(idx, val as number)
+      this.addItemToChannel(idx, val as number, channelAddress)
     } else if (queue == 'recv') {
       // should be safe cast as we check for non empty before this and since the instruction is atomic, it will not be swapped out for another thread
       thread = globalState.CHANNELARRAY[idx].getRecvQueue().shift() as Thread
       // we assume that the sender that unblocks this receiver already wrote to the item queue
-      const val = this.getItemFromChannel(idx)
+      const val = this.popItemFromChannel(idx, channelAddress)
       thread.OS.pop() // pop channel from OS
       // push val on OS as the return value
       push(thread.OS, val)
@@ -648,18 +649,18 @@ export class VM {
     globalState.CHANNELARRAY.push(new Channel(idx, capacity))
   }
 
-  addItemToChannel(idx: number, val: number) {
+  addItemToChannel(idx: number, val: number, channelAddress: number) {
     if (idx >= globalState.CHANNELARRAY.length) {
       throw new Error('adding to non existent channel')
     }
-    globalState.CHANNELARRAY[idx].pushToItemQueue(val)
+    this.heapInstance.heap_push_to_channel(channelAddress, val)
   }
 
-  getItemFromChannel(idx: number): number {
+  popItemFromChannel(idx: number, channelAddress: number): number {
     if (idx >= globalState.CHANNELARRAY.length) {
       throw new Error('popping from non existent channel')
     }
-    return globalState.CHANNELARRAY[idx].popFromItemQueue()
+    return this.heapInstance.heap_pop_from_channel(channelAddress)
   }
 
   saveThread = () => {

@@ -678,7 +678,7 @@ describe('Runner tests', () => {
     func main() {
       var wg1 WaitGroup = waitgroup
       var wg2 WaitGroup = waitgroup
-      
+
       x int := 0
       y int := 0
       go func() {
@@ -696,7 +696,6 @@ describe('Runner tests', () => {
         Wait(wg2)
         Done(wg1)
       }()
-      
 
       return x + y
     }`
@@ -709,7 +708,7 @@ describe('Runner tests', () => {
     func main() {
       var wg1 WaitGroup = waitgroup
       var wg2 WaitGroup = waitgroup
-      
+
       x int := 0
       y int := 0
       go func() {
