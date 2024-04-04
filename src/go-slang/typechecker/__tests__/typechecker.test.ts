@@ -992,5 +992,76 @@ describe('Basic typecheck test', () => {
     const outputAst: ASTNode = parse(program)
     expect(() => typecheck(outputAst)).toThrow("type error in add; expected type: int actual type: bool")
   });
+
+  test('basic chan recv', async () => {
+    const program = `
+        func main() {
+          var x chan int = make(chan int)
+          <- x
+        }
+          `
+    const outputAst: ASTNode = parse(program)
+    expect(() => typecheck(outputAst)).not.toThrow()
+  });
+
+  test('basic chan recv not chan', async () => {
+    const program = `
+        func main() {
+          var x chan int = make(chan int)
+          var y bool = false
+          <-y
+        }
+          `
+    const outputAst: ASTNode = parse(program)
+    expect(() => typecheck(outputAst)).toThrow("type error in add; expected type: chan actual type: bool")
+  });
+
+  test('basic chan recv var decl correct', async () => {
+    const program = `
+        func main() {
+          var x chan int = make(chan int)
+          var y int = <- x
+          y = <-x
+        }
+          `
+    const outputAst: ASTNode = parse(program)
+    expect(() => typecheck(outputAst)).not.toThrow()
+  });
+
+  test('basic chan recv var decl wrong', async () => {
+    const program = `
+        func main() {
+          var x chan int = make(chan int)
+          var y bool = <-x
+          y = <-x
+        }
+          `
+    const outputAst: ASTNode = parse(program)
+    expect(() => typecheck(outputAst)).toThrow("type error in variable declaration; declared type: bool, actual type: int")
+  });
+
+  test('basic chan recv assign correct', async () => {
+    const program = `
+        func main() {
+          var x chan int = make(chan int)
+          var y int = <- x
+          y = <-x
+        }
+          `
+    const outputAst: ASTNode = parse(program)
+    expect(() => typecheck(outputAst)).not.toThrow()
+  });
+
+  test('basic chan recv assign wrong', async () => {
+    const program = `
+        func main() {
+          var x chan int = make(chan int)
+          var y bool = false
+          y = <-x
+        }
+          `
+    const outputAst: ASTNode = parse(program)
+    expect(() => typecheck(outputAst)).toThrow("type error in assignment; declared type: bool, actual type: int")
+  });
   
 })

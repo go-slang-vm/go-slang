@@ -1,7 +1,7 @@
 // type_comp has the typing
 
 import { isArray } from "lodash"
-import { ASTNode, AssignNode, BinOpNode, BlockNode, ForStmtNode, FuncAppNode, FuncDeclNode, FunctionLiteralNode, GoStmtNode, IfStmtNode, LiteralNode, LogicalNode, MakeAppNode, NameNode, ReturnStmtNode, SequenceNode, Tag, UnOpNode, VarDeclNode } from "../ast/AST"
+import { ASTNode, AssignNode, BinOpNode, BlockNode, ForStmtNode, FuncAppNode, FuncDeclNode, FunctionLiteralNode, GoStmtNode, IfStmtNode, LiteralNode, LogicalNode, MakeAppNode, NameNode, RecvExprNode, ReturnStmtNode, SequenceNode, Tag, UnOpNode, VarDeclNode } from "../ast/AST"
 import { is_boolean, is_number, is_string, is_undefined } from "../vm/utils"
 import { equal_array_types, equal_type, extend_type_environment, global_type_environment, lookup_type, unparse_type, unparse_types } from "./typeenvironment"
 
@@ -379,7 +379,31 @@ const type_comp = {
                 } 
             }
             return "undefined"
-        }, 
+        },
+    recv:
+        (comp: RecvExprNode, te: any) => {
+            const res = type(comp.frst, te)
+            if(isArray(res)) {
+                if(res.length != 1) {
+                    throw new Error("type error in add; expected type: chan" + " actual type: " + unparse_types(res))
+                }
+                const resString = res[0]
+                if(resString.length < 4 || resString.substring(0, 4) !== "chan") {
+                    throw new Error("type error in add; expected type: chan" + " actual type: " + unparse_types(res))
+                }
+                return resString.slice(5)
+            }
+
+            if(is_string(res)) {
+                if(res.length < 4 || res.substring(0, 4) !== "chan") {
+                    throw new Error("type error in add; expected type: chan" + " actual type: " + res)
+                }
+                return res.slice(5)
+            }
+
+            // should never reach here
+            return "undefined"
+        }
 }
 
 const type = (comp: ASTNode, te: any) =>
