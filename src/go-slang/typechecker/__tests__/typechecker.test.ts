@@ -605,4 +605,48 @@ describe('Basic typecheck test', () => {
     const outputAst: ASTNode = parse(program)
     expect(() => typecheck(outputAst)).toThrow("Too many expressions on the RHS of assignment!")
   });
+
+  test('basic correct var outside func body and assign inside func body with function return', async () => {
+    const program = `
+        func inc() (int, int, int) {
+          return 11, 22, 33
+        }
+        var x, y, z int = 1, 2, 3
+        var a string = "hello"
+        var b bool = true
+        var f float = 1.1
+        var mut1,mut2 Mutex = mutex
+        var wg1, wg2 WaitGroup = mutex
+        var xx int = x
+        func main() {
+          x = 2
+          a = "world"
+          b,f,x,y,z,mut1, wg1, wg2 = false, 3.3, inc(), mut2, wg2, wg1
+        }
+          `
+    const outputAst: ASTNode = parse(program)
+    expect(() => typecheck(outputAst)).not.toThrow()
+  });
+
+  test('basic correct var outside func body and assign inside func body with function return and wrong number of assignments', async () => {
+    const program = `
+        func inc() (int, int, int) {
+          return 11, 22, 33
+        }
+        var x, y, z int = 1, 2, 3
+        var a string = "hello"
+        var b bool = true
+        var f float = 1.1
+        var mut1,mut2 Mutex = mutex
+        var wg1, wg2 WaitGroup = mutex
+        var xx int = x
+        func main() {
+          x = 2
+          a = "world"
+          b,f,x,y,mut1, wg1, wg2 = false, 3.3, inc(), mut2, wg2, wg1
+        }
+          `
+    const outputAst: ASTNode = parse(program)
+    expect(() => typecheck(outputAst)).toThrow("Too many expressions on the RHS of assignment!")
+  });
 })
