@@ -762,5 +762,105 @@ describe('Basic typecheck test', () => {
     const outputAst: ASTNode = parse(program)
     expect(() => typecheck(outputAst)).toThrow("type error in assignment; declared type: chan int, actual type: chan bool")
   });
+
+  test('basic mutex lock test', async () => {
+    const program = `
+        
+        func main() {
+          var x Mutex = mutex
+          Lock(x)
+        }
+          `
+    const outputAst: ASTNode = parse(program)
+    expect(() => typecheck(outputAst)).not.toThrow()
+  });
+
+  test('basic wrong mutex lock test', async () => {
+    const program = `
+        
+        func main() {
+          var x Mutex = mutex
+          var y int = 1
+          Lock(y)
+        }
+          `
+    const outputAst: ASTNode = parse(program)
+    expect(() => typecheck(outputAst)).toThrow("type error in lock; expected type: mutex actual type: int")
+  });
+
+  test('basic mutex unlock test', async () => {
+    const program = `
+        
+        func main() {
+          var x Mutex = mutex
+          Unlock(x)
+        }
+          `
+    const outputAst: ASTNode = parse(program)
+    expect(() => typecheck(outputAst)).not.toThrow()
+  });
+
+  test('basic wrong mutex unlock test', async () => {
+    const program = `
+        
+        func main() {
+          var x Mutex = mutex
+          var y int = 1
+          Unlock(y)
+        }
+          `
+    const outputAst: ASTNode = parse(program)
+    expect(() => typecheck(outputAst)).toThrow("type error in unlock; expected type: mutex actual type: int")
+  });
+
+  test('basic waitgroup done test', async () => {
+    const program = `
+        
+        func main() {
+          var x WaitGroup = wg
+          Done(x)
+        }
+          `
+    const outputAst: ASTNode = parse(program)
+    expect(() => typecheck(outputAst)).not.toThrow()
+  });
+
+  test('basic wrong waitgroup done test', async () => {
+    const program = `
+        
+        func main() {
+          var x WaitGroup = wg
+          var y int = 1
+          Done(y)
+        }
+          `
+    const outputAst: ASTNode = parse(program)
+    expect(() => typecheck(outputAst)).toThrow("type error in done; expected type: waitgroup actual type: int")
+  });
+
+  test('basic waitgroup wait test', async () => {
+    const program = `
+        
+        func main() {
+          var x WaitGroup = wg
+          Wait(x)
+        }
+          `
+    const outputAst: ASTNode = parse(program)
+    expect(() => typecheck(outputAst)).not.toThrow()
+  });
+
+  test('basic wrong waitgroup wait test', async () => {
+    const program = `
+        
+        func main() {
+          var x WaitGroup = wg
+          var y int = 1
+          Wait(y)
+        }
+          `
+    const outputAst: ASTNode = parse(program)
+    expect(() => typecheck(outputAst)).toThrow("type error in wait; expected type: waitgroup actual type: int")
+  });
   
 })
