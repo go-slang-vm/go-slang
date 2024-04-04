@@ -52,6 +52,7 @@ const global_type_frame = {
     "-": binary_arith_type,
     "*": binary_arith_type,
     "/": binary_arith_type,
+    "%": binary_arith_type,
     "<": number_comparison_type,
     ">": number_comparison_type,
     "<=": number_comparison_type,

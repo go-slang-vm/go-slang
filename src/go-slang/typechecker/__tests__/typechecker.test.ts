@@ -291,7 +291,7 @@ describe('Basic typecheck test', () => {
         //console.dir(outputAst, {depth: 100})
         expect(()=>typecheck(outputAst)).toThrow("type error in function declaration; expected return type: int, int, int actual return type: null");
       });
-      
+
       test('basic conditional statement make sure it is non terminating with else branch but correct return', async () => {
         const program = `
         func inc() (int, int, int) {
@@ -357,5 +357,113 @@ describe('Basic typecheck test', () => {
         const outputAst: ASTNode = parse(program)
         //console.dir(outputAst, {depth: 100})
         expect(()=>typecheck(outputAst)).toThrow("type error in application; expected argument types: int, int, int, actual argument types: int, int, string");
+      });
+
+      test('basic for statement predicate is bool literal', async () => {
+        const program = `
+        func main() {
+          for true {
+
+          }
+        }
+          `
+        const outputAst: ASTNode = parse(program)
+        console.dir(outputAst, {depth: 100})
+        expect(()=>typecheck(outputAst)).not.toThrow("expected predicate type: bool, actual predicate type: undefined");
+      });
+
+      test('basic for statement predicate is bool', async () => {
+        const program = `
+        func main() {
+          x int := 1
+          for x < 1 || x < 2 {
+
+          }
+        }
+          `
+        const outputAst: ASTNode = parse(program)
+        console.dir(outputAst, {depth: 100})
+        expect(()=>typecheck(outputAst)).not.toThrow("expected predicate type: bool, actual predicate type: undefined");
+      });
+
+      test('basic for statement predicate is not bool', async () => {
+        const program = `
+        func main() {
+          x int := 1
+          for x {
+
+          }
+        }
+          `
+        const outputAst: ASTNode = parse(program)
+        console.dir(outputAst, {depth: 100})
+        expect(()=>typecheck(outputAst)).toThrow("expected predicate type: bool, actual predicate type: int");
+      });
+
+      test('basic for statement predicate is not bool expr', async () => {
+        const program = `
+        func main() {
+          x int := 1
+          for x + 3 / 2 % 6 {
+
+          }
+        }
+          `
+        const outputAst: ASTNode = parse(program)
+        //console.dir(outputAst, {depth: 100})
+        expect(()=>typecheck(outputAst)).toThrow("expected predicate type: bool, actual predicate type: int");
+      });
+
+      test('basic for statement has correct return statement in body', async () => {
+        const program = `
+        func inc() int {
+          x int := 1
+          for x < 3{
+            return 1
+          }
+          return x
+        }
+        func main() {
+
+        }
+          `
+        const outputAst: ASTNode = parse(program)
+        //console.dir(outputAst, {depth: 100})
+        expect(()=>typecheck(outputAst)).not.toThrow();
+      });
+
+      test('basic for statement has incorrect return statement in body', async () => {
+        const program = `
+        func inc() int {
+          x int := 1
+          for x < 3{
+            return "hi"
+          }
+          return x
+        }
+        func main() {
+
+        }
+          `
+        const outputAst: ASTNode = parse(program)
+        //console.dir(outputAst, {depth: 100})
+        expect(()=>typecheck(outputAst)).toThrow("expected return types int but got string in function inc");
+      });
+
+      test('basic for statement is not a terminating statement in body', async () => {
+        const program = `
+        func inc() int {
+          x int := 1
+          for x < 3 {
+            return 1
+          }
+        }
+        func main() {
+
+        }
+          `
+        const outputAst: ASTNode = parse(program)
+        //console.dir(outputAst, {depth: 100})
+        expect(()=>typecheck(outputAst)).toThrow("type error in function declaration; expected return type: int actual return type: null");
       });
 })

@@ -366,11 +366,20 @@ const type_fun_body_stmt = {
         (comp: ForStmtNode, te: any, func_ctx: any) => {
             // check this with Go specs
             // predicate has to be a bool value
-            const t0 = type_fun_body(comp.pred, te, func_ctx)
-            if ((isArray(t0) && t0.length != 1 && t0[0] !== "bool") || (is_string(t0) && t0 !== "bool"))
+            const t0 = type(comp.pred, te)
+            // console.log(t0)
+            if(isArray(t0)) {
+                if(t0.length != 1 || t0[0] !== "bool") {
+                    throw new Error("expected predicate type: bool, " +
+                    "actual predicate type: " +
+                    unparse_types(t0))
+                }
+            }
+            if (is_string(t0) && t0 !== "bool") {
                 throw new Error("expected predicate type: bool, " +
                     "actual predicate type: " +
                     unparse_type(t0))
+            }
 
             // according to Go Spec, if the loop condition is present, this statement is not terminating so since we enforce the loop condition this statement is not terminating
             // so we just need to type check the body and do nothing with the result and return undefined
