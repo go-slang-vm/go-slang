@@ -305,7 +305,7 @@ export class Heap {
     const tail = this.heap_get_channel_tail(address)
     if (head === this.Unassigned) {
       // case 1: 0 elements
-      this.heap_set_channel_head(address, item, item)
+      this.heap_set_channel_head(address, item, this.Unassigned)
       this.heap_set_channel_tail(address, item, this.Unassigned)
     } else if (head === tail) {
       // case 2: 1 element
@@ -326,7 +326,6 @@ export class Heap {
     const tail = this.heap_get_channel_tail(address)
     if (head === this.Unassigned) {
       // case 1: 0 elements
-      console.log({ head, tail })
       throw new Error('Channel is empty and should not have been popped')
     } else if (head === tail) {
       // case 1: 1 element
