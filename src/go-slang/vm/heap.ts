@@ -254,12 +254,12 @@ export class Heap {
 
   // channel
   // [1 byte tag, 4 bytes channel idx,
-  //  2 bytes #children, 1 byte unused]
+  //  1 byte, 2 bytes unused]
   // followed by the counter
   // followed by the capacity
   // CHANNEL TYPES: 0 = unbuffered, 1 = buffered, 2 = mutex
   // note: #children is 0
-  TYPE_OFFSET: number = 7
+  TYPE_OFFSET: number = 5
   heap_allocate_Channel = (
     capacity: number,
     type: number,
