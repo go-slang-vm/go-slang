@@ -862,5 +862,96 @@ describe('Basic typecheck test', () => {
     const outputAst: ASTNode = parse(program)
     expect(() => typecheck(outputAst)).toThrow("type error in wait; expected type: waitgroup actual type: int")
   });
+
+  test('basic sleep test', async () => {
+    const program = `
+        
+        func main() {
+          var x WaitGroup = wg
+          var y int = 1
+          sleep(5)
+        }
+          `
+    const outputAst: ASTNode = parse(program)
+    expect(() => typecheck(outputAst)).not.toThrow()
+  });
+
+  test('basic wrong sleep test', async () => {
+    const program = `
+        
+        func main() {
+          var x WaitGroup = wg
+          var y bool = false
+          sleep(y)
+        }
+          `
+    const outputAst: ASTNode = parse(program)
+    expect(() => typecheck(outputAst)).toThrow("type error in application; expected argument types: int, actual argument types: bool")
+  });
+
+  test('basic sleep expr test', async () => {
+    const program = `
+        
+        func main() {
+          var x WaitGroup = wg
+          var y int = 1
+          sleep(5 + y)
+        }
+          `
+    const outputAst: ASTNode = parse(program)
+    expect(() => typecheck(outputAst)).not.toThrow()
+  });
+
+  test('basic wrong sleep test', async () => {
+    const program = `
+        
+        func main() {
+          var x WaitGroup = wg
+          var y bool = false
+          sleep(y || y)
+        }
+          `
+    const outputAst: ASTNode = parse(program)
+    expect(() => typecheck(outputAst)).toThrow("type error in application; expected argument types: int, actual argument types: bool")
+  });
+
+  test('basic Println test', async () => {
+    const program = `
+        
+        func main() {
+          var x WaitGroup = wg
+          var y int = 1
+          Println(y)
+        }
+          `
+    const outputAst: ASTNode = parse(program)
+    expect(() => typecheck(outputAst)).not.toThrow()
+  });
+
+  test('basic wrong Println test no args', async () => {
+    const program = `
+        
+        func main() {
+          var x WaitGroup = wg
+          var y bool = false
+          Println()
+        }
+          `
+    const outputAst: ASTNode = parse(program)
+    expect(() => typecheck(outputAst)).toThrow("Println expects 1 arguement of any type")
+  });
+
+  test('basic wrong Println test too many args', async () => {
+    const program = `
+        
+        func main() {
+          var x WaitGroup = wg
+          var y bool = false
+          Println(x, y)
+        }
+          `
+    const outputAst: ASTNode = parse(program)
+    expect(() => typecheck(outputAst)).toThrow("Println expects 1 arguement of any type")
+  });
   
 })

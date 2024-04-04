@@ -101,8 +101,19 @@ const type_comp = {
             }
             return "undefined"
         },
+    // TODO: rmb to specify in report that we define Println as taking only 1 argument of any type
     app:
         (comp: FuncAppNode, te: any) => {
+            // Special case handling for Println
+            if (comp.fun.tag === "nam") {
+                const sym = (comp.fun as NameNode).sym;
+                if(sym === "Println") {
+                    if(comp.args.length !== 1) {
+                        throw new Error("Println expects 1 arguement of any type")
+                    }
+                    return []
+                }
+            }
             const fun_type = type(comp.fun, te)
             if (fun_type.tag !== "fun")
                 throw new Error("type error in application; function " +
