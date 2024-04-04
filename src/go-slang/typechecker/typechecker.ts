@@ -1,7 +1,7 @@
 // type_comp has the typing
 
 import { isArray } from "lodash"
-import { ASTNode, AssignNode, BinOpNode, BlockNode, ForStmtNode, FuncAppNode, FuncDeclNode, FunctionLiteralNode, IfStmtNode, LiteralNode, LogicalNode, MakeAppNode, NameNode, ReturnStmtNode, SequenceNode, Tag, UnOpNode, VarDeclNode } from "../ast/AST"
+import { ASTNode, AssignNode, BinOpNode, BlockNode, DoneStmtNode, ForStmtNode, FuncAppNode, FuncDeclNode, FunctionLiteralNode, GoStmtNode, IfStmtNode, LiteralNode, LockStmtNode, LogicalNode, MakeAppNode, NameNode, ReturnStmtNode, SequenceNode, Tag, UnOpNode, UnlockStmtNode, VarDeclNode } from "../ast/AST"
 import { is_boolean, is_number, is_string, is_undefined } from "../vm/utils"
 import { equal_array_types, equal_type, extend_type_environment, global_type_environment, lookup_type, unparse_type, unparse_types } from "./typeenvironment"
 
@@ -263,7 +263,76 @@ const type_comp = {
     make:
         (comp: MakeAppNode, te: any) => {
             return comp.chanType
-        }, 
+        },
+    go:
+        (comp: GoStmtNode, te: any) => {
+            type(comp.funcApp, te)
+            return "undefined"
+        },
+    lock:
+        (comp: LockStmtNode, te: any) => {
+            const res = type(comp.frst, te)
+            if(isArray(res)) {
+                if(!equal_array_types(res, ["mutex"])) {
+                    throw new Error("type error in lock; expected type: mutex" + " actual return type: " + unparse_types(res))
+                }
+            }
+
+            if(is_string(res)) {
+                if(res !== "mutex") {
+                    throw new Error("type error in lock; expected type: mutex" + " actual return type: " + res)
+                } 
+            }
+            return "undefined"
+        },
+    unlock:
+        (comp: UnlockStmtNode, te: any) => {
+            const res = type(comp.frst, te)
+            if(isArray(res)) {
+                if(!equal_array_types(res, ["mutex"])) {
+                    throw new Error("type error in unlock; expected type: mutex" + " actual return type: " + unparse_types(res))
+                }
+            }
+
+            if(is_string(res)) {
+                if(res !== "mutex") {
+                    throw new Error("type error in unlock; expected type: mutex" + " actual return type: " + res)
+                } 
+            }
+            return "undefined"
+        },
+    done:
+        (comp: DoneStmtNode, te: any) => {
+            const res = type(comp.frst, te)
+            if(isArray(res)) {
+                if(!equal_array_types(res, ["waitgroup"])) {
+                    throw new Error("type error in done; expected type: waitgroup" + " actual return type: " + unparse_types(res))
+                }
+            }
+
+            if(is_string(res)) {
+                if(res !== "waitgroup") {
+                    throw new Error("type error in done; expected type: waitgroup" + " actual return type: " + res)
+                } 
+            }
+            return "undefined"
+        },
+    wait:
+        (comp: DoneStmtNode, te: any) => {
+            const res = type(comp.frst, te)
+            if(isArray(res)) {
+                if(!equal_array_types(res, ["waitgroup"])) {
+                    throw new Error("type error in wait; expected type: waitgroup" + " actual return type: " + unparse_types(res))
+                }
+            }
+
+            if(is_string(res)) {
+                if(res !== "waitgroup") {
+                    throw new Error("type error in wait; expected type: waitgroup" + " actual return type: " + res)
+                } 
+            }
+            return "undefined"
+        },
 }
 
 const type = (comp: ASTNode, te: any) =>
@@ -307,7 +376,7 @@ const type_fun_body_stmt = {
             for (let i = 0; i < comp.stmts.length; ++i) {
                 const stmt = comp.stmts[i];
                 const stmt_type = type_fun_body(stmt, te, func_ctx)
-                // return values can only be arrays or "undefined" in functions
+                // return values can only be arrays or "undefined" in functions how about literals?
                 if (!isArray(stmt_type)) {
                 } else if (i == comp.stmts.length - 1) {
                     // only if final stmt is terminating then this seq is terminating
