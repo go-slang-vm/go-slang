@@ -1,7 +1,7 @@
 // type_comp has the typing
 
 import { isArray } from "lodash"
-import { ASTNode, AssignNode, BinOpNode, BlockNode, ForStmtNode, FuncAppNode, FuncDeclNode, FunctionLiteralNode, IfStmtNode, LiteralNode, LogicalNode, NameNode, ReturnStmtNode, SequenceNode, Tag, UnOpNode, VarDeclNode } from "../ast/AST"
+import { ASTNode, AssignNode, BinOpNode, BlockNode, ForStmtNode, FuncAppNode, FuncDeclNode, FunctionLiteralNode, IfStmtNode, LiteralNode, LogicalNode, MakeAppNode, NameNode, ReturnStmtNode, SequenceNode, Tag, UnOpNode, VarDeclNode } from "../ast/AST"
 import { is_boolean, is_number, is_string, is_undefined } from "../vm/utils"
 import { equal_array_types, equal_type, extend_type_environment, global_type_environment, lookup_type, unparse_type, unparse_types } from "./typeenvironment"
 
@@ -259,6 +259,10 @@ const type_comp = {
             }
             // TODO: think if this should be undefined or the func type also check for function declarations
             return comp.type
+        },
+    make:
+        (comp: MakeAppNode, te: any) => {
+            return comp.chanType
         }, 
 }
 

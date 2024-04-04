@@ -649,4 +649,118 @@ describe('Basic typecheck test', () => {
     const outputAst: ASTNode = parse(program)
     expect(() => typecheck(outputAst)).toThrow("Too many expressions on the RHS of assignment!")
   });
+
+  test('basic make channel outside of func body', async () => {
+    const program = `
+        var x, y, z int = 1, 2, 3
+        var a chan int = make(chan int)
+        var b bool = true
+        var c, d chan bool = make(chan bool, 2), make(chan bool)
+        func main() {
+        }
+          `
+    const outputAst: ASTNode = parse(program)
+    expect(() => typecheck(outputAst)).not.toThrow()
+  });
+
+  test('basic make channel inside of func body', async () => {
+    const program = `
+        
+        func main() {
+          var x, y, z int = 1, 2, 3
+          var a chan int = make(chan int)
+          var b bool = true
+          var c, d chan bool = make(chan bool, 2), make(chan bool)
+        }
+          `
+    const outputAst: ASTNode = parse(program)
+    expect(() => typecheck(outputAst)).not.toThrow()
+  });
+
+  test('basic make channel outside of func body with wrong chan type', async () => {
+    const program = `
+        var x, y, z int = 1, 2, 3
+        var a chan bool = make(chan int)
+        var b bool = true
+        var c, d chan bool = make(chan bool, 2), make(chan bool)
+        func main() {
+        }
+          `
+    const outputAst: ASTNode = parse(program)
+    expect(() => typecheck(outputAst)).toThrow("type error in variable declaration; declared type: chan bool, actual type: chan int")
+  });
+
+  test('basic make channel inside of func body with wrong chan type', async () => {
+    const program = `
+        
+        func main() {
+          var x, y, z int = 1, 2, 3
+          var a chan int = make(chan bool)
+          var b bool = true
+          var c, d chan bool = make(chan bool, 2), make(chan bool)
+        }
+          `
+    const outputAst: ASTNode = parse(program)
+    expect(() => typecheck(outputAst)).toThrow("type error in variable declaration; declared type: chan int, actual type: chan bool")
+  });
+
+  //// here
+  test('basic make channel outside of func body with reassign', async () => {
+    const program = `
+        var x, y, z int = 1, 2, 3
+        var a chan int = make(chan int)
+        var b bool = true
+        var c, d chan bool = make(chan bool, 2), make(chan bool)
+        func main() {
+          d = make(chan bool)
+        }
+          `
+    const outputAst: ASTNode = parse(program)
+    expect(() => typecheck(outputAst)).not.toThrow()
+  });
+
+  test('basic make channel inside of func body', async () => {
+    const program = `
+        
+        func main() {
+          var x, y, z int = 1, 2, 3
+          var a chan int = make(chan int)
+          var b bool = true
+          var c, d chan bool = make(chan bool, 2), make(chan bool)
+          d = make(chan bool)
+        }
+          `
+    const outputAst: ASTNode = parse(program)
+    expect(() => typecheck(outputAst)).not.toThrow()
+  });
+
+  test('basic make channel outside of func body with wrong chan type with wrong reassign', async () => {
+    const program = `
+        var x, y, z int = 1, 2, 3
+        var a chan int = make(chan int)
+        var b bool = true
+        var c, d chan bool = make(chan bool, 2), make(chan bool)
+        func main() {
+          d = make(chan int)
+        }
+          `
+    const outputAst: ASTNode = parse(program)
+    expect(() => typecheck(outputAst)).toThrow("type error in assignment; declared type: chan bool, actual type: chan int")
+  });
+
+  test('basic make channel inside of func body with wrong assignment type', async () => {
+    const program = `
+        
+        func main() {
+          var x, y, z int = 1, 2, 3
+          var a chan int = make(chan int)
+          var b bool = true
+          var c, d chan bool = make(chan bool, 2), make(chan bool)
+          a = make(chan bool)
+        }
+          `
+    const outputAst: ASTNode = parse(program)
+    expect(() => typecheck(outputAst)).toThrow("type error in assignment; declared type: chan int, actual type: chan bool")
+  });
+  
 })
