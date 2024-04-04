@@ -193,8 +193,10 @@ export class ParseTree_To_AST implements SimpleParserVisitor<ASTNode> {
       prms: res.params.params,
       body: this.visitBlock(ctx.block()),
       _arity: res.params.params.length,
-      paramTypes: res.params.types,
-      returnTypes: res.result.resultTypes,
+      type: { tag: Tag.FUNC, 
+        paramTypes: res.params.types,
+        returnTypes: res.result.resultTypes,
+      },      
     };
   }
 
