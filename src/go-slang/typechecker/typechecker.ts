@@ -1,13 +1,13 @@
 // type_comp has the typing
 
 import { isArray } from "lodash"
-import { ASTNode, AssignNode, BinOpNode, BlockNode, ForStmtNode, FuncAppNode, FuncDeclNode, IfStmtNode, LiteralNode, LogicalNode, NameNode, ReturnStmtNode, SequenceNode, Tag, UnOpNode, VarDeclNode } from "../ast/AST"
+import { ASTNode, AssignNode, BinOpNode, BlockNode, ForStmtNode, FuncAppNode, FuncDeclNode, FunctionLiteralNode, IfStmtNode, LiteralNode, LogicalNode, NameNode, ReturnStmtNode, SequenceNode, Tag, UnOpNode, VarDeclNode } from "../ast/AST"
 import { is_boolean, is_number, is_string, is_undefined } from "../vm/utils"
 import { equal_array_types, equal_type, extend_type_environment, global_type_environment, lookup_type, unparse_type, unparse_types } from "./typeenvironment"
 
 // TODO: STILL MISSING GO MAKE ADD DONE LOCK SEND RECV
-// TODO: STILL HAVE NOT IMPLEMENTED ASSIGNMENT STMTS AND FOR STMTS
-// TODO: LAMBDA NOT IMPLEMENTED
+// STILL HAVE NOT IMPLEMENTED ASSIGNMENT STMTS AND FOR STMTS done
+// LAMBDA NOT IMPLEMENTED done
 
 // functions for each component tag
 const type_comp = {
@@ -104,7 +104,6 @@ const type_comp = {
     app:
         (comp: FuncAppNode, te: any) => {
             const fun_type = type(comp.fun, te)
-            //console.log((comp.fun as NameNode).sym)
             if (fun_type.tag !== "fun")
                 throw new Error("type error in application; function " +
                     "expression must have function type; " +
@@ -244,7 +243,23 @@ const type_comp = {
             return type(comp.body, extended_te)
         },
     ret:
-        (comp: ReturnStmtNode, te: any) => comp
+        (comp: ReturnStmtNode, te: any) => comp,    
+    lam:
+        (comp: FunctionLiteralNode, te: any) => {
+            const extended_te = extend_type_environment(
+                comp.prms,
+                comp.type.paramTypes,
+                te)
+            // TODO: FIX THIS... seems fine with name lambda?
+            const body = type_fun_body(comp.body, extended_te, { retType: comp.type.returnTypes, name: "lambda" })
+            if (isArray(body) && !equal_array_types(body, comp.type.returnTypes)) {
+                throw new Error("type error in function declaration; expected return type: " + unparse_types(comp.type.returnTypes) + " actual return type: " + unparse_types(body))
+            } else if (!isArray(body) && comp.type.returnTypes.length != 0) {
+                throw new Error("type error in function declaration; expected return type: " + unparse_types(comp.type.returnTypes) + " actual return type: " + unparse_type(body))
+            }
+            // TODO: think if this should be undefined or the func type also check for function declarations
+            return comp.type
+        }, 
 }
 
 const type = (comp: ASTNode, te: any) =>

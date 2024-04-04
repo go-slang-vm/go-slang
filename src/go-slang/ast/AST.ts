@@ -284,8 +284,7 @@ export interface FunctionLiteralNode extends LiteralNode {
     prms: string[];
     body: BlockNode;
     _arity: Number;
-    paramTypes: string[];
-    returnTypes: string[];
+    type: FuncType;
 }
 
 export interface NameNode extends ExprNode {

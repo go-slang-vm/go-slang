@@ -291,6 +291,7 @@ describe('Basic typecheck test', () => {
         //console.dir(outputAst, {depth: 100})
         expect(()=>typecheck(outputAst)).toThrow("type error in function declaration; expected return type: int, int, int actual return type: null");
       });
+      
       test('basic conditional statement make sure it is non terminating with else branch but correct return', async () => {
         const program = `
         func inc() (int, int, int) {
@@ -311,5 +312,50 @@ describe('Basic typecheck test', () => {
         const outputAst: ASTNode = parse(program)
         //console.dir(outputAst, {depth: 100})
         expect(()=>typecheck(outputAst)).toThrow("type error in function declaration; expected return type: int, int, int actual return type: null");
+      });
+
+      test('basic lambda', async () => {
+        const program = `
+        func main() {
+          var x, y, z int = func(a, b, c int) (int, int, int) {
+            return a,b,c
+          }(1,2,3)
+          a string := "hello"
+          var f float = 1.1
+        }
+          `
+        const outputAst: ASTNode = parse(program)
+        //console.dir(outputAst, {depth: 100})
+        expect(()=>typecheck(outputAst)).not.toThrow("type error in function declaration; expected return type: int, int, int actual return type: null");
+      });
+
+      test('basic lambda with wrong body', async () => {
+        const program = `
+        func main() {
+          var x, y, z int = func(a, b, c int) int {
+            return a,b,c
+          }(1,2,3)
+          a string := "hello"
+          var f float = 1.1
+        }
+          `
+        const outputAst: ASTNode = parse(program)
+        //console.dir(outputAst, {depth: 100})
+        expect(()=>typecheck(outputAst)).toThrow("expected return types int but got int, int, int in function lambda");
+      });
+
+      test('basic lambda with wrong args', async () => {
+        const program = `
+        func main() {
+          var x, y, z int = func(a, b, c int) (int, int, int) {
+            return a,b,c
+          }(1,2,"world")
+          a string := "hello"
+          var f float = 1.1
+        }
+          `
+        const outputAst: ASTNode = parse(program)
+        //console.dir(outputAst, {depth: 100})
+        expect(()=>typecheck(outputAst)).toThrow("type error in application; expected argument types: int, int, int, actual argument types: int, int, string");
       });
 })
