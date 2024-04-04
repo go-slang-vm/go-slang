@@ -417,13 +417,13 @@ export class VM {
     },
     MAKE: instr => {
       const idx = globalState.CHANNELARRAY.length
-      this.createNewChannel(instr.capacity, idx)
       const addr = this.heapInstance.heap_allocate_Channel(
         instr.capacity,
         instr.type,
         instr.elemType,
         idx
       )
+      this.createNewChannel(instr.capacity, idx, addr)
       // if it is a mutex, we populate it with 1 UNDEFINED
       if (instr.type === 2) {
         this.heapInstance.heap_push_to_channel(addr, this.heapInstance.Undefined)
@@ -645,8 +645,8 @@ export class VM {
     globalState.THREADQUEUE.push(thread)
   }
 
-  createNewChannel(capacity: number, idx: number) {
-    globalState.CHANNELARRAY.push(new Channel(idx, capacity))
+  createNewChannel(capacity: number, idx: number, address: number) {
+    globalState.CHANNELARRAY.push(new Channel(idx, capacity, address))
   }
 
   addItemToChannel(idx: number, val: number, channelAddress: number) {

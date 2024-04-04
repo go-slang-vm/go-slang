@@ -262,6 +262,7 @@ export class Heap {
   // CHANNEL TYPES: 0 = unbuffered, 1 = buffered, 2 = mutex
   // note: #children is 0
   TYPE_OFFSET: number = 7
+  NEXT_OFFSET: number = 6
   CHANNEL_METADATA_OFFSET: number = 5
   heap_allocate_Channel = (
     capacity: number,
@@ -269,7 +270,7 @@ export class Heap {
     elemType: string,
     idx: number
   ): number => {
-    const address = this.heap_allocate(Channel_tag, capacity + this.CHANNEL_METADATA_OFFSET)
+    const address = this.heap_allocate(Channel_tag, this.CHANNEL_METADATA_OFFSET)
     this.heap_set_4_bytes_at_offset(address, 1, idx)
 
     this.heap_set_channel_type(address, type)
@@ -278,8 +279,8 @@ export class Heap {
     this.heap_set_channel_counter(address, initialCounter)
     this.heap_set_channel_capacity(address, capacity)
     // since the channel has no children, we use the bytes given to it to store head and tail pointers
-    this.heap_set_channel_head(address, 0) // initialise head
-    this.heap_set_channel_tail(address, 0) // initialise tail; when the channel is empty, head and tail point to the same address
+    this.heap_set_channel_head(address, this.Unassigned, this.Unassigned) // initialise head
+    this.heap_set_channel_tail(address, this.Unassigned, this.Unassigned) // initialise tail
     return address
   }
 
@@ -287,31 +288,59 @@ export class Heap {
 
   heap_get_channel_tail = (address: number): number => this.heap_get_child(address, 3)
 
-  heap_set_channel_head = (address: number, val: number) => this.heap_set_child(address, 2, val)
+  heap_set_channel_head = (address: number, val: number, next_val: number) => {
+    this.heap_set_child(address, 2, val)
+    const headAddress = this.heap_get_channel_head(address)
+    this.heap_set_byte_at_offset(headAddress, this.NEXT_OFFSET, next_val)
+  }
 
-  heap_set_channel_tail = (address: number, val: number) => this.heap_set_child(address, 3, val)
+  heap_set_channel_tail = (address: number, val: number, next_val: number) => {
+    this.heap_set_child(address, 3, val)
+    const tailAddress = this.heap_get_channel_tail(address)
+    this.heap_set_byte_at_offset(tailAddress, this.NEXT_OFFSET, next_val)
+  }
 
   heap_push_to_channel = (address: number, item: number): void => {
-    // if head and tail are the same, the channel is empty so we reset both head and tail pointers to 0
-    if (this.heap_get_channel_head(address) === this.heap_get_channel_tail(address)) {
-      this.heap_set_channel_head(address, 0)
-      this.heap_set_channel_tail(address, 0)
-    }
+    const head = this.heap_get_channel_head(address)
     const tail = this.heap_get_channel_tail(address)
-    // append item to the tail
-    this.heap_set_child(address, tail + this.CHANNEL_METADATA_OFFSET, item)
-    // increase tail pointer by 1
-    this.heap_set_channel_tail(address, tail + 1)
+    if (head === this.Unassigned) {
+      // case 1: 0 elements
+      this.heap_set_channel_head(address, item, item)
+      this.heap_set_channel_tail(address, item, this.Unassigned)
+    } else if (head === tail) {
+      // case 2: 1 element
+      // point head.next to item
+      this.heap_set_channel_head(address, head, item)
+      // set item as tail
+      this.heap_set_channel_tail(address, item, this.Unassigned)
+    } else {
+      // case 3: >1 element
+      // point tail.next to item
+      this.heap_set_channel_tail(address, tail, item)
+      // move tail to tail.next
+      this.heap_set_channel_tail(address, item, this.Unassigned)
+    }
   }
   heap_pop_from_channel = (address: number): number => {
     const head = this.heap_get_channel_head(address)
     const tail = this.heap_get_channel_tail(address)
-    if (head === tail) {
+    if (head === this.Unassigned) {
+      // case 1: 0 elements
+      console.log({ head, tail })
       throw new Error('Channel is empty and should not have been popped')
+    } else if (head === tail) {
+      // case 1: 1 element
+      // reset both head and tail
+      this.heap_set_channel_head(address, this.Unassigned, this.Unassigned)
+      this.heap_set_channel_tail(address, this.Unassigned, this.Unassigned)
+    } else {
+      // case 2: >1 element
+      const headNext = this.heap_get_byte_at_offset(head, this.NEXT_OFFSET)
+      const headNextNext = this.heap_get_byte_at_offset(headNext, this.NEXT_OFFSET)
+      // move head to head.next
+      this.heap_set_channel_head(address, headNext, headNextNext)
     }
-    const item = this.heap_get_child(address, head + this.CHANNEL_METADATA_OFFSET)
-    this.heap_set_channel_head(address, head + 1)
-    return item
+    return head
   }
 
   heap_get_channel_idx = (address: number): number => this.heap_get_4_bytes_at_offset(address, 1)
@@ -497,11 +526,15 @@ export class Heap {
           this.mark(roots[i])
         }
       }
-      
-      // items in the channel item queues should be marked in case
-      for (const item of channel.items) {
-        this.mark(item)
+      // mark all items in channel
+      let head = this.heap_get_channel_head(channel.address)
+      while (head !== this.Unassigned) {
+        this.mark(head)
+        head = this.heap_get_byte_at_offset(head, this.NEXT_OFFSET)
       }
+
+      // mark the channel's address
+      this.mark(channel.address)
     }
   }
 
