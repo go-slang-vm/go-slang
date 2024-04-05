@@ -16,15 +16,14 @@ export async function goRunner(
   memory: number = 1500,
   options: RecursivePartial<IOptions> = {}
 ): Promise<Result> {
-  let program: ASTNode | null = parse(code, context)
-  if (!program) {
-    return resolvedErrorPromise
-  }
-  program = preprocess(program)
-  const compiledProgram: any[] = compile_program(program)
-  const vm = new VM(memory)
-
   try {
+    let program: ASTNode | null = parse(code, context)
+    if (!program) {
+      return resolvedErrorPromise
+    }
+    program = preprocess(program)
+    const compiledProgram: any[] = compile_program(program)
+    const vm = new VM(memory)
     return Promise.resolve({
       status: 'finished',
       context,
