@@ -59,8 +59,11 @@ describe('Basic compiler test', () => {
               }
             },
             _arity: 0,
-            paramTypes: [],
-            returnTypes: ['int']
+            type: {
+              tag: "fun",
+              paramTypes: [],
+              returnTypes: ['int']
+            },
           },
           {
             tag: 'app',
@@ -110,8 +113,11 @@ describe('Basic compiler test', () => {
               }
             },
             _arity: 0,
-            paramTypes: [],
-            returnTypes: []
+            type: {
+              tag: "fun",
+              paramTypes: [],
+              returnTypes: []
+            },
           },
           {
             tag: 'let',
@@ -173,8 +179,11 @@ describe('Basic compiler test', () => {
               }
             },
             _arity: 0,
-            paramTypes: [],
-            returnTypes: []
+            type: {
+              tag: "fun",
+              paramTypes: [],
+              returnTypes: []
+            },
           },
           {
             tag: 'let',
@@ -238,8 +247,11 @@ describe('Basic compiler test', () => {
               }
             },
             _arity: 0,
-            paramTypes: [],
-            returnTypes: []
+            type: {
+              tag: "fun",
+              paramTypes: [],
+              returnTypes: []
+            },
           },
           {
             tag: 'fun',
@@ -260,8 +272,11 @@ describe('Basic compiler test', () => {
               }
             },
             _arity: 0,
-            paramTypes: [],
-            returnTypes: []
+            type: {
+              tag: "fun",
+              paramTypes: [],
+              returnTypes: []
+            },
           },
           {
             tag: 'let',
@@ -436,8 +451,11 @@ describe('Basic compiler test', () => {
               }
             },
             _arity: 1,
-            paramTypes: [ 'int' ],
-            returnTypes: [ 'int' ]
+            type: {
+              tag: "fun",
+              paramTypes: ['int'],
+              returnTypes: ['int']
+            },
           },
           {
             tag: 'fun',
@@ -471,8 +489,11 @@ describe('Basic compiler test', () => {
               }
             },
             _arity: 1,
-            paramTypes: [ 'int' ],
-            returnTypes: [ 'int' ]
+            type: {
+              tag: "fun",
+              paramTypes: ['int'],
+              returnTypes: ['int']
+            },
           },
           {
             tag: 'fun',
@@ -493,8 +514,11 @@ describe('Basic compiler test', () => {
               }
             },
             _arity: 0,
-            paramTypes: [],
-            returnTypes: []
+            type: {
+              tag: "fun",
+              paramTypes: [],
+              returnTypes: []
+            },
           },
           {
             tag: 'let',
@@ -584,8 +608,11 @@ describe('Basic compiler test', () => {
               }
             },
             _arity: 0,
-            paramTypes: [],
-            returnTypes: [ 'int' ]
+            type: {
+              tag: "fun",
+              paramTypes: [],
+              returnTypes: ['int']
+            },
           },
           {
             tag: 'fun',
@@ -617,8 +644,11 @@ describe('Basic compiler test', () => {
               }
             },
             _arity: 0,
-            paramTypes: [],
-            returnTypes: [ 'int' ]
+            type: {
+              tag: "fun",
+              paramTypes: [],
+              returnTypes: ['int']
+            },
           },
           {
             tag: 'fun',
@@ -626,8 +656,11 @@ describe('Basic compiler test', () => {
             prms: [],
             body: { tag: 'blk', body: { tag: 'seq', stmts: [] } },
             _arity: 0,
-            paramTypes: [],
-            returnTypes: []
+            type: {
+              tag: "fun",
+              paramTypes: [],
+              returnTypes: []
+            },
           },
           {
             tag: 'let',
@@ -761,8 +794,11 @@ describe('Basic compiler test', () => {
               }
             },
             _arity: 0,
-            paramTypes: [],
-            returnTypes: [ 'int' ]
+            type: {
+              tag: "fun",
+              paramTypes: [],
+              returnTypes: ['int']
+            },
           },
           {
             tag: 'fun',
@@ -770,8 +806,11 @@ describe('Basic compiler test', () => {
             prms: [],
             body: { tag: 'blk', body: { tag: 'seq', stmts: [] } },
             _arity: 0,
-            paramTypes: [],
-            returnTypes: []
+            type: {
+              tag: "fun",
+              paramTypes: [],
+              returnTypes: []
+            },
           },
           {
             tag: 'let',
@@ -878,8 +917,11 @@ describe('Basic compiler test', () => {
               }
             },
             _arity: 0,
-            paramTypes: [],
-            returnTypes: [ 'int' ]
+            type: {
+              tag: "fun",
+              paramTypes: [],
+              returnTypes: ['int']
+            },
           },
           {
             tag: 'fun',
@@ -914,8 +956,11 @@ describe('Basic compiler test', () => {
               }
             },
             _arity: 0,
-            paramTypes: [],
-            returnTypes: []
+            type: {
+              tag: "fun",
+              paramTypes: [],
+              returnTypes: []
+            },
           },
           {
             tag: 'let',

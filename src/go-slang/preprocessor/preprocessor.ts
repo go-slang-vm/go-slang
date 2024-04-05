@@ -7,7 +7,7 @@
 // use adj list and map to map variable name to stmt number
 
 import { Pair } from "../../stdlib/list";
-import { ASTNode, AssignNode, BinOpNode, BlockNode, ConstDeclNode, ForStmtNode, FuncAppNode, FuncDeclNode, GoStmtNode, IfStmtNode, LambdaStmtNode, LiteralNode, LogicalNode, MakeAppNode, NameNode, RecvExprNode, ReturnStmtNode, SendStmtNode, SequenceNode, StmtNode, UnOpNode, VarDeclNode } from "../ast/AST";
+import { ASTNode, AssignNode, BinOpNode, BlockNode, ConstDeclNode, ForStmtNode, FuncAppNode, FuncDeclNode, FunctionLiteralNode, GoStmtNode, IfStmtNode, LiteralNode, LogicalNode, MakeAppNode, NameNode, RecvExprNode, ReturnStmtNode, SendStmtNode, SequenceNode, StmtNode, UnOpNode, VarDeclNode } from "../ast/AST";
 import { CompileTimeEnvironment, Frame, compile_time_environment_extend, compile_time_environment_position, global_compile_environment, scan_for_locals } from "../utils";
 
 const varNameToStmtNumber: Map<string, Pair<number, string>> = new Map();
@@ -62,7 +62,7 @@ const create_graph = {
         createGraph(comp.exprs.list[i], ce, stmtNum)
       }
     },
-  lam: (comp: LambdaStmtNode, ce: CompileTimeEnvironment, stmtNum: number) => {
+  lam: (comp: FunctionLiteralNode, ce: CompileTimeEnvironment, stmtNum: number) => {
     // extend compile-time environment
     createGraph(comp.body, compile_time_environment_extend(comp.prms, ce), stmtNum);
   },

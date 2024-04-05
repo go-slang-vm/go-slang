@@ -8,9 +8,9 @@ import {
   ForStmtNode,
   FuncAppNode,
   FuncDeclNode,
+  FunctionLiteralNode,
   GoStmtNode,
   IfStmtNode,
-  LambdaStmtNode,
   LiteralNode,
   LogicalNode,
   MakeAppNode,
@@ -234,8 +234,8 @@ const compile_comp = {
         }
       }
     },
-  // NOTE to us, lambda statement is not actually implemented yet, only used for func decl to lambda conversion
-  lam: (comp: LambdaStmtNode, ce: CompileTimeEnvironment) => {
+
+  lam: (comp: FunctionLiteralNode, ce: CompileTimeEnvironment) => {
     instrs[wc++] = { tag: 'LDF', arity: comp._arity, addr: wc + 1 }
     // jump over the body of the lambda expression
     const goto_instruction: any = { tag: 'GOTO' }
@@ -318,19 +318,22 @@ const compile_comp = {
     }
   },
   fun: (comp: FuncDeclNode, ce: CompileTimeEnvironment) => {
-    const funcBodyToLambda: LambdaStmtNode = {
+    const funcBodyToLambda: FunctionLiteralNode = {
       tag: Tag.LAM,
       prms: comp.prms,
       body: comp.body,
-      _arity: comp._arity
+      _arity: comp._arity,
+      type: comp.type,
+      val: 'funcLit'
     }
 
-    // NOTE the type here is lam
+    // NOTE the type here is fun
+    // type should not be necessary from compiler onwards
     const funcDeclToConstDecl: ConstDeclNode = {
       tag: Tag.CONST,
       syms: { tag: Tag.IDENTS, IDENTS: [comp.sym] },
       assignments: { tag: Tag.EXPRLIST, list: [funcBodyToLambda] },
-      type: 'lam'
+      type: 'fun'
     }
 
     compile(funcDeclToConstDecl, ce)

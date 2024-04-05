@@ -234,7 +234,7 @@ describe('Runner tests', () => {
     const result = await goRunner(code, createContext())
     boilerplateAssert(result, undefined)
   })
-  // this fails
+
   test('basic buffered channel test', async () => {
     const code = `
     func inc(output chan int) {
@@ -253,7 +253,7 @@ describe('Runner tests', () => {
         input <- i
         i=i+1
       }
-      sleep(35)
+      sleep(25000)
     }
     `
     const result = await goRunner(code, createContext())
@@ -285,7 +285,7 @@ describe('Runner tests', () => {
     const result = await goRunner(code, createContext())
     boilerplateAssert(result, undefined)
   })
-  test('go call in loop buffered channels', async () => {
+  test('go call in loop', async () => {
     const code = `
     func inc(x int) {
       x = x + 1
@@ -563,6 +563,7 @@ describe('Runner tests', () => {
     const result = await goRunner(code, createContext())
     boilerplateAssert(result, undefined)
   })
+  
   test('wait - concurrent go routines', async () => {
     const code = `
     func worker(id int) {
