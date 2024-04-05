@@ -222,12 +222,6 @@ export interface ForStmtNode extends StmtNode {
     body: BlockNode;
 }
 
-export interface LambdaStmtNode extends StmtNode {
-    tag: Tag.LAM;
-    prms: string[];
-    body: BlockNode;
-    _arity: Number;
-}
 
 export interface GoStmtNode extends StmtNode {
     tag: Tag.GO;
@@ -294,7 +288,7 @@ export interface NameNode extends ExprNode {
 
 export interface FuncAppNode extends ExprNode, ExpressionStmtNode {
     tag: Tag.APP | Tag.DONE | Tag.ADD | Tag.WAIT | Tag.LOCK | Tag.UNLOCK;
-    fun: NameNode | LambdaStmtNode;
+    fun: NameNode | FunctionLiteralNode;
     args: ExprNode[];
     _arity: Number;
 }
