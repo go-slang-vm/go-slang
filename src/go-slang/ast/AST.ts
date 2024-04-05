@@ -64,7 +64,7 @@ export enum BINOP {
 }
 
 export interface ASTNode {
-   tag: string; 
+   tag: string;
 }
 
 // To make visitor work
@@ -187,14 +187,20 @@ export interface AssignNode extends StmtNode {
     exprs: ExpressionListNode;
 }
 
+export interface FuncType {
+    tag: Tag.FUNC
+    paramTypes: string[];
+    returnTypes: string[];
+}
+
 export interface FuncDeclNode extends StmtNode {
     tag: Tag.FUNC;
     sym: string;
     prms: string[];
     body: BlockNode;
+    // note that this arity is the # of params not # of return values
     _arity: Number;
-    paramTypes: string[];
-    returnTypes: string[];
+    type: FuncType;   
 }
 
 export interface IfStmtNode extends StmtNode {
@@ -216,12 +222,6 @@ export interface ForStmtNode extends StmtNode {
     body: BlockNode;
 }
 
-export interface LambdaStmtNode extends StmtNode {
-    tag: Tag.LAM;
-    prms: string[];
-    body: BlockNode;
-    _arity: Number;
-}
 
 export interface GoStmtNode extends StmtNode {
     tag: Tag.GO;
@@ -278,8 +278,7 @@ export interface FunctionLiteralNode extends LiteralNode {
     prms: string[];
     body: BlockNode;
     _arity: Number;
-    paramTypes: string[];
-    returnTypes: string[];
+    type: FuncType;
 }
 
 export interface NameNode extends ExprNode {
@@ -289,7 +288,7 @@ export interface NameNode extends ExprNode {
 
 export interface FuncAppNode extends ExprNode, ExpressionStmtNode {
     tag: Tag.APP | Tag.DONE | Tag.ADD | Tag.WAIT | Tag.LOCK | Tag.UNLOCK;
-    fun: NameNode | LambdaStmtNode;
+    fun: NameNode | FunctionLiteralNode;
     args: ExprNode[];
     _arity: Number;
 }
