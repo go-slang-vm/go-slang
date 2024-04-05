@@ -1,3 +1,4 @@
+import createContext from '../../../createContext'
 import { ASTNode } from '../../ast/AST'
 import { parse } from '../../parser/parser'
 
@@ -12,87 +13,86 @@ describe('Basic parser test', () => {
       }`
 
     const expectedAst = {
-        tag: 'blk',
-        body: {
-          tag: 'seq',
-          stmts: [
-            {
+      tag: 'blk',
+      body: {
+        tag: 'seq',
+        stmts: [
+          {
+            tag: 'fun',
+            sym: 'main',
+            prms: [],
+            type: {
               tag: 'fun',
-              sym: 'main',
-              prms: [],
-              type: {
-                tag: "fun",
-                paramTypes: [],
-                returnTypes: []
-              },
-              body: {
-                tag: 'blk',
-                body: {
-                  tag: 'seq',
-                  stmts: [
-                    {
-                      tag: 'let',
-                      syms: { tag: 'idents', IDENTS: [ 'channel1' ] },
-                      assignments: {
-                        tag: 'exprlist',
-                        list: [
-                          {
-                            tag: 'make',
-                            chanType: 'chan int',
-                            buffered: true,
-                            capacity: 10
-                          }
-                        ]
-                      },
-                      type: 'chan int'
-                    },
-                    {
-                      tag: 'let',
-                      syms: { tag: 'idents', IDENTS: [ 'channel2' ] },
-                      assignments: {
-                        tag: 'exprlist',
-                        list: [
-                          {
-                            tag: 'make',
-                            chanType: 'chan int',
-                            buffered: false,
-                            capacity: 0
-                          }
-                        ]
-                      },
-                      type: 'chan int'
-                    },
-                    {
-                      tag: 'send',
-                      frst: { tag: 'nam', sym: 'channel1' },
-                      scnd: {
-                        tag: 'binop',
-                        sym: '+',
-                        frst: { tag: 'lit', val: 1 },
-                        scnd: { tag: 'lit', val: 2 }
-                      }
-                    },
-                    {
-                      tag: 'recv',
-                      sym: '<-',
-                      frst: { tag: 'nam', sym: 'channel2' }
-                    }
-                  ]
-                }
-              },
-              _arity: 0,
-
+              paramTypes: [],
+              returnTypes: []
             },
-            {
-              tag: 'app',
-              fun: { tag: 'nam', sym: 'main' },
-              args: [],
-              _arity: 0
-            }
-          ]
-        }
-      };
-    const outputAst: ASTNode = parse(program)
+            body: {
+              tag: 'blk',
+              body: {
+                tag: 'seq',
+                stmts: [
+                  {
+                    tag: 'let',
+                    syms: { tag: 'idents', IDENTS: ['channel1'] },
+                    assignments: {
+                      tag: 'exprlist',
+                      list: [
+                        {
+                          tag: 'make',
+                          chanType: 'chan int',
+                          buffered: true,
+                          capacity: 10
+                        }
+                      ]
+                    },
+                    type: 'chan int'
+                  },
+                  {
+                    tag: 'let',
+                    syms: { tag: 'idents', IDENTS: ['channel2'] },
+                    assignments: {
+                      tag: 'exprlist',
+                      list: [
+                        {
+                          tag: 'make',
+                          chanType: 'chan int',
+                          buffered: false,
+                          capacity: 0
+                        }
+                      ]
+                    },
+                    type: 'chan int'
+                  },
+                  {
+                    tag: 'send',
+                    frst: { tag: 'nam', sym: 'channel1' },
+                    scnd: {
+                      tag: 'binop',
+                      sym: '+',
+                      frst: { tag: 'lit', val: 1 },
+                      scnd: { tag: 'lit', val: 2 }
+                    }
+                  },
+                  {
+                    tag: 'recv',
+                    sym: '<-',
+                    frst: { tag: 'nam', sym: 'channel2' }
+                  }
+                ]
+              }
+            },
+            _arity: 0
+          },
+          {
+            tag: 'app',
+            fun: { tag: 'nam', sym: 'main' },
+            args: [],
+            _arity: 0
+          }
+        ]
+      }
+    }
+    const outputAst: ASTNode | null = parse(program, createContext(), true)
     expect(outputAst).toStrictEqual(expectedAst)
   })
 
@@ -106,87 +106,86 @@ describe('Basic parser test', () => {
       }`
 
     const expectedAst = {
-        tag: 'blk',
-        body: {
-          tag: 'seq',
-          stmts: [
-            {
+      tag: 'blk',
+      body: {
+        tag: 'seq',
+        stmts: [
+          {
+            tag: 'fun',
+            sym: 'main',
+            prms: [],
+            type: {
               tag: 'fun',
-              sym: 'main',
-              prms: [],
-              type: {
-                tag: "fun",
-                paramTypes: [],
-                returnTypes: []
-              },
-              body: {
-                tag: 'blk',
-                body: {
-                  tag: 'seq',
-                  stmts: [
-                    {
-                      tag: 'let',
-                      syms: { tag: 'idents', IDENTS: [ 'channel1' ] },
-                      assignments: {
-                        tag: 'exprlist',
-                        list: [
-                          {
-                            tag: 'make',
-                            chanType: 'chan chan chan int',
-                            buffered: true,
-                            capacity: 10
-                          }
-                        ]
-                      },
-                      type: 'chan chan chan int'
-                    },
-                    {
-                      tag: 'let',
-                      syms: { tag: 'idents', IDENTS: [ 'channel2' ] },
-                      assignments: {
-                        tag: 'exprlist',
-                        list: [
-                          {
-                            tag: 'make',
-                            chanType: 'chan int',
-                            buffered: false,
-                            capacity: 0
-                          }
-                        ]
-                      },
-                      type: 'chan int'
-                    },
-                    {
-                      tag: 'send',
-                      frst: { tag: 'nam', sym: 'channel1' },
-                      scnd: {
-                        tag: 'binop',
-                        sym: '+',
-                        frst: { tag: 'lit', val: 1 },
-                        scnd: { tag: 'lit', val: 2 }
-                      }
-                    },
-                    {
-                      tag: 'recv',
-                      sym: '<-',
-                      frst: { tag: 'nam', sym: 'channel2' }
-                    }
-                  ]
-                }
-              },
-              _arity: 0,
-
+              paramTypes: [],
+              returnTypes: []
             },
-            {
-              tag: 'app',
-              fun: { tag: 'nam', sym: 'main' },
-              args: [],
-              _arity: 0
-            }
-          ]
-        }
-      };
-    const outputAst: ASTNode = parse(program)
+            body: {
+              tag: 'blk',
+              body: {
+                tag: 'seq',
+                stmts: [
+                  {
+                    tag: 'let',
+                    syms: { tag: 'idents', IDENTS: ['channel1'] },
+                    assignments: {
+                      tag: 'exprlist',
+                      list: [
+                        {
+                          tag: 'make',
+                          chanType: 'chan chan chan int',
+                          buffered: true,
+                          capacity: 10
+                        }
+                      ]
+                    },
+                    type: 'chan chan chan int'
+                  },
+                  {
+                    tag: 'let',
+                    syms: { tag: 'idents', IDENTS: ['channel2'] },
+                    assignments: {
+                      tag: 'exprlist',
+                      list: [
+                        {
+                          tag: 'make',
+                          chanType: 'chan int',
+                          buffered: false,
+                          capacity: 0
+                        }
+                      ]
+                    },
+                    type: 'chan int'
+                  },
+                  {
+                    tag: 'send',
+                    frst: { tag: 'nam', sym: 'channel1' },
+                    scnd: {
+                      tag: 'binop',
+                      sym: '+',
+                      frst: { tag: 'lit', val: 1 },
+                      scnd: { tag: 'lit', val: 2 }
+                    }
+                  },
+                  {
+                    tag: 'recv',
+                    sym: '<-',
+                    frst: { tag: 'nam', sym: 'channel2' }
+                  }
+                ]
+              }
+            },
+            _arity: 0
+          },
+          {
+            tag: 'app',
+            fun: { tag: 'nam', sym: 'main' },
+            args: [],
+            _arity: 0
+          }
+        ]
+      }
+    }
+    const outputAst: ASTNode | null = parse(program, createContext(), true)
     expect(outputAst).toStrictEqual(expectedAst)
   })
 
@@ -196,13 +195,17 @@ describe('Basic parser test', () => {
         var channel1 int = make(int, 10)
       }`
 
-    expect(()=>parse(program)).toThrow("Syntax Error at line 3, col 32: missing 'chan' at 'int'");
+    expect(() => parse(program, createContext(), true)).toThrow(
+      "Syntax Error at line 3, col 32: missing 'chan' at 'int'"
+    )
   })
 
   test('weird channel types should throw syntax error', async () => {
     const program = `func main(){var channel1 chan int int chan int = make(chan int, 10)}`
 
-    expect(()=>parse(program)).toThrow("Syntax Error at line 1, col 34: mismatched input 'int' expecting '='");
+    expect(() => parse(program, createContext(), true)).toThrow(
+      "Syntax Error at line 1, col 34: mismatched input 'int' expecting '='"
+    )
   })
 
   test('=== should throw parser error', async () => {
@@ -213,7 +216,9 @@ describe('Basic parser test', () => {
         x = x + 1
       }
     }`
-    expect(()=>parse(program)).toThrow("Syntax Error at line 4, col 13: extraneous input '=' expecting {'func', 'make', 'nil', IDENTIFIER, '(', '!', '-', '<-', DECIMAL_LIT, FLOAT_LIT, RAW_STRING_LIT, INTERPRETED_STRING_LIT}");
+    expect(() => parse(program, createContext(), true)).toThrow(
+      "Syntax Error at line 4, col 13: extraneous input '=' expecting {'func', 'make', 'nil', IDENTIFIER, '(', '!', '-', '<-', DECIMAL_LIT, FLOAT_LIT, RAW_STRING_LIT, INTERPRETED_STRING_LIT}"
+    )
   })
 
   test('!== should throw parser error', async () => {
@@ -224,7 +229,10 @@ describe('Basic parser test', () => {
         x = x + 1
       }
     }`
-    expect(()=>parse(program)).toThrow("Syntax Error at line 4, col 13: extraneous input '=' expecting {'func', 'make', 'nil', IDENTIFIER, '(', '!', '-', '<-', DECIMAL_LIT, FLOAT_LIT, RAW_STRING_LIT, INTERPRETED_STRING_LIT}");
+
+    expect(() => parse(program, createContext(), true)).toThrow(
+      "Syntax Error at line 4, col 13: extraneous input '=' expecting {'func', 'make', 'nil', IDENTIFIER, '(', '!', '-', '<-', DECIMAL_LIT, FLOAT_LIT, RAW_STRING_LIT, INTERPRETED_STRING_LIT}"
+    )
   })
 
   // test('uninit var decl with type channel should throw error', async () => {
@@ -232,7 +240,7 @@ describe('Basic parser test', () => {
   //   func main(){
   //     var x chan int
   //   }`
-  //   expect(()=>parse(program)).toThrow("channels should be initialized!");
+  //   expect(() => parse(program, createContext(), true)).toThrow('channels should be initialized!')
   // })
 
   // test('uninit var decl test', async () => {
@@ -260,34 +268,34 @@ describe('Basic parser test', () => {
   //               stmts: [
   //                 {
   //                   tag: 'let',
-  //                   syms: { tag: 'idents', IDENTS: [ 'x' ] },
-  //                   assignments: { tag: 'exprlist', list: [ { tag: 'lit', val: 0 } ] },
+  //                   syms: { tag: 'idents', IDENTS: ['x'] },
+  //                   assignments: { tag: 'exprlist', list: [{ tag: 'lit', val: 0 }] },
   //                   type: 'int'
   //                 },
   //                 {
   //                   tag: 'let',
-  //                   syms: { tag: 'idents', IDENTS: [ 'y' ] },
-  //                   assignments: { tag: 'exprlist', list: [ { tag: 'lit', val: 0 } ] },
+  //                   syms: { tag: 'idents', IDENTS: ['y'] },
+  //                   assignments: { tag: 'exprlist', list: [{ tag: 'lit', val: 0 }] },
   //                   type: 'float'
   //                 },
   //                 {
   //                   tag: 'let',
-  //                   syms: { tag: 'idents', IDENTS: [ 'b' ] },
+  //                   syms: { tag: 'idents', IDENTS: ['b'] },
   //                   assignments: {
   //                     tag: 'exprlist',
-  //                     list: [ { tag: 'lit', val: false } ]
+  //                     list: [{ tag: 'lit', val: false }]
   //                   },
   //                   type: 'bool'
   //                 },
   //                 {
   //                   tag: 'let',
-  //                   syms: { tag: 'idents', IDENTS: [ 's' ] },
-  //                   assignments: { tag: 'exprlist', list: [ { tag: 'lit', val: '' } ] },
+  //                   syms: { tag: 'idents', IDENTS: ['s'] },
+  //                   assignments: { tag: 'exprlist', list: [{ tag: 'lit', val: '' }] },
   //                   type: 'string'
   //                 },
   //                 {
   //                   tag: 'let',
-  //                   syms: { tag: 'idents', IDENTS: [ 'a', 'b', 'c' ] },
+  //                   syms: { tag: 'idents', IDENTS: ['a', 'b', 'c'] },
   //                   assignments: {
   //                     tag: 'exprlist',
   //                     list: [
@@ -314,8 +322,8 @@ describe('Basic parser test', () => {
   //       ]
   //     }
   //   }
-  //   const outputAst: ASTNode = parse(program)
-  //   expect(outputAst).toStrictEqual(expectedAst) 
+  //   const outputAst: ASTNode | null = parse(program, createContext(), true)
+  //   expect(outputAst).toStrictEqual(expectedAst)
   // })
 
   test('var decl test', async () => {
@@ -337,7 +345,7 @@ describe('Basic parser test', () => {
             sym: 'main',
             prms: [],
             type: {
-              tag: "fun",
+              tag: 'fun',
               paramTypes: [],
               returnTypes: []
             },
@@ -348,37 +356,37 @@ describe('Basic parser test', () => {
                 stmts: [
                   {
                     tag: 'let',
-                    syms: { tag: 'idents', IDENTS: [ 'x' ] },
-                    assignments: { tag: 'exprlist', list: [ { tag: 'lit', val: 1 } ] },
+                    syms: { tag: 'idents', IDENTS: ['x'] },
+                    assignments: { tag: 'exprlist', list: [{ tag: 'lit', val: 1 }] },
                     type: 'int'
                   },
                   {
                     tag: 'let',
-                    syms: { tag: 'idents', IDENTS: [ 'y' ] },
-                    assignments: { tag: 'exprlist', list: [ { tag: 'lit', val: 1 } ] },
+                    syms: { tag: 'idents', IDENTS: ['y'] },
+                    assignments: { tag: 'exprlist', list: [{ tag: 'lit', val: 1 }] },
                     type: 'float'
                   },
                   {
                     tag: 'let',
-                    syms: { tag: 'idents', IDENTS: [ 'b' ] },
+                    syms: { tag: 'idents', IDENTS: ['b'] },
                     assignments: {
                       tag: 'exprlist',
-                      list: [ { tag: 'lit', val: false } ]
+                      list: [{ tag: 'lit', val: false }]
                     },
                     type: 'bool'
                   },
                   {
                     tag: 'let',
-                    syms: { tag: 'idents', IDENTS: [ 's' ] },
+                    syms: { tag: 'idents', IDENTS: ['s'] },
                     assignments: {
                       tag: 'exprlist',
-                      list: [ { tag: 'lit', val: 'hello' } ]
+                      list: [{ tag: 'lit', val: 'hello' }]
                     },
                     type: 'string'
                   },
                   {
                     tag: 'let',
-                    syms: { tag: 'idents', IDENTS: [ 'a', 'b', 'c' ] },
+                    syms: { tag: 'idents', IDENTS: ['a', 'b', 'c'] },
                     assignments: {
                       tag: 'exprlist',
                       list: [
@@ -392,8 +400,7 @@ describe('Basic parser test', () => {
                 ]
               }
             },
-            _arity: 0,
-
+            _arity: 0
           },
           {
             tag: 'app',
@@ -404,8 +411,8 @@ describe('Basic parser test', () => {
         ]
       }
     }
-    const outputAst: ASTNode = parse(program)
-    expect(outputAst).toStrictEqual(expectedAst) 
+    const outputAst: ASTNode | null = parse(program, createContext(), true)
+    expect(outputAst).toStrictEqual(expectedAst)
   })
 
   test('short decl test', async () => {
@@ -427,7 +434,7 @@ describe('Basic parser test', () => {
             sym: 'main',
             prms: [],
             type: {
-              tag: "fun",
+              tag: 'fun',
               paramTypes: [],
               returnTypes: []
             },
@@ -438,37 +445,37 @@ describe('Basic parser test', () => {
                 stmts: [
                   {
                     tag: 'let',
-                    syms: { tag: 'idents', IDENTS: [ 'x' ] },
-                    assignments: { tag: 'exprlist', list: [ { tag: 'lit', val: 1 } ] },
+                    syms: { tag: 'idents', IDENTS: ['x'] },
+                    assignments: { tag: 'exprlist', list: [{ tag: 'lit', val: 1 }] },
                     type: 'int'
                   },
                   {
                     tag: 'let',
-                    syms: { tag: 'idents', IDENTS: [ 'y' ] },
-                    assignments: { tag: 'exprlist', list: [ { tag: 'lit', val: 1 } ] },
+                    syms: { tag: 'idents', IDENTS: ['y'] },
+                    assignments: { tag: 'exprlist', list: [{ tag: 'lit', val: 1 }] },
                     type: 'float'
                   },
                   {
                     tag: 'let',
-                    syms: { tag: 'idents', IDENTS: [ 'b' ] },
+                    syms: { tag: 'idents', IDENTS: ['b'] },
                     assignments: {
                       tag: 'exprlist',
-                      list: [ { tag: 'lit', val: false } ]
+                      list: [{ tag: 'lit', val: false }]
                     },
                     type: 'bool'
                   },
                   {
                     tag: 'let',
-                    syms: { tag: 'idents', IDENTS: [ 's' ] },
+                    syms: { tag: 'idents', IDENTS: ['s'] },
                     assignments: {
                       tag: 'exprlist',
-                      list: [ { tag: 'lit', val: 'hello' } ]
+                      list: [{ tag: 'lit', val: 'hello' }]
                     },
                     type: 'string'
                   },
                   {
                     tag: 'let',
-                    syms: { tag: 'idents', IDENTS: [ 'a', 'b', 'c' ] },
+                    syms: { tag: 'idents', IDENTS: ['a', 'b', 'c'] },
                     assignments: {
                       tag: 'exprlist',
                       list: [
@@ -482,8 +489,7 @@ describe('Basic parser test', () => {
                 ]
               }
             },
-            _arity: 0,
-
+            _arity: 0
           },
           {
             tag: 'app',
@@ -494,8 +500,8 @@ describe('Basic parser test', () => {
         ]
       }
     }
-    const outputAst: ASTNode = parse(program)
-    expect(outputAst).toStrictEqual(expectedAst) 
+    const outputAst: ASTNode | null = parse(program, createContext(), true)
+    expect(outputAst).toStrictEqual(expectedAst)
   })
 
   test('mixture decl test', async () => {
@@ -517,7 +523,7 @@ describe('Basic parser test', () => {
             sym: 'main',
             prms: [],
             type: {
-              tag: "fun",
+              tag: 'fun',
               paramTypes: [],
               returnTypes: []
             },
@@ -528,37 +534,37 @@ describe('Basic parser test', () => {
                 stmts: [
                   {
                     tag: 'let',
-                    syms: { tag: 'idents', IDENTS: [ 'x' ] },
-                    assignments: { tag: 'exprlist', list: [ { tag: 'lit', val: 1 } ] },
+                    syms: { tag: 'idents', IDENTS: ['x'] },
+                    assignments: { tag: 'exprlist', list: [{ tag: 'lit', val: 1 }] },
                     type: 'int'
                   },
                   {
                     tag: 'let',
-                    syms: { tag: 'idents', IDENTS: [ 'y' ] },
-                    assignments: { tag: 'exprlist', list: [ { tag: 'lit', val: 1 } ] },
+                    syms: { tag: 'idents', IDENTS: ['y'] },
+                    assignments: { tag: 'exprlist', list: [{ tag: 'lit', val: 1 }] },
                     type: 'float'
                   },
                   {
                     tag: 'let',
-                    syms: { tag: 'idents', IDENTS: [ 'b' ] },
+                    syms: { tag: 'idents', IDENTS: ['b'] },
                     assignments: {
                       tag: 'exprlist',
-                      list: [ { tag: 'lit', val: false } ]
+                      list: [{ tag: 'lit', val: false }]
                     },
                     type: 'bool'
                   },
                   {
                     tag: 'let',
-                    syms: { tag: 'idents', IDENTS: [ 's' ] },
+                    syms: { tag: 'idents', IDENTS: ['s'] },
                     assignments: {
                       tag: 'exprlist',
-                      list: [ { tag: 'lit', val: 'hello' } ]
+                      list: [{ tag: 'lit', val: 'hello' }]
                     },
                     type: 'string'
                   },
                   {
                     tag: 'let',
-                    syms: { tag: 'idents', IDENTS: [ 'a', 'bb', 'c' ] },
+                    syms: { tag: 'idents', IDENTS: ['a', 'bb', 'c'] },
                     assignments: {
                       tag: 'exprlist',
                       list: [
@@ -572,8 +578,7 @@ describe('Basic parser test', () => {
                 ]
               }
             },
-            _arity: 0,
-
+            _arity: 0
           },
           {
             tag: 'app',
@@ -584,8 +589,8 @@ describe('Basic parser test', () => {
         ]
       }
     }
-    const outputAst: ASTNode = parse(program)
-    expect(outputAst).toStrictEqual(expectedAst) 
+    const outputAst: ASTNode | null = parse(program, createContext(), true)
+    expect(outputAst).toStrictEqual(expectedAst)
   })
 
   test('basic mutex test', async () => {
@@ -603,7 +608,7 @@ describe('Basic parser test', () => {
             sym: 'main',
             prms: [],
             type: {
-              tag: "fun",
+              tag: 'fun',
               paramTypes: [],
               returnTypes: []
             },
@@ -614,15 +619,14 @@ describe('Basic parser test', () => {
                 stmts: [
                   {
                     tag: 'mut',
-                    syms: { tag: 'idents', IDENTS: [ 'x' ] },
+                    syms: { tag: 'idents', IDENTS: ['x'] },
                     assignments: { tag: 'exprlist', list: [] },
                     type: 'mutex'
-                  },
+                  }
                 ]
               }
             },
-            _arity: 0,
-
+            _arity: 0
           },
           {
             tag: 'app',
@@ -633,8 +637,8 @@ describe('Basic parser test', () => {
         ]
       }
     }
-    const outputAst: ASTNode = parse(program)
-    expect(outputAst).toStrictEqual(expectedAst) 
+    const outputAst: ASTNode | null = parse(program, createContext(), true)
+    expect(outputAst).toStrictEqual(expectedAst)
   })
 
   test('basic waitgroup test', async () => {
@@ -652,7 +656,7 @@ describe('Basic parser test', () => {
             sym: 'main',
             prms: [],
             type: {
-              tag: "fun",
+              tag: 'fun',
               paramTypes: [],
               returnTypes: []
             },
@@ -663,14 +667,14 @@ describe('Basic parser test', () => {
                 stmts: [
                   {
                     tag: 'waitgroup',
-                    syms: { tag: 'idents', IDENTS: [ 'x' ] },
+                    syms: { tag: 'idents', IDENTS: ['x'] },
                     assignments: { tag: 'exprlist', list: [] },
                     type: 'waitgroup'
-                  },
+                  }
                 ]
               }
             },
-            _arity: 0,
+            _arity: 0
           },
           {
             tag: 'app',
@@ -681,8 +685,8 @@ describe('Basic parser test', () => {
         ]
       }
     }
-    const outputAst: ASTNode = parse(program)
-    expect(outputAst).toStrictEqual(expectedAst) 
+    const outputAst: ASTNode | null = parse(program, createContext(), true)
+    expect(outputAst).toStrictEqual(expectedAst)
   })
 
   test('multi mutex test', async () => {
@@ -700,7 +704,7 @@ describe('Basic parser test', () => {
             sym: 'main',
             prms: [],
             type: {
-              tag: "fun",
+              tag: 'fun',
               paramTypes: [],
               returnTypes: []
             },
@@ -711,14 +715,14 @@ describe('Basic parser test', () => {
                 stmts: [
                   {
                     tag: 'mut',
-                    syms: { tag: 'idents', IDENTS: [ 'x', 'y', 'z' ] },
+                    syms: { tag: 'idents', IDENTS: ['x', 'y', 'z'] },
                     assignments: { tag: 'exprlist', list: [] },
                     type: 'mutex'
-                  },
+                  }
                 ]
               }
             },
-            _arity: 0,
+            _arity: 0
           },
           {
             tag: 'app',
@@ -729,8 +733,8 @@ describe('Basic parser test', () => {
         ]
       }
     }
-    const outputAst: ASTNode = parse(program)
-    expect(outputAst).toStrictEqual(expectedAst) 
+    const outputAst: ASTNode | null = parse(program, createContext(), true)
+    expect(outputAst).toStrictEqual(expectedAst)
   })
 
   test('multi waitgroup test', async () => {
@@ -748,7 +752,7 @@ describe('Basic parser test', () => {
             sym: 'main',
             prms: [],
             type: {
-              tag: "fun",
+              tag: 'fun',
               paramTypes: [],
               returnTypes: []
             },
@@ -759,14 +763,14 @@ describe('Basic parser test', () => {
                 stmts: [
                   {
                     tag: 'waitgroup',
-                    syms: { tag: 'idents', IDENTS: [ 'x', 'y', 'z' ] },
+                    syms: { tag: 'idents', IDENTS: ['x', 'y', 'z'] },
                     assignments: { tag: 'exprlist', list: [] },
                     type: 'waitgroup'
-                  },
+                  }
                 ]
               }
             },
-            _arity: 0,
+            _arity: 0
           },
           {
             tag: 'app',
@@ -777,8 +781,8 @@ describe('Basic parser test', () => {
         ]
       }
     }
-    const outputAst: ASTNode = parse(program)
-    expect(outputAst).toStrictEqual(expectedAst) 
+    const outputAst: ASTNode | null = parse(program, createContext(), true)
+    expect(outputAst).toStrictEqual(expectedAst)
   })
 
   test('basic done, add, wait test', async () => {
@@ -799,7 +803,7 @@ describe('Basic parser test', () => {
             sym: 'main',
             prms: [],
             type: {
-              tag: "fun",
+              tag: 'fun',
               paramTypes: [],
               returnTypes: []
             },
@@ -810,32 +814,35 @@ describe('Basic parser test', () => {
                 stmts: [
                   {
                     tag: 'waitgroup',
-                    syms: { tag: 'idents', IDENTS: [ 'x' ] },
+                    syms: { tag: 'idents', IDENTS: ['x'] },
                     assignments: { tag: 'exprlist', list: [] },
                     type: 'waitgroup'
                   },
                   {
                     tag: 'add',
                     fun: { tag: 'nam', sym: 'Add' },
-                    args: [ { tag: 'nam', sym: 'x' }, { tag: 'lit', val: 2 } ],
+                    args: [
+                      { tag: 'nam', sym: 'x' },
+                      { tag: 'lit', val: 2 }
+                    ],
                     _arity: 2
                   },
                   {
                     tag: 'done',
                     fun: { tag: 'nam', sym: 'Done' },
-                    args: [ { tag: 'nam', sym: 'x' } ],
+                    args: [{ tag: 'nam', sym: 'x' }],
                     _arity: 1
                   },
                   {
                     tag: 'wait',
                     fun: { tag: 'nam', sym: 'Wait' },
-                    args: [ { tag: 'nam', sym: 'x' } ],
+                    args: [{ tag: 'nam', sym: 'x' }],
                     _arity: 1
                   }
                 ]
               }
             },
-            _arity: 0,
+            _arity: 0
           },
           {
             tag: 'app',
@@ -846,9 +853,9 @@ describe('Basic parser test', () => {
         ]
       }
     }
-    const outputAst: ASTNode = parse(program)
-    console.dir(outputAst, {depth: 100})
-    expect(outputAst).toStrictEqual(expectedAst) 
+    const outputAst: ASTNode | null = parse(program, createContext(), true)
+    console.dir(outputAst, { depth: 100 })
+    expect(outputAst).toStrictEqual(expectedAst)
   })
 
   test('basic lock, unlock test', async () => {
@@ -868,7 +875,7 @@ describe('Basic parser test', () => {
             sym: 'main',
             prms: [],
             type: {
-              tag: "fun",
+              tag: 'fun',
               paramTypes: [],
               returnTypes: []
             },
@@ -879,26 +886,26 @@ describe('Basic parser test', () => {
                 stmts: [
                   {
                     tag: 'mut',
-                    syms: { tag: 'idents', IDENTS: [ 'x' ] },
+                    syms: { tag: 'idents', IDENTS: ['x'] },
                     assignments: { tag: 'exprlist', list: [] },
                     type: 'mutex'
                   },
                   {
                     tag: 'lock',
                     fun: { tag: 'nam', sym: 'Lock' },
-                    args: [ { tag: 'nam', sym: 'x' } ],
+                    args: [{ tag: 'nam', sym: 'x' }],
                     _arity: 1
                   },
                   {
                     tag: 'unlock',
                     fun: { tag: 'nam', sym: 'Unlock' },
-                    args: [ { tag: 'nam', sym: 'x' } ],
+                    args: [{ tag: 'nam', sym: 'x' }],
                     _arity: 1
                   }
                 ]
               }
             },
-            _arity: 0,
+            _arity: 0
           },
           {
             tag: 'app',
@@ -909,16 +916,16 @@ describe('Basic parser test', () => {
         ]
       }
     }
-    const outputAst: ASTNode = parse(program)
-    console.dir(outputAst, {depth: 100})
-    expect(outputAst).toStrictEqual(expectedAst) 
+    const outputAst: ASTNode | null = parse(program, createContext(), true)
+    console.dir(outputAst, { depth: 100 })
+    expect(outputAst).toStrictEqual(expectedAst)
   })
 
   test('parse mutex and waitgroup in global scope', async () => {
     const program = `
     var z WaitGroup = inc2()
     var y Mutex = s
-    `;
+    `
     const expectedAst = {
       tag: 'blk',
       body: {
@@ -926,13 +933,13 @@ describe('Basic parser test', () => {
         stmts: [
           {
             tag: 'waitgroup',
-            syms: { tag: 'idents', IDENTS: [ 'z' ] },
+            syms: { tag: 'idents', IDENTS: ['z'] },
             assignments: { tag: 'exprlist', list: [] },
             type: 'waitgroup'
           },
           {
             tag: 'mut',
-            syms: { tag: 'idents', IDENTS: [ 'y' ] },
+            syms: { tag: 'idents', IDENTS: ['y'] },
             assignments: { tag: 'exprlist', list: [] },
             type: 'mutex'
           },
@@ -945,7 +952,7 @@ describe('Basic parser test', () => {
         ]
       }
     }
-    const outputAst: ASTNode = parse(program)
-    expect(outputAst).toStrictEqual(expectedAst) 
+    const outputAst: ASTNode | null = parse(program, createContext(), true)
+    expect(outputAst).toStrictEqual(expectedAst)
   })
 })

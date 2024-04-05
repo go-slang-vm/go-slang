@@ -16,7 +16,6 @@ import {
   ModuleContext,
   RecursivePartial,
   Result,
-  SourceError,
   SVMProgram,
   Variant
 } from './types'
@@ -68,13 +67,19 @@ if (typeof window !== 'undefined') {
 
 let verboseErrors: boolean = false
 
-export function parseError(errors: SourceError[], verbose: boolean = verboseErrors): string {
+export function parseError(errors: any[], verbose: boolean = verboseErrors): string {
   const errorMessagesArr = errors.map(error => {
     // FIXME: Either refactor the parser to output an ESTree-compliant AST, or modify the ESTree types.
     const filePath = error.location?.source ? `[${error.location.source}] ` : ''
     const line = error.location ? error.location.start.line : '<unknown>'
     const column = error.location ? error.location.start.column : '<unknown>'
-    const explanation = error.explain()
+    let explanation = ''
+    // check if error has an explain method
+    if (error.explain) {
+      explanation = error.explain()
+    } else {
+      explanation = error.stack || error.message
+    }
 
     if (verbose) {
       // TODO currently elaboration is just tagged on to a new line after the error message itself. find a better
