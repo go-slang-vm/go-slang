@@ -17,6 +17,12 @@ export class Channel {
         this.recvBlockedQueue = []
     }
 
+    clear() {
+        this.items = []
+        this.sendBlockedQueue = []
+        this.recvBlockedQueue = []
+    }
+
     pushToItemQueue(item: number) {
         this.items.push(item)
     }

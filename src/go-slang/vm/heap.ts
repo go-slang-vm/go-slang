@@ -489,6 +489,13 @@ export class Heap {
 
     while (v < this.heap_size) {
       if (this.is_unmarked(v)) {
+        // clear JS runtime resources related to this channel
+        if (this.heap_get_tag(v) === Channel_tag) {
+          const idx = this.heap_get_channel_idx(v)
+
+          globalState.CHANNELARRAY[idx].clear()
+        }
+        
         this.free_node(v)
       } else {
         this.heap_set_byte_at_offset(v, this.mark_bit, this.UNMARKED)
