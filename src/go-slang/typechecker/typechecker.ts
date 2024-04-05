@@ -5,9 +5,6 @@ import { ASTNode, AssignNode, BinOpNode, BlockNode, ForStmtNode, FuncAppNode, Fu
 import { is_boolean, is_number, is_string, is_undefined } from "../vm/utils"
 import { equal_array_types, equal_type, extend_type_environment, global_type_environment, lookup_type, unparse_type, unparse_types } from "./typeenvironment"
 
-// TODO: STILL MISSING GO MAKE ADD DONE LOCK SEND RECV
-// STILL HAVE NOT IMPLEMENTED ASSIGNMENT STMTS AND FOR STMTS done
-// LAMBDA NOT IMPLEMENTED done
 
 // functions for each component tag
 const type_comp = {
