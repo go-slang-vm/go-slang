@@ -60,10 +60,10 @@ describe('Basic compiler test', () => {
             },
             _arity: 0,
             type: {
-              tag: "fun",
+              tag: 'fun',
               paramTypes: [],
               returnTypes: ['int']
-            },
+            }
           },
           {
             tag: 'app',
@@ -73,10 +73,13 @@ describe('Basic compiler test', () => {
           }
         ]
       }
-    };
+    }
 
-    const inputAst: ASTNode = parse(program);
-    const postProcessedAst: ASTNode = preprocess(inputAst);
+    const inputAst: ASTNode | null = parse(program)
+    if (!inputAst) {
+      throw new Error('Parsing failed')
+    }
+    const postProcessedAst: ASTNode = preprocess(inputAst)
     expect(postProcessedAst).toStrictEqual(expectedAst)
   })
 
@@ -114,10 +117,10 @@ describe('Basic compiler test', () => {
             },
             _arity: 0,
             type: {
-              tag: "fun",
+              tag: 'fun',
               paramTypes: [],
               returnTypes: []
-            },
+            }
           },
           {
             tag: 'let',
@@ -139,10 +142,13 @@ describe('Basic compiler test', () => {
           }
         ]
       }
-    };
+    }
 
-    const inputAst: ASTNode = parse(program);
-    const postProcessedAst: ASTNode = preprocess(inputAst);
+    const inputAst: ASTNode | null = parse(program)
+    if (!inputAst) {
+      throw new Error('Parsing failed')
+    }
+    const postProcessedAst: ASTNode = preprocess(inputAst)
     expect(postProcessedAst).toStrictEqual(expectedAst)
   })
 
@@ -180,10 +186,10 @@ describe('Basic compiler test', () => {
             },
             _arity: 0,
             type: {
-              tag: "fun",
+              tag: 'fun',
               paramTypes: [],
               returnTypes: []
-            },
+            }
           },
           {
             tag: 'let',
@@ -205,10 +211,13 @@ describe('Basic compiler test', () => {
           }
         ]
       }
-    };
+    }
 
-    const inputAst: ASTNode = parse(program);
-    const postProcessedAst: ASTNode = preprocess(inputAst);
+    const inputAst: ASTNode | null = parse(program)
+    if (!inputAst) {
+      throw new Error('Parsing failed')
+    }
+    const postProcessedAst: ASTNode = preprocess(inputAst)
     expect(postProcessedAst).toStrictEqual(expectedAst)
   })
 
@@ -248,10 +257,10 @@ describe('Basic compiler test', () => {
             },
             _arity: 0,
             type: {
-              tag: "fun",
+              tag: 'fun',
               paramTypes: [],
               returnTypes: []
-            },
+            }
           },
           {
             tag: 'fun',
@@ -273,10 +282,10 @@ describe('Basic compiler test', () => {
             },
             _arity: 0,
             type: {
-              tag: "fun",
+              tag: 'fun',
               paramTypes: [],
               returnTypes: []
-            },
+            }
           },
           {
             tag: 'let',
@@ -308,14 +317,17 @@ describe('Basic compiler test', () => {
           }
         ]
       }
-    };
+    }
 
-    const inputAst: ASTNode = parse(program);
-    const postProcessedAst: ASTNode = preprocess(inputAst);
+    const inputAst: ASTNode | null = parse(program)
+    if (!inputAst) {
+      throw new Error('Parsing failed')
+    }
+    const postProcessedAst: ASTNode = preprocess(inputAst)
     expect(postProcessedAst).toStrictEqual(expectedAst)
   })
 
-  test("basic init cycle present should throw", async () => {
+  test('basic init cycle present should throw', async () => {
     const program = `
       var x int = inc()
       func inc() {
@@ -325,37 +337,46 @@ describe('Basic compiler test', () => {
         sz int :=1
       }
       var y int = x
-      `;
+      `
 
-    const inputAst: ASTNode = parse(program);
-    expect(() => preprocess(inputAst)).toThrow("initialization cycle present");
+    const inputAst: ASTNode | null = parse(program)
+    if (!inputAst) {
+      throw new Error('Parsing failed')
+    }
+    expect(() => preprocess(inputAst)).toThrow('initialization cycle present')
   })
 
-  test("basic redeclaration should throw", async () => {
+  test('basic redeclaration should throw', async () => {
     const program = `
       var x int = 1
       func main() {
         sz int :=1
       }
       var x int = 1
-      `;
+      `
 
-    const inputAst: ASTNode = parse(program);
-    expect(() => preprocess(inputAst)).toThrow("redeclaration of x");
+    const inputAst: ASTNode | null = parse(program)
+    if (!inputAst) {
+      throw new Error('Parsing failed')
+    }
+    expect(() => preprocess(inputAst)).toThrow('redeclaration of x')
   })
-  test("basic redeclaration in different scope should not throw", async () => {
+  test('basic redeclaration in different scope should not throw', async () => {
     const program = `
       var x int = 1
       func main() {
         x int := 1
       }
       var y int = 1
-      `;
+      `
 
-    const inputAst: ASTNode = parse(program);
-    expect(() => preprocess(inputAst)).not.toThrow("redeclaration of x");
+    const inputAst: ASTNode | null = parse(program)
+    if (!inputAst) {
+      throw new Error('Parsing failed')
+    }
+    expect(() => preprocess(inputAst)).not.toThrow('redeclaration of x')
   })
-  test("basic redeclaration of function name should throw", async () => {
+  test('basic redeclaration of function name should throw', async () => {
     const program = `
       var x int = 1
       func main() {
@@ -364,13 +385,16 @@ describe('Basic compiler test', () => {
       func x() {
 
       }
-      `;
+      `
 
-    const inputAst: ASTNode = parse(program);
-    expect(() => preprocess(inputAst)).toThrow("redeclaration of x");
+    const inputAst: ASTNode | null = parse(program)
+    if (!inputAst) {
+      throw new Error('Parsing failed')
+    }
+    expect(() => preprocess(inputAst)).toThrow('redeclaration of x')
   })
 
-  test("basic recursive cycle present should not throw", async () => {
+  test('basic recursive cycle present should not throw', async () => {
     const program = `
     func recurse1(o int) int {
       if o == 0 {
@@ -389,7 +413,7 @@ describe('Basic compiler test', () => {
     }
     
     var y int = 1
-      `;
+      `
 
     const expectedAst = {
       tag: 'blk',
@@ -399,7 +423,7 @@ describe('Basic compiler test', () => {
           {
             tag: 'fun',
             sym: 'recurse1',
-            prms: [ 'o' ],
+            prms: ['o'],
             body: {
               tag: 'blk',
               body: {
@@ -420,7 +444,7 @@ describe('Basic compiler test', () => {
                         stmts: [
                           {
                             tag: 'ret',
-                            expr: [ { tag: 'nam', sym: 'y' } ],
+                            expr: [{ tag: 'nam', sym: 'y' }],
                             _arity: 1
                           }
                         ]
@@ -452,15 +476,15 @@ describe('Basic compiler test', () => {
             },
             _arity: 1,
             type: {
-              tag: "fun",
+              tag: 'fun',
               paramTypes: ['int'],
               returnTypes: ['int']
-            },
+            }
           },
           {
             tag: 'fun',
             sym: 'recurse2',
-            prms: [ 't' ],
+            prms: ['t'],
             body: {
               tag: 'blk',
               body: {
@@ -490,10 +514,10 @@ describe('Basic compiler test', () => {
             },
             _arity: 1,
             type: {
-              tag: "fun",
+              tag: 'fun',
               paramTypes: ['int'],
               returnTypes: ['int']
-            },
+            }
           },
           {
             tag: 'fun',
@@ -507,7 +531,7 @@ describe('Basic compiler test', () => {
                   {
                     tag: 'app',
                     fun: { tag: 'nam', sym: 'Println' },
-                    args: [ { tag: 'nam', sym: 'x' } ],
+                    args: [{ tag: 'nam', sym: 'x' }],
                     _arity: 1
                   }
                 ]
@@ -515,27 +539,27 @@ describe('Basic compiler test', () => {
             },
             _arity: 0,
             type: {
-              tag: "fun",
+              tag: 'fun',
               paramTypes: [],
               returnTypes: []
-            },
+            }
           },
           {
             tag: 'let',
-            syms: { tag: 'idents', IDENTS: [ 'y' ] },
-            assignments: { tag: 'exprlist', list: [ { tag: 'lit', val: 1 } ] },
+            syms: { tag: 'idents', IDENTS: ['y'] },
+            assignments: { tag: 'exprlist', list: [{ tag: 'lit', val: 1 }] },
             type: 'int'
           },
           {
             tag: 'let',
-            syms: { tag: 'idents', IDENTS: [ 'x' ] },
+            syms: { tag: 'idents', IDENTS: ['x'] },
             assignments: {
               tag: 'exprlist',
               list: [
                 {
                   tag: 'app',
                   fun: { tag: 'nam', sym: 'recurse1' },
-                  args: [ { tag: 'lit', val: 4 } ],
+                  args: [{ tag: 'lit', val: 4 }],
                   _arity: 1
                 }
               ]
@@ -552,13 +576,16 @@ describe('Basic compiler test', () => {
       }
     }
 
-    const inputAst: ASTNode = parse(program);
-    const outputAst: ASTNode = preprocess(inputAst);
-    expect(() => preprocess(inputAst)).not.toThrow("initialization cycle present");
-    expect(outputAst).toStrictEqual(expectedAst);
+    const inputAst: ASTNode | null = parse(program)
+    if (!inputAst) {
+      throw new Error('Parsing failed')
+    }
+    const outputAst: ASTNode = preprocess(inputAst)
+    expect(() => preprocess(inputAst)).not.toThrow('initialization cycle present')
+    expect(outputAst).toStrictEqual(expectedAst)
   })
 
-  test("shadowed redeclaraction should not throw", async () => {
+  test('shadowed redeclaraction should not throw', async () => {
     const program = `
     func inc1() int {
       Println(1)
@@ -577,9 +604,9 @@ describe('Basic compiler test', () => {
     func main() {
 
     }
-          `;
+          `
 
-    const expectedAst ={
+    const expectedAst = {
       tag: 'blk',
       body: {
         tag: 'seq',
@@ -596,12 +623,12 @@ describe('Basic compiler test', () => {
                   {
                     tag: 'app',
                     fun: { tag: 'nam', sym: 'Println' },
-                    args: [ { tag: 'lit', val: 1 } ],
+                    args: [{ tag: 'lit', val: 1 }],
                     _arity: 1
                   },
                   {
                     tag: 'ret',
-                    expr: [ { tag: 'nam', sym: 'y' } ],
+                    expr: [{ tag: 'nam', sym: 'y' }],
                     _arity: 1
                   }
                 ]
@@ -609,10 +636,10 @@ describe('Basic compiler test', () => {
             },
             _arity: 0,
             type: {
-              tag: "fun",
+              tag: 'fun',
               paramTypes: [],
               returnTypes: ['int']
-            },
+            }
           },
           {
             tag: 'fun',
@@ -626,18 +653,18 @@ describe('Basic compiler test', () => {
                   {
                     tag: 'app',
                     fun: { tag: 'nam', sym: 'Println' },
-                    args: [ { tag: 'lit', val: 2 } ],
+                    args: [{ tag: 'lit', val: 2 }],
                     _arity: 1
                   },
                   {
                     tag: 'let',
-                    syms: { tag: 'idents', IDENTS: [ 'x' ] },
-                    assignments: { tag: 'exprlist', list: [ { tag: 'lit', val: 5 } ] },
+                    syms: { tag: 'idents', IDENTS: ['x'] },
+                    assignments: { tag: 'exprlist', list: [{ tag: 'lit', val: 5 }] },
                     type: 'int'
                   },
                   {
                     tag: 'ret',
-                    expr: [ { tag: 'nam', sym: 'x' } ],
+                    expr: [{ tag: 'nam', sym: 'x' }],
                     _arity: 1
                   }
                 ]
@@ -645,10 +672,10 @@ describe('Basic compiler test', () => {
             },
             _arity: 0,
             type: {
-              tag: "fun",
+              tag: 'fun',
               paramTypes: [],
               returnTypes: ['int']
-            },
+            }
           },
           {
             tag: 'fun',
@@ -657,14 +684,14 @@ describe('Basic compiler test', () => {
             body: { tag: 'blk', body: { tag: 'seq', stmts: [] } },
             _arity: 0,
             type: {
-              tag: "fun",
+              tag: 'fun',
               paramTypes: [],
               returnTypes: []
-            },
+            }
           },
           {
             tag: 'let',
-            syms: { tag: 'idents', IDENTS: [ 'y' ] },
+            syms: { tag: 'idents', IDENTS: ['y'] },
             assignments: {
               tag: 'exprlist',
               list: [
@@ -680,7 +707,7 @@ describe('Basic compiler test', () => {
           },
           {
             tag: 'let',
-            syms: { tag: 'idents', IDENTS: [ 'x' ] },
+            syms: { tag: 'idents', IDENTS: ['x'] },
             assignments: {
               tag: 'exprlist',
               list: [
@@ -702,15 +729,18 @@ describe('Basic compiler test', () => {
           }
         ]
       }
-    };
+    }
 
-    const inputAst: ASTNode = parse(program);
-    const outputAst: ASTNode = preprocess(inputAst);
-    expect(() => preprocess(inputAst)).not.toThrow("initialization cycle present");
-    expect(outputAst).toStrictEqual(expectedAst);
+    const inputAst: ASTNode | null = parse(program)
+    if (!inputAst) {
+      throw new Error('Parsing failed')
+    }
+    const outputAst: ASTNode = preprocess(inputAst)
+    expect(() => preprocess(inputAst)).not.toThrow('initialization cycle present')
+    expect(outputAst).toStrictEqual(expectedAst)
   })
 
-  test("basic recursive cycle present with cyclic definition should throw", async () => {
+  test('basic recursive cycle present with cyclic definition should throw', async () => {
     const program = `
     func recurse1(o int) int {
       if o == 0 {
@@ -732,13 +762,16 @@ describe('Basic compiler test', () => {
     }
     
     var y int = 1
-      `;
+      `
 
-    const inputAst: ASTNode = parse(program);
-    expect(() => preprocess(inputAst)).toThrow("initialization cycle present");
+    const inputAst: ASTNode | null = parse(program)
+    if (!inputAst) {
+      throw new Error('Parsing failed')
+    }
+    expect(() => preprocess(inputAst)).toThrow('initialization cycle present')
   })
 
-  test("test channels, Mutex, WaitGroups should not have cycles", async () => {
+  test('test channels, Mutex, WaitGroups should not have cycles', async () => {
     const program = `
     func inc2() int {
       Println(2)
@@ -751,7 +784,7 @@ describe('Basic compiler test', () => {
     var z WaitGroup = inc2()
     
     func main() {
-    }`;
+    }`
 
     const expectedAst = {
       tag: 'blk',
@@ -770,7 +803,7 @@ describe('Basic compiler test', () => {
                   {
                     tag: 'app',
                     fun: { tag: 'nam', sym: 'Println' },
-                    args: [ { tag: 'lit', val: 2 } ],
+                    args: [{ tag: 'lit', val: 2 }],
                     _arity: 1
                   },
                   {
@@ -795,10 +828,10 @@ describe('Basic compiler test', () => {
             },
             _arity: 0,
             type: {
-              tag: "fun",
+              tag: 'fun',
               paramTypes: [],
               returnTypes: ['int']
-            },
+            }
           },
           {
             tag: 'fun',
@@ -807,14 +840,14 @@ describe('Basic compiler test', () => {
             body: { tag: 'blk', body: { tag: 'seq', stmts: [] } },
             _arity: 0,
             type: {
-              tag: "fun",
+              tag: 'fun',
               paramTypes: [],
               returnTypes: []
-            },
+            }
           },
           {
             tag: 'let',
-            syms: { tag: 'idents', IDENTS: [ 'x' ] },
+            syms: { tag: 'idents', IDENTS: ['x'] },
             assignments: {
               tag: 'exprlist',
               list: [
@@ -830,13 +863,13 @@ describe('Basic compiler test', () => {
           },
           {
             tag: 'mut',
-            syms: { tag: 'idents', IDENTS: [ 'y' ] },
+            syms: { tag: 'idents', IDENTS: ['y'] },
             assignments: { tag: 'exprlist', list: [] },
             type: 'mutex'
           },
           {
             tag: 'waitgroup',
-            syms: { tag: 'idents', IDENTS: [ 'z' ] },
+            syms: { tag: 'idents', IDENTS: ['z'] },
             assignments: { tag: 'exprlist', list: [] },
             type: 'waitgroup'
           },
@@ -848,15 +881,18 @@ describe('Basic compiler test', () => {
           }
         ]
       }
-    };
+    }
 
-    const inputAst: ASTNode = parse(program);
-    const outputAst: ASTNode = preprocess(inputAst);
-    expect(() => preprocess(inputAst)).not.toThrow("initialization cycle present");
-    expect(outputAst).toStrictEqual(expectedAst);
+    const inputAst: ASTNode | null = parse(program)
+    if (!inputAst) {
+      throw new Error('Parsing failed')
+    }
+    const outputAst: ASTNode = preprocess(inputAst)
+    expect(() => preprocess(inputAst)).not.toThrow('initialization cycle present')
+    expect(outputAst).toStrictEqual(expectedAst)
   })
 
-  test("test channels, Mutex, WaitGroups operations with reordering", async () => {
+  test('test channels, Mutex, WaitGroups operations with reordering', async () => {
     const program = `
     func inc2() int {
       Println(2)
@@ -873,7 +909,7 @@ describe('Basic compiler test', () => {
 
     var y Mutex = inc2()
     var z WaitGroup = inc2()
-    `;
+    `
 
     const expectedAst = {
       tag: 'blk',
@@ -892,13 +928,13 @@ describe('Basic compiler test', () => {
                   {
                     tag: 'app',
                     fun: { tag: 'nam', sym: 'Println' },
-                    args: [ { tag: 'lit', val: 2 } ],
+                    args: [{ tag: 'lit', val: 2 }],
                     _arity: 1
                   },
                   {
                     tag: 'done',
                     fun: { tag: 'nam', sym: 'Done' },
-                    args: [ { tag: 'nam', sym: 'z' } ],
+                    args: [{ tag: 'nam', sym: 'z' }],
                     _arity: 1
                   },
                   {
@@ -918,10 +954,10 @@ describe('Basic compiler test', () => {
             },
             _arity: 0,
             type: {
-              tag: "fun",
+              tag: 'fun',
               paramTypes: [],
               returnTypes: ['int']
-            },
+            }
           },
           {
             tag: 'fun',
@@ -939,7 +975,7 @@ describe('Basic compiler test', () => {
                   },
                   {
                     tag: 'assmt',
-                    syms: { tag: 'idents', IDENTS: [ 'x' ] },
+                    syms: { tag: 'idents', IDENTS: ['x'] },
                     exprs: {
                       tag: 'exprlist',
                       list: [
@@ -957,14 +993,14 @@ describe('Basic compiler test', () => {
             },
             _arity: 0,
             type: {
-              tag: "fun",
+              tag: 'fun',
               paramTypes: [],
               returnTypes: []
-            },
+            }
           },
           {
             tag: 'let',
-            syms: { tag: 'idents', IDENTS: [ 'x' ] },
+            syms: { tag: 'idents', IDENTS: ['x'] },
             assignments: {
               tag: 'exprlist',
               list: [
@@ -980,13 +1016,13 @@ describe('Basic compiler test', () => {
           },
           {
             tag: 'mut',
-            syms: { tag: 'idents', IDENTS: [ 'y' ] },
+            syms: { tag: 'idents', IDENTS: ['y'] },
             assignments: { tag: 'exprlist', list: [] },
             type: 'mutex'
           },
           {
             tag: 'waitgroup',
-            syms: { tag: 'idents', IDENTS: [ 'z' ] },
+            syms: { tag: 'idents', IDENTS: ['z'] },
             assignments: { tag: 'exprlist', list: [] },
             type: 'waitgroup'
           },
@@ -998,12 +1034,15 @@ describe('Basic compiler test', () => {
           }
         ]
       }
-    };
+    }
 
-    const inputAst: ASTNode = parse(program);
-    const outputAst: ASTNode = preprocess(inputAst);
-    console.dir(outputAst, {depth: 100})
-    expect(() => preprocess(inputAst)).not.toThrow("initialization cycle present");
-    expect(outputAst).toStrictEqual(expectedAst);
+    const inputAst: ASTNode | null = parse(program)
+    if (!inputAst) {
+      throw new Error('Parsing failed')
+    }
+    const outputAst: ASTNode = preprocess(inputAst)
+    console.dir(outputAst, { depth: 100 })
+    expect(() => preprocess(inputAst)).not.toThrow('initialization cycle present')
+    expect(outputAst).toStrictEqual(expectedAst)
   })
 })

@@ -1,6 +1,6 @@
-import { ASTNode } from "../../ast/AST"
-import { parse } from "../../parser/parser"
-import { typecheck } from "../typechecker"
+import { ASTNode } from '../../ast/AST'
+import { parse } from '../../parser/parser'
+import { typecheck } from '../typechecker'
 describe('Basic typecheck test', () => {
   test('basic correct var tests outside func body', async () => {
     const program = `
@@ -14,9 +14,12 @@ describe('Basic typecheck test', () => {
         func main() {
         }
           `
-    const outputAst: ASTNode = parse(program)
+    const outputAst: ASTNode | null = parse(program)
+    if (!outputAst) {
+      throw new Error('Parsing failed')
+    }
     expect(() => typecheck(outputAst)).not.toThrow()
-  });
+  })
 
   test('basic correct var tests in func body', async () => {
     const program = `
@@ -30,9 +33,12 @@ describe('Basic typecheck test', () => {
         xx int := x
       }
         `
-    const outputAst: ASTNode = parse(program)
+    const outputAst: ASTNode | null = parse(program)
+    if (!outputAst) {
+      throw new Error('Parsing failed')
+    }
     expect(() => typecheck(outputAst)).not.toThrow()
-  });
+  })
 
   test('basic incorrect var tests outside func body', async () => {
     const program = `
@@ -43,9 +49,14 @@ describe('Basic typecheck test', () => {
         func main() {
         }
           `
-    const outputAst: ASTNode = parse(program)
-    expect(() => typecheck(outputAst)).toThrow("type error in variable declaration; declared type: string, actual type: int")
-  });
+    const outputAst: ASTNode | null = parse(program)
+    if (!outputAst) {
+      throw new Error('Parsing failed')
+    }
+    expect(() => typecheck(outputAst)).toThrow(
+      'type error in variable declaration; declared type: string, actual type: int'
+    )
+  })
   test('basic incorrect var tests in func body', async () => {
     const program = `
       func main() {
@@ -55,9 +66,14 @@ describe('Basic typecheck test', () => {
         var f float = 1.1
       }
         `
-    const outputAst: ASTNode = parse(program)
-    expect(() => typecheck(outputAst)).toThrow("type error in variable declaration; declared type: bool, actual type: int")
-  });
+    const outputAst: ASTNode | null = parse(program)
+    if (!outputAst) {
+      throw new Error('Parsing failed')
+    }
+    expect(() => typecheck(outputAst)).toThrow(
+      'type error in variable declaration; declared type: bool, actual type: int'
+    )
+  })
 
   test('basic incorrect number of var expressions outside func body', async () => {
     const program = `
@@ -67,9 +83,14 @@ describe('Basic typecheck test', () => {
         func main() {
         }
           `
-    const outputAst: ASTNode = parse(program)
-    expect(() => typecheck(outputAst)).toThrow("Too few expressions on the RHS of variable declaration!")
-  });
+    const outputAst: ASTNode | null = parse(program)
+    if (!outputAst) {
+      throw new Error('Parsing failed')
+    }
+    expect(() => typecheck(outputAst)).toThrow(
+      'Too few expressions on the RHS of variable declaration!'
+    )
+  })
 
   test('basic incorrect number of var expressions tests in func body', async () => {
     const program = `
@@ -79,9 +100,14 @@ describe('Basic typecheck test', () => {
         var f float = 1.1
       }
         `
-    const outputAst: ASTNode = parse(program)
-    expect(() => typecheck(outputAst)).toThrow("Too few expressions on the RHS of variable declaration!")
-  });
+    const outputAst: ASTNode | null = parse(program)
+    if (!outputAst) {
+      throw new Error('Parsing failed')
+    }
+    expect(() => typecheck(outputAst)).toThrow(
+      'Too few expressions on the RHS of variable declaration!'
+    )
+  })
 
   test('basic incorrect number of var expressions outside func body', async () => {
     const program = `
@@ -91,9 +117,14 @@ describe('Basic typecheck test', () => {
         func main() {
         }
           `
-    const outputAst: ASTNode = parse(program)
-    expect(() => typecheck(outputAst)).toThrow("Too many expressions on the RHS of variable declaration!")
-  });
+    const outputAst: ASTNode | null = parse(program)
+    if (!outputAst) {
+      throw new Error('Parsing failed')
+    }
+    expect(() => typecheck(outputAst)).toThrow(
+      'Too many expressions on the RHS of variable declaration!'
+    )
+  })
 
   test('basic incorrect number of var expressions tests in func body', async () => {
     const program = `
@@ -103,9 +134,14 @@ describe('Basic typecheck test', () => {
         var f float = 1.1
       }
         `
-    const outputAst: ASTNode = parse(program)
-    expect(() => typecheck(outputAst)).toThrow("Too many expressions on the RHS of variable declaration!")
-  });
+    const outputAst: ASTNode | null = parse(program)
+    if (!outputAst) {
+      throw new Error('Parsing failed')
+    }
+    expect(() => typecheck(outputAst)).toThrow(
+      'Too many expressions on the RHS of variable declaration!'
+    )
+  })
 
   test('basic function app', async () => {
     const program = `
@@ -118,9 +154,12 @@ describe('Basic typecheck test', () => {
           var f float = 1.1
         }
           `
-    const outputAst: ASTNode = parse(program)
+    const outputAst: ASTNode | null = parse(program)
+    if (!outputAst) {
+      throw new Error('Parsing failed')
+    }
     expect(() => typecheck(outputAst)).not.toThrow()
-  });
+  })
 
   test('basic function app incorrect number of return', async () => {
     const program = `
@@ -133,9 +172,14 @@ describe('Basic typecheck test', () => {
           var f float = 1.1
         }
           `
-    const outputAst: ASTNode = parse(program)
-    expect(() => typecheck(outputAst)).toThrow("Too few expressions on the RHS of variable declaration!")
-  });
+    const outputAst: ASTNode | null = parse(program)
+    if (!outputAst) {
+      throw new Error('Parsing failed')
+    }
+    expect(() => typecheck(outputAst)).toThrow(
+      'Too few expressions on the RHS of variable declaration!'
+    )
+  })
   test('basic function app correct number of return', async () => {
     const program = `
         func inc() (int, int, int) {
@@ -147,9 +191,12 @@ describe('Basic typecheck test', () => {
           var f float = 1.1
         }
           `
-    const outputAst: ASTNode = parse(program)
-    expect(() => typecheck(outputAst)).not.toThrow("Too many expressions on the RHS!")
-  });
+    const outputAst: ASTNode | null = parse(program)
+    if (!outputAst) {
+      throw new Error('Parsing failed')
+    }
+    expect(() => typecheck(outputAst)).not.toThrow('Too many expressions on the RHS!')
+  })
   test('basic function declaration incorrect return', async () => {
     const program = `
         func inc() (int, int, string) {
@@ -161,9 +208,14 @@ describe('Basic typecheck test', () => {
           var f float = 1.1
         }
           `
-    const outputAst: ASTNode = parse(program)
-    expect(() => typecheck(outputAst)).toThrow("expected return types int, int, string but got int, int, int in function inc")
-  });
+    const outputAst: ASTNode | null = parse(program)
+    if (!outputAst) {
+      throw new Error('Parsing failed')
+    }
+    expect(() => typecheck(outputAst)).toThrow(
+      'expected return types int, int, string but got int, int, int in function inc'
+    )
+  })
   test('basic function declaration correct return', async () => {
     const program = `
         func inc() (int, int, int) {
@@ -175,9 +227,14 @@ describe('Basic typecheck test', () => {
           var f float = 1.1
         }
           `
-    const outputAst: ASTNode = parse(program)
-    expect(() => typecheck(outputAst)).not.toThrow("expected return types int, int, string but got int, int, int in function inc")
-  });
+    const outputAst: ASTNode | null = parse(program)
+    if (!outputAst) {
+      throw new Error('Parsing failed')
+    }
+    expect(() => typecheck(outputAst)).not.toThrow(
+      'expected return types int, int, string but got int, int, int in function inc'
+    )
+  })
 
   test('basic function app but sequence does not end in terminating statement', async () => {
     const program = `
@@ -191,9 +248,14 @@ describe('Basic typecheck test', () => {
           var f float = 1.1
         }
           `
-    const outputAst: ASTNode = parse(program)
-    expect(() => typecheck(outputAst)).toThrow("type error in function declaration; expected return type: int, int, int actual return type: null")
-  });
+    const outputAst: ASTNode | null = parse(program)
+    if (!outputAst) {
+      throw new Error('Parsing failed')
+    }
+    expect(() => typecheck(outputAst)).toThrow(
+      'type error in function declaration; expected return type: int, int, int actual return type: null'
+    )
+  })
 
   test('basic function app test is not terminating statement', async () => {
     const program = `
@@ -209,9 +271,14 @@ describe('Basic typecheck test', () => {
           var f float = 1.1
         }
           `
-    const outputAst: ASTNode = parse(program)
-    expect(() => typecheck(outputAst)).toThrow("type error in function declaration; expected return type: int actual return type: null")
-  });
+    const outputAst: ASTNode | null = parse(program)
+    if (!outputAst) {
+      throw new Error('Parsing failed')
+    }
+    expect(() => typecheck(outputAst)).toThrow(
+      'type error in function declaration; expected return type: int actual return type: null'
+    )
+  })
 
   test('basic conditional statement non terminating but correct return', async () => {
     const program = `
@@ -228,11 +295,14 @@ describe('Basic typecheck test', () => {
           var f float = 1.1
         }
           `
-    const outputAst: ASTNode = parse(program)
+    const outputAst: ASTNode | null = parse(program)
+    if (!outputAst) {
+      throw new Error('Parsing failed')
+    }
     //console.dir(outputAst, {depth: 100})
-    expect(() => typecheck(outputAst)).not.toThrow();
-  });
-  
+    expect(() => typecheck(outputAst)).not.toThrow()
+  })
+
   test('basic conditional statement non terminating but incorrect return', async () => {
     const program = `
         func inc() (int, int, int) {
@@ -248,10 +318,15 @@ describe('Basic typecheck test', () => {
           var f float = 1.1
         }
           `
-    const outputAst: ASTNode = parse(program)
+    const outputAst: ASTNode | null = parse(program)
+    if (!outputAst) {
+      throw new Error('Parsing failed')
+    }
     //console.dir(outputAst, {depth: 100})
-    expect(() => typecheck(outputAst)).toThrow("expected return types int, int, int but got string in function inc");
-  });
+    expect(() => typecheck(outputAst)).toThrow(
+      'expected return types int, int, int but got string in function inc'
+    )
+  })
 
   test('basic conditional statement terminating correct return', async () => {
     const program = `
@@ -272,10 +347,13 @@ describe('Basic typecheck test', () => {
           var f float = 1.1
         }
           `
-    const outputAst: ASTNode = parse(program)
+    const outputAst: ASTNode | null = parse(program)
+    if (!outputAst) {
+      throw new Error('Parsing failed')
+    }
     //console.dir(outputAst, {depth: 100})
     expect(() => typecheck(outputAst)).not.toThrow()
-  });
+  })
 
   test('basic conditional statement terminating incorrect return', async () => {
     const program = `
@@ -296,10 +374,15 @@ describe('Basic typecheck test', () => {
           var f float = 1.1
         }
           `
-    const outputAst: ASTNode = parse(program)
+    const outputAst: ASTNode | null = parse(program)
+    if (!outputAst) {
+      throw new Error('Parsing failed')
+    }
     //console.dir(outputAst, {depth: 100})
-    expect(() => typecheck(outputAst)).toThrow("expected return types int, int, int but got int, int in function inc")
-  });
+    expect(() => typecheck(outputAst)).toThrow(
+      'expected return types int, int, int but got int, int in function inc'
+    )
+  })
 
   test('basic conditional statement make sure it is non terminating but correct return', async () => {
     const program = `
@@ -316,10 +399,15 @@ describe('Basic typecheck test', () => {
           var f float = 1.1
         }
           `
-    const outputAst: ASTNode = parse(program)
+    const outputAst: ASTNode | null = parse(program)
+    if (!outputAst) {
+      throw new Error('Parsing failed')
+    }
     //console.dir(outputAst, {depth: 100})
-    expect(() => typecheck(outputAst)).toThrow("type error in function declaration; expected return type: int, int, int actual return type: null");
-  });
+    expect(() => typecheck(outputAst)).toThrow(
+      'type error in function declaration; expected return type: int, int, int actual return type: null'
+    )
+  })
 
   test('basic conditional statement make sure it is non terminating with else branch but correct return', async () => {
     const program = `
@@ -338,10 +426,15 @@ describe('Basic typecheck test', () => {
           var f float = 1.1
         }
           `
-    const outputAst: ASTNode = parse(program)
+    const outputAst: ASTNode | null = parse(program)
+    if (!outputAst) {
+      throw new Error('Parsing failed')
+    }
     //console.dir(outputAst, {depth: 100})
-    expect(() => typecheck(outputAst)).toThrow("type error in function declaration; expected return type: int, int, int actual return type: null");
-  });
+    expect(() => typecheck(outputAst)).toThrow(
+      'type error in function declaration; expected return type: int, int, int actual return type: null'
+    )
+  })
 
   test('basic lambda', async () => {
     const program = `
@@ -353,10 +446,15 @@ describe('Basic typecheck test', () => {
           var f float = 1.1
         }
           `
-    const outputAst: ASTNode = parse(program)
+    const outputAst: ASTNode | null = parse(program)
+    if (!outputAst) {
+      throw new Error('Parsing failed')
+    }
     //console.dir(outputAst, {depth: 100})
-    expect(() => typecheck(outputAst)).not.toThrow("type error in function declaration; expected return type: int, int, int actual return type: null");
-  });
+    expect(() => typecheck(outputAst)).not.toThrow(
+      'type error in function declaration; expected return type: int, int, int actual return type: null'
+    )
+  })
 
   test('basic lambda with wrong body', async () => {
     const program = `
@@ -368,10 +466,15 @@ describe('Basic typecheck test', () => {
           var f float = 1.1
         }
           `
-    const outputAst: ASTNode = parse(program)
+    const outputAst: ASTNode | null = parse(program)
+    if (!outputAst) {
+      throw new Error('Parsing failed')
+    }
     //console.dir(outputAst, {depth: 100})
-    expect(() => typecheck(outputAst)).toThrow("expected return types int but got int, int, int in function lambda");
-  });
+    expect(() => typecheck(outputAst)).toThrow(
+      'expected return types int but got int, int, int in function lambda'
+    )
+  })
 
   test('basic lambda with wrong args', async () => {
     const program = `
@@ -383,10 +486,15 @@ describe('Basic typecheck test', () => {
           var f float = 1.1
         }
           `
-    const outputAst: ASTNode = parse(program)
+    const outputAst: ASTNode | null = parse(program)
+    if (!outputAst) {
+      throw new Error('Parsing failed')
+    }
     //console.dir(outputAst, {depth: 100})
-    expect(() => typecheck(outputAst)).toThrow("type error in application; expected argument types: int, int, int, actual argument types: int, int, string");
-  });
+    expect(() => typecheck(outputAst)).toThrow(
+      'type error in application; expected argument types: int, int, int, actual argument types: int, int, string'
+    )
+  })
 
   test('basic for statement predicate is bool literal', async () => {
     const program = `
@@ -396,10 +504,15 @@ describe('Basic typecheck test', () => {
           }
         }
           `
-    const outputAst: ASTNode = parse(program)
+    const outputAst: ASTNode | null = parse(program)
+    if (!outputAst) {
+      throw new Error('Parsing failed')
+    }
     console.dir(outputAst, { depth: 100 })
-    expect(() => typecheck(outputAst)).not.toThrow("expected predicate type: bool, actual predicate type: undefined");
-  });
+    expect(() => typecheck(outputAst)).not.toThrow(
+      'expected predicate type: bool, actual predicate type: undefined'
+    )
+  })
 
   test('basic for statement predicate is bool', async () => {
     const program = `
@@ -410,10 +523,15 @@ describe('Basic typecheck test', () => {
           }
         }
           `
-    const outputAst: ASTNode = parse(program)
+    const outputAst: ASTNode | null = parse(program)
+    if (!outputAst) {
+      throw new Error('Parsing failed')
+    }
     console.dir(outputAst, { depth: 100 })
-    expect(() => typecheck(outputAst)).not.toThrow("expected predicate type: bool, actual predicate type: undefined");
-  });
+    expect(() => typecheck(outputAst)).not.toThrow(
+      'expected predicate type: bool, actual predicate type: undefined'
+    )
+  })
 
   test('basic for statement predicate is not bool', async () => {
     const program = `
@@ -424,10 +542,15 @@ describe('Basic typecheck test', () => {
           }
         }
           `
-    const outputAst: ASTNode = parse(program)
+    const outputAst: ASTNode | null = parse(program)
+    if (!outputAst) {
+      throw new Error('Parsing failed')
+    }
     console.dir(outputAst, { depth: 100 })
-    expect(() => typecheck(outputAst)).toThrow("expected predicate type: bool, actual predicate type: int");
-  });
+    expect(() => typecheck(outputAst)).toThrow(
+      'expected predicate type: bool, actual predicate type: int'
+    )
+  })
 
   test('basic for statement predicate is not bool expr', async () => {
     const program = `
@@ -438,10 +561,15 @@ describe('Basic typecheck test', () => {
           }
         }
           `
-    const outputAst: ASTNode = parse(program)
+    const outputAst: ASTNode | null = parse(program)
+    if (!outputAst) {
+      throw new Error('Parsing failed')
+    }
     //console.dir(outputAst, {depth: 100})
-    expect(() => typecheck(outputAst)).toThrow("expected predicate type: bool, actual predicate type: int");
-  });
+    expect(() => typecheck(outputAst)).toThrow(
+      'expected predicate type: bool, actual predicate type: int'
+    )
+  })
 
   test('basic for statement has correct return statement in body', async () => {
     const program = `
@@ -456,10 +584,13 @@ describe('Basic typecheck test', () => {
 
         }
           `
-    const outputAst: ASTNode = parse(program)
+    const outputAst: ASTNode | null = parse(program)
+    if (!outputAst) {
+      throw new Error('Parsing failed')
+    }
     //console.dir(outputAst, {depth: 100})
-    expect(() => typecheck(outputAst)).not.toThrow();
-  });
+    expect(() => typecheck(outputAst)).not.toThrow()
+  })
 
   test('basic for statement has incorrect return statement in body', async () => {
     const program = `
@@ -474,10 +605,15 @@ describe('Basic typecheck test', () => {
 
         }
           `
-    const outputAst: ASTNode = parse(program)
+    const outputAst: ASTNode | null = parse(program)
+    if (!outputAst) {
+      throw new Error('Parsing failed')
+    }
     //console.dir(outputAst, {depth: 100})
-    expect(() => typecheck(outputAst)).toThrow("expected return types int but got string in function inc");
-  });
+    expect(() => typecheck(outputAst)).toThrow(
+      'expected return types int but got string in function inc'
+    )
+  })
 
   test('basic for statement is not a terminating statement in body', async () => {
     const program = `
@@ -491,10 +627,15 @@ describe('Basic typecheck test', () => {
 
         }
           `
-    const outputAst: ASTNode = parse(program)
+    const outputAst: ASTNode | null = parse(program)
+    if (!outputAst) {
+      throw new Error('Parsing failed')
+    }
     //console.dir(outputAst, {depth: 100})
-    expect(() => typecheck(outputAst)).toThrow("type error in function declaration; expected return type: int actual return type: null");
-  });
+    expect(() => typecheck(outputAst)).toThrow(
+      'type error in function declaration; expected return type: int actual return type: null'
+    )
+  })
 
   test('basic correct var outside func body and assign inside func body', async () => {
     const program = `
@@ -511,9 +652,12 @@ describe('Basic typecheck test', () => {
           y,z,b,f,mut1, wg1, wg2 = x, 6, false, 3.3, mut2, wg2, wg1
         }
           `
-    const outputAst: ASTNode = parse(program)
+    const outputAst: ASTNode | null = parse(program)
+    if (!outputAst) {
+      throw new Error('Parsing failed')
+    }
     expect(() => typecheck(outputAst)).not.toThrow()
-  });
+  })
 
   test('basic correct var tests in func body and assign inside func body', async () => {
     const program = `
@@ -531,9 +675,12 @@ describe('Basic typecheck test', () => {
         y,z,b,f,mut1, wg1, wg2 = x, 6, false, 3.3, mut2, wg2, wg1
       }
         `
-    const outputAst: ASTNode = parse(program)
+    const outputAst: ASTNode | null = parse(program)
+    if (!outputAst) {
+      throw new Error('Parsing failed')
+    }
     expect(() => typecheck(outputAst)).not.toThrow()
-  });
+  })
 
   test('basic correct var tests outside func body but incorrect assign inside func body', async () => {
     const program = `
@@ -549,9 +696,14 @@ describe('Basic typecheck test', () => {
           y,z,b,f,mut1 = x, 6, false, 3.3, wg2
         }
           `
-    const outputAst: ASTNode = parse(program)
-    expect(() => typecheck(outputAst)).toThrow("type error in assignment; declared type: mutex, actual type: waitgroup")
-  });
+    const outputAst: ASTNode | null = parse(program)
+    if (!outputAst) {
+      throw new Error('Parsing failed')
+    }
+    expect(() => typecheck(outputAst)).toThrow(
+      'type error in assignment; declared type: mutex, actual type: waitgroup'
+    )
+  })
 
   test('basic correct var tests inside func body but incorrect assign inside func body', async () => {
     const program = `
@@ -569,9 +721,14 @@ describe('Basic typecheck test', () => {
           y,z,b,f,mut1 = x, 6, false, 3.3, wg2
         }
           `
-    const outputAst: ASTNode = parse(program)
-    expect(() => typecheck(outputAst)).toThrow("type error in assignment; declared type: mutex, actual type: waitgroup")
-  });
+    const outputAst: ASTNode | null = parse(program)
+    if (!outputAst) {
+      throw new Error('Parsing failed')
+    }
+    expect(() => typecheck(outputAst)).toThrow(
+      'type error in assignment; declared type: mutex, actual type: waitgroup'
+    )
+  })
 
   test('basic incorrect number of assignment expressions inside func body with var declaration outside of func body', async () => {
     const program = `
@@ -582,9 +739,12 @@ describe('Basic typecheck test', () => {
           x, b, f = 10
         }
           `
-    const outputAst: ASTNode = parse(program)
-    expect(() => typecheck(outputAst)).toThrow("Too few expressions on the RHS of assignment!")
-  });
+    const outputAst: ASTNode | null = parse(program)
+    if (!outputAst) {
+      throw new Error('Parsing failed')
+    }
+    expect(() => typecheck(outputAst)).toThrow('Too few expressions on the RHS of assignment!')
+  })
 
   test('basic incorrect number of assignment expressions inside func body with var declaration inside of func body', async () => {
     const program = `
@@ -596,9 +756,12 @@ describe('Basic typecheck test', () => {
         x, y = 3
       }
         `
-    const outputAst: ASTNode = parse(program)
-    expect(() => typecheck(outputAst)).toThrow("Too few expressions on the RHS of assignment!")
-  });
+    const outputAst: ASTNode | null = parse(program)
+    if (!outputAst) {
+      throw new Error('Parsing failed')
+    }
+    expect(() => typecheck(outputAst)).toThrow('Too few expressions on the RHS of assignment!')
+  })
 
   test('basic incorrect number of assignment expressions inside func body with var declaration outside of func body', async () => {
     const program = `
@@ -609,9 +772,12 @@ describe('Basic typecheck test', () => {
         x,y,z = 10, 90, 99, 1000
       }
         `
-    const outputAst: ASTNode = parse(program)
-    expect(() => typecheck(outputAst)).toThrow("Too many expressions on the RHS of assignment!")
-  });
+    const outputAst: ASTNode | null = parse(program)
+    if (!outputAst) {
+      throw new Error('Parsing failed')
+    }
+    expect(() => typecheck(outputAst)).toThrow('Too many expressions on the RHS of assignment!')
+  })
 
   test('basic incorrect number of assignment expressions inside func body with var declaration inside of func body', async () => {
     const program = `
@@ -622,9 +788,12 @@ describe('Basic typecheck test', () => {
       x,y,z = 10, 90, 99, 1000
     }
       `
-    const outputAst: ASTNode = parse(program)
-    expect(() => typecheck(outputAst)).toThrow("Too many expressions on the RHS of assignment!")
-  });
+    const outputAst: ASTNode | null = parse(program)
+    if (!outputAst) {
+      throw new Error('Parsing failed')
+    }
+    expect(() => typecheck(outputAst)).toThrow('Too many expressions on the RHS of assignment!')
+  })
 
   test('basic correct var outside func body and assign inside func body with function return', async () => {
     const program = `
@@ -644,9 +813,12 @@ describe('Basic typecheck test', () => {
           b,f,x,y,z,mut1, wg1, wg2 = false, 3.3, inc(), mut2, wg2, wg1
         }
           `
-    const outputAst: ASTNode = parse(program)
+    const outputAst: ASTNode | null = parse(program)
+    if (!outputAst) {
+      throw new Error('Parsing failed')
+    }
     expect(() => typecheck(outputAst)).not.toThrow()
-  });
+  })
 
   test('basic correct var outside func body and assign inside func body with function return and wrong number of assignments', async () => {
     const program = `
@@ -666,9 +838,12 @@ describe('Basic typecheck test', () => {
           b,f,x,y,mut1, wg1, wg2 = false, 3.3, inc(), mut2, wg2, wg1
         }
           `
-    const outputAst: ASTNode = parse(program)
-    expect(() => typecheck(outputAst)).toThrow("Too many expressions on the RHS of assignment!")
-  });
+    const outputAst: ASTNode | null = parse(program)
+    if (!outputAst) {
+      throw new Error('Parsing failed')
+    }
+    expect(() => typecheck(outputAst)).toThrow('Too many expressions on the RHS of assignment!')
+  })
 
   test('basic make channel outside of func body', async () => {
     const program = `
@@ -679,9 +854,12 @@ describe('Basic typecheck test', () => {
         func main() {
         }
           `
-    const outputAst: ASTNode = parse(program)
+    const outputAst: ASTNode | null = parse(program)
+    if (!outputAst) {
+      throw new Error('Parsing failed')
+    }
     expect(() => typecheck(outputAst)).not.toThrow()
-  });
+  })
 
   test('basic make channel inside of func body', async () => {
     const program = `
@@ -693,9 +871,12 @@ describe('Basic typecheck test', () => {
           var c, d chan bool = make(chan bool, 2), make(chan bool)
         }
           `
-    const outputAst: ASTNode = parse(program)
+    const outputAst: ASTNode | null = parse(program)
+    if (!outputAst) {
+      throw new Error('Parsing failed')
+    }
     expect(() => typecheck(outputAst)).not.toThrow()
-  });
+  })
 
   test('basic make channel outside of func body with wrong chan type', async () => {
     const program = `
@@ -706,9 +887,14 @@ describe('Basic typecheck test', () => {
         func main() {
         }
           `
-    const outputAst: ASTNode = parse(program)
-    expect(() => typecheck(outputAst)).toThrow("type error in variable declaration; declared type: chan bool, actual type: chan int")
-  });
+    const outputAst: ASTNode | null = parse(program)
+    if (!outputAst) {
+      throw new Error('Parsing failed')
+    }
+    expect(() => typecheck(outputAst)).toThrow(
+      'type error in variable declaration; declared type: chan bool, actual type: chan int'
+    )
+  })
 
   test('basic make channel inside of func body with wrong chan type', async () => {
     const program = `
@@ -720,9 +906,14 @@ describe('Basic typecheck test', () => {
           var c, d chan bool = make(chan bool, 2), make(chan bool)
         }
           `
-    const outputAst: ASTNode = parse(program)
-    expect(() => typecheck(outputAst)).toThrow("type error in variable declaration; declared type: chan int, actual type: chan bool")
-  });
+    const outputAst: ASTNode | null = parse(program)
+    if (!outputAst) {
+      throw new Error('Parsing failed')
+    }
+    expect(() => typecheck(outputAst)).toThrow(
+      'type error in variable declaration; declared type: chan int, actual type: chan bool'
+    )
+  })
 
   //// here
   test('basic make channel outside of func body with reassign', async () => {
@@ -735,9 +926,12 @@ describe('Basic typecheck test', () => {
           d = make(chan bool)
         }
           `
-    const outputAst: ASTNode = parse(program)
+    const outputAst: ASTNode | null = parse(program)
+    if (!outputAst) {
+      throw new Error('Parsing failed')
+    }
     expect(() => typecheck(outputAst)).not.toThrow()
-  });
+  })
 
   test('basic make channel inside of func body', async () => {
     const program = `
@@ -750,9 +944,12 @@ describe('Basic typecheck test', () => {
           d = make(chan bool)
         }
           `
-    const outputAst: ASTNode = parse(program)
+    const outputAst: ASTNode | null = parse(program)
+    if (!outputAst) {
+      throw new Error('Parsing failed')
+    }
     expect(() => typecheck(outputAst)).not.toThrow()
-  });
+  })
 
   test('basic make channel outside of func body with wrong chan type with wrong reassign', async () => {
     const program = `
@@ -764,9 +961,14 @@ describe('Basic typecheck test', () => {
           d = make(chan int)
         }
           `
-    const outputAst: ASTNode = parse(program)
-    expect(() => typecheck(outputAst)).toThrow("type error in assignment; declared type: chan bool, actual type: chan int")
-  });
+    const outputAst: ASTNode | null = parse(program)
+    if (!outputAst) {
+      throw new Error('Parsing failed')
+    }
+    expect(() => typecheck(outputAst)).toThrow(
+      'type error in assignment; declared type: chan bool, actual type: chan int'
+    )
+  })
 
   test('basic make channel inside of func body with wrong assignment type', async () => {
     const program = `
@@ -779,9 +981,14 @@ describe('Basic typecheck test', () => {
           a = make(chan bool)
         }
           `
-    const outputAst: ASTNode = parse(program)
-    expect(() => typecheck(outputAst)).toThrow("type error in assignment; declared type: chan int, actual type: chan bool")
-  });
+    const outputAst: ASTNode | null = parse(program)
+    if (!outputAst) {
+      throw new Error('Parsing failed')
+    }
+    expect(() => typecheck(outputAst)).toThrow(
+      'type error in assignment; declared type: chan int, actual type: chan bool'
+    )
+  })
 
   test('basic mutex lock test', async () => {
     const program = `
@@ -791,9 +998,12 @@ describe('Basic typecheck test', () => {
           Lock(x)
         }
           `
-    const outputAst: ASTNode = parse(program)
+    const outputAst: ASTNode | null = parse(program)
+    if (!outputAst) {
+      throw new Error('Parsing failed')
+    }
     expect(() => typecheck(outputAst)).not.toThrow()
-  });
+  })
 
   test('basic wrong mutex lock test', async () => {
     const program = `
@@ -804,9 +1014,14 @@ describe('Basic typecheck test', () => {
           Lock(y)
         }
           `
-    const outputAst: ASTNode = parse(program)
-    expect(() => typecheck(outputAst)).toThrow("type error in lock; expected type: mutex actual type: int")
-  });
+    const outputAst: ASTNode | null = parse(program)
+    if (!outputAst) {
+      throw new Error('Parsing failed')
+    }
+    expect(() => typecheck(outputAst)).toThrow(
+      'type error in lock; expected type: mutex actual type: int'
+    )
+  })
 
   test('basic mutex unlock test', async () => {
     const program = `
@@ -816,9 +1031,12 @@ describe('Basic typecheck test', () => {
           Unlock(x)
         }
           `
-    const outputAst: ASTNode = parse(program)
+    const outputAst: ASTNode | null = parse(program)
+    if (!outputAst) {
+      throw new Error('Parsing failed')
+    }
     expect(() => typecheck(outputAst)).not.toThrow()
-  });
+  })
 
   test('basic wrong mutex unlock test', async () => {
     const program = `
@@ -829,9 +1047,14 @@ describe('Basic typecheck test', () => {
           Unlock(y)
         }
           `
-    const outputAst: ASTNode = parse(program)
-    expect(() => typecheck(outputAst)).toThrow("type error in unlock; expected type: mutex actual type: int")
-  });
+    const outputAst: ASTNode | null = parse(program)
+    if (!outputAst) {
+      throw new Error('Parsing failed')
+    }
+    expect(() => typecheck(outputAst)).toThrow(
+      'type error in unlock; expected type: mutex actual type: int'
+    )
+  })
 
   test('basic waitgroup done test', async () => {
     const program = `
@@ -841,9 +1064,12 @@ describe('Basic typecheck test', () => {
           Done(x)
         }
           `
-    const outputAst: ASTNode = parse(program)
+    const outputAst: ASTNode | null = parse(program)
+    if (!outputAst) {
+      throw new Error('Parsing failed')
+    }
     expect(() => typecheck(outputAst)).not.toThrow()
-  });
+  })
 
   test('basic wrong waitgroup done test', async () => {
     const program = `
@@ -854,9 +1080,14 @@ describe('Basic typecheck test', () => {
           Done(y)
         }
           `
-    const outputAst: ASTNode = parse(program)
-    expect(() => typecheck(outputAst)).toThrow("type error in done; expected type: waitgroup actual type: int")
-  });
+    const outputAst: ASTNode | null = parse(program)
+    if (!outputAst) {
+      throw new Error('Parsing failed')
+    }
+    expect(() => typecheck(outputAst)).toThrow(
+      'type error in done; expected type: waitgroup actual type: int'
+    )
+  })
 
   test('basic waitgroup wait test', async () => {
     const program = `
@@ -866,9 +1097,12 @@ describe('Basic typecheck test', () => {
           Wait(x)
         }
           `
-    const outputAst: ASTNode = parse(program)
+    const outputAst: ASTNode | null = parse(program)
+    if (!outputAst) {
+      throw new Error('Parsing failed')
+    }
     expect(() => typecheck(outputAst)).not.toThrow()
-  });
+  })
 
   test('basic wrong waitgroup wait test', async () => {
     const program = `
@@ -879,9 +1113,14 @@ describe('Basic typecheck test', () => {
           Wait(y)
         }
           `
-    const outputAst: ASTNode = parse(program)
-    expect(() => typecheck(outputAst)).toThrow("type error in wait; expected type: waitgroup actual type: int")
-  });
+    const outputAst: ASTNode | null = parse(program)
+    if (!outputAst) {
+      throw new Error('Parsing failed')
+    }
+    expect(() => typecheck(outputAst)).toThrow(
+      'type error in wait; expected type: waitgroup actual type: int'
+    )
+  })
 
   test('basic sleep test', async () => {
     const program = `
@@ -892,9 +1131,12 @@ describe('Basic typecheck test', () => {
           sleep(5)
         }
           `
-    const outputAst: ASTNode = parse(program)
+    const outputAst: ASTNode | null = parse(program)
+    if (!outputAst) {
+      throw new Error('Parsing failed')
+    }
     expect(() => typecheck(outputAst)).not.toThrow()
-  });
+  })
 
   test('basic wrong sleep test', async () => {
     const program = `
@@ -905,9 +1147,14 @@ describe('Basic typecheck test', () => {
           sleep(y)
         }
           `
-    const outputAst: ASTNode = parse(program)
-    expect(() => typecheck(outputAst)).toThrow("type error in application; expected argument types: int, actual argument types: bool")
-  });
+    const outputAst: ASTNode | null = parse(program)
+    if (!outputAst) {
+      throw new Error('Parsing failed')
+    }
+    expect(() => typecheck(outputAst)).toThrow(
+      'type error in application; expected argument types: int, actual argument types: bool'
+    )
+  })
 
   test('basic sleep expr test', async () => {
     const program = `
@@ -918,9 +1165,12 @@ describe('Basic typecheck test', () => {
           sleep(5 + y)
         }
           `
-    const outputAst: ASTNode = parse(program)
+    const outputAst: ASTNode | null = parse(program)
+    if (!outputAst) {
+      throw new Error('Parsing failed')
+    }
     expect(() => typecheck(outputAst)).not.toThrow()
-  });
+  })
 
   test('basic wrong sleep test', async () => {
     const program = `
@@ -931,9 +1181,14 @@ describe('Basic typecheck test', () => {
           sleep(y || y)
         }
           `
-    const outputAst: ASTNode = parse(program)
-    expect(() => typecheck(outputAst)).toThrow("type error in application; expected argument types: int, actual argument types: bool")
-  });
+    const outputAst: ASTNode | null = parse(program)
+    if (!outputAst) {
+      throw new Error('Parsing failed')
+    }
+    expect(() => typecheck(outputAst)).toThrow(
+      'type error in application; expected argument types: int, actual argument types: bool'
+    )
+  })
 
   test('basic Println test', async () => {
     const program = `
@@ -944,9 +1199,12 @@ describe('Basic typecheck test', () => {
           Println(y)
         }
           `
-    const outputAst: ASTNode = parse(program)
+    const outputAst: ASTNode | null = parse(program)
+    if (!outputAst) {
+      throw new Error('Parsing failed')
+    }
     expect(() => typecheck(outputAst)).not.toThrow()
-  });
+  })
 
   test('basic wrong Println test no args', async () => {
     const program = `
@@ -957,9 +1215,12 @@ describe('Basic typecheck test', () => {
           Println()
         }
           `
-    const outputAst: ASTNode = parse(program)
-    expect(() => typecheck(outputAst)).toThrow("Println expects 1 arguement of any type")
-  });
+    const outputAst: ASTNode | null = parse(program)
+    if (!outputAst) {
+      throw new Error('Parsing failed')
+    }
+    expect(() => typecheck(outputAst)).toThrow('Println expects 1 arguement of any type')
+  })
 
   test('basic wrong Println test too many args', async () => {
     const program = `
@@ -970,9 +1231,12 @@ describe('Basic typecheck test', () => {
           Println(x, y)
         }
           `
-    const outputAst: ASTNode = parse(program)
-    expect(() => typecheck(outputAst)).toThrow("Println expects 1 arguement of any type")
-  });
+    const outputAst: ASTNode | null = parse(program)
+    if (!outputAst) {
+      throw new Error('Parsing failed')
+    }
+    expect(() => typecheck(outputAst)).toThrow('Println expects 1 arguement of any type')
+  })
 
   test('basic add test', async () => {
     const program = `
@@ -983,9 +1247,12 @@ describe('Basic typecheck test', () => {
           Add(x, y)
         }
           `
-    const outputAst: ASTNode = parse(program)
+    const outputAst: ASTNode | null = parse(program)
+    if (!outputAst) {
+      throw new Error('Parsing failed')
+    }
     expect(() => typecheck(outputAst)).not.toThrow()
-  });
+  })
 
   test('basic wrong add test not waitgroup', async () => {
     const program = `
@@ -996,9 +1263,14 @@ describe('Basic typecheck test', () => {
           Add(y, 1)
         }
           `
-    const outputAst: ASTNode = parse(program)
-    expect(() => typecheck(outputAst)).toThrow("type error in add; expected type: waitgroup actual type: bool")
-  });
+    const outputAst: ASTNode | null = parse(program)
+    if (!outputAst) {
+      throw new Error('Parsing failed')
+    }
+    expect(() => typecheck(outputAst)).toThrow(
+      'type error in add; expected type: waitgroup actual type: bool'
+    )
+  })
 
   test('basic wrong add test not int', async () => {
     const program = `
@@ -1009,9 +1281,14 @@ describe('Basic typecheck test', () => {
           Add(x, y)
         }
           `
-    const outputAst: ASTNode = parse(program)
-    expect(() => typecheck(outputAst)).toThrow("type error in add; expected type: int actual type: bool")
-  });
+    const outputAst: ASTNode | null = parse(program)
+    if (!outputAst) {
+      throw new Error('Parsing failed')
+    }
+    expect(() => typecheck(outputAst)).toThrow(
+      'type error in add; expected type: int actual type: bool'
+    )
+  })
 
   test('basic chan recv', async () => {
     const program = `
@@ -1020,9 +1297,12 @@ describe('Basic typecheck test', () => {
           <- x
         }
           `
-    const outputAst: ASTNode = parse(program)
+    const outputAst: ASTNode | null = parse(program)
+    if (!outputAst) {
+      throw new Error('Parsing failed')
+    }
     expect(() => typecheck(outputAst)).not.toThrow()
-  });
+  })
 
   test('basic chan recv not chan', async () => {
     const program = `
@@ -1032,9 +1312,14 @@ describe('Basic typecheck test', () => {
           <-y
         }
           `
-    const outputAst: ASTNode = parse(program)
-    expect(() => typecheck(outputAst)).toThrow("type error in chan recv; expected type: chan actual type: bool")
-  });
+    const outputAst: ASTNode | null = parse(program)
+    if (!outputAst) {
+      throw new Error('Parsing failed')
+    }
+    expect(() => typecheck(outputAst)).toThrow(
+      'type error in chan recv; expected type: chan actual type: bool'
+    )
+  })
 
   test('basic chan recv var decl correct', async () => {
     const program = `
@@ -1044,9 +1329,12 @@ describe('Basic typecheck test', () => {
           y = <-x
         }
           `
-    const outputAst: ASTNode = parse(program)
+    const outputAst: ASTNode | null = parse(program)
+    if (!outputAst) {
+      throw new Error('Parsing failed')
+    }
     expect(() => typecheck(outputAst)).not.toThrow()
-  });
+  })
 
   test('basic chan recv var decl wrong', async () => {
     const program = `
@@ -1056,9 +1344,14 @@ describe('Basic typecheck test', () => {
           y = <-x
         }
           `
-    const outputAst: ASTNode = parse(program)
-    expect(() => typecheck(outputAst)).toThrow("type error in variable declaration; declared type: bool, actual type: int")
-  });
+    const outputAst: ASTNode | null = parse(program)
+    if (!outputAst) {
+      throw new Error('Parsing failed')
+    }
+    expect(() => typecheck(outputAst)).toThrow(
+      'type error in variable declaration; declared type: bool, actual type: int'
+    )
+  })
 
   test('basic chan recv assign correct', async () => {
     const program = `
@@ -1068,9 +1361,12 @@ describe('Basic typecheck test', () => {
           y = <-x
         }
           `
-    const outputAst: ASTNode = parse(program)
+    const outputAst: ASTNode | null = parse(program)
+    if (!outputAst) {
+      throw new Error('Parsing failed')
+    }
     expect(() => typecheck(outputAst)).not.toThrow()
-  });
+  })
 
   test('basic chan recv assign wrong', async () => {
     const program = `
@@ -1080,9 +1376,14 @@ describe('Basic typecheck test', () => {
           y = <-x
         }
           `
-    const outputAst: ASTNode = parse(program)
-    expect(() => typecheck(outputAst)).toThrow("type error in assignment; declared type: bool, actual type: int")
-  });
+    const outputAst: ASTNode | null = parse(program)
+    if (!outputAst) {
+      throw new Error('Parsing failed')
+    }
+    expect(() => typecheck(outputAst)).toThrow(
+      'type error in assignment; declared type: bool, actual type: int'
+    )
+  })
 
   test('basic chan send correct', async () => {
     const program = `
@@ -1093,9 +1394,12 @@ describe('Basic typecheck test', () => {
           x <- y
         }
           `
-    const outputAst: ASTNode = parse(program)
+    const outputAst: ASTNode | null = parse(program)
+    if (!outputAst) {
+      throw new Error('Parsing failed')
+    }
     expect(() => typecheck(outputAst)).not.toThrow()
-  });
+  })
 
   test('basic chan send wrong elem type', async () => {
     const program = `
@@ -1105,9 +1409,14 @@ describe('Basic typecheck test', () => {
           x <- y
         }
           `
-    const outputAst: ASTNode = parse(program)
-    expect(() => typecheck(outputAst)).toThrow("type error in chan send; expected type: int, actual type: bool")
-  });
+    const outputAst: ASTNode | null = parse(program)
+    if (!outputAst) {
+      throw new Error('Parsing failed')
+    }
+    expect(() => typecheck(outputAst)).toThrow(
+      'type error in chan send; expected type: int, actual type: bool'
+    )
+  })
 
   test('basic chan send not chan', async () => {
     const program = `
@@ -1117,9 +1426,14 @@ describe('Basic typecheck test', () => {
           y <- y
         }
           `
-    const outputAst: ASTNode = parse(program)
-    expect(() => typecheck(outputAst)).toThrow("type error in chan send; expected type: chan, actual type: bool")
-  });
+    const outputAst: ASTNode | null = parse(program)
+    if (!outputAst) {
+      throw new Error('Parsing failed')
+    }
+    expect(() => typecheck(outputAst)).toThrow(
+      'type error in chan send; expected type: chan, actual type: bool'
+    )
+  })
 
   test('basic chan recv is not terminating statement', async () => {
     const program = `
@@ -1136,9 +1450,14 @@ describe('Basic typecheck test', () => {
           var f float = 1.1
         }
           `
-    const outputAst: ASTNode = parse(program)
-    expect(() => typecheck(outputAst)).toThrow("type error in function declaration; expected return type: int actual return type: null")
-  });
+    const outputAst: ASTNode | null = parse(program)
+    if (!outputAst) {
+      throw new Error('Parsing failed')
+    }
+    expect(() => typecheck(outputAst)).toThrow(
+      'type error in function declaration; expected return type: int actual return type: null'
+    )
+  })
 
   test('basic chan send is not terminating statement', async () => {
     const program = `
@@ -1155,9 +1474,14 @@ describe('Basic typecheck test', () => {
           var f float = 1.1
         }
           `
-    const outputAst: ASTNode = parse(program)
-    expect(() => typecheck(outputAst)).toThrow("type error in function declaration; expected return type: int actual return type: null")
-  });
+    const outputAst: ASTNode | null = parse(program)
+    if (!outputAst) {
+      throw new Error('Parsing failed')
+    }
+    expect(() => typecheck(outputAst)).toThrow(
+      'type error in function declaration; expected return type: int actual return type: null'
+    )
+  })
 
   test('basic go stmt is not terminating statement', async () => {
     const program = `
@@ -1174,8 +1498,12 @@ describe('Basic typecheck test', () => {
           var f float = 1.1
         }
           `
-    const outputAst: ASTNode = parse(program)
-    expect(() => typecheck(outputAst)).toThrow("type error in function declaration; expected return type: int actual return type: null")
-  });
-  
+    const outputAst: ASTNode | null = parse(program)
+    if (!outputAst) {
+      throw new Error('Parsing failed')
+    }
+    expect(() => typecheck(outputAst)).toThrow(
+      'type error in function declaration; expected return type: int actual return type: null'
+    )
+  })
 })

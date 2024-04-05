@@ -15,7 +15,7 @@ export async function goRunner(
   context: Context,
   memory: number = 1500,
   options: RecursivePartial<IOptions> = {},
-  throwError: boolean = false
+  throwError: boolean = false // for testing purposes; helps us to check that the correct error is thrown in our test suite
 ): Promise<Result> {
   try {
     let program: ASTNode | null = parse(code, context)
@@ -32,8 +32,6 @@ export async function goRunner(
     })
   } catch (error) {
     if (throwError) {
-      // this is used for testing purposes
-      // set it to True to ensure that the error does not cascade to the frontend
       throw error
     }
     let sourceMapJson: RawSourceMap | undefined

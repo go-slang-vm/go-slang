@@ -39,7 +39,10 @@ describe('Basic compiler test', () => {
       { tag: 'DONE' }
     ]
 
-    const inputAst: ASTNode = parse(program)
+    const inputAst: ASTNode | null = parse(program)
+    if (!inputAst) {
+      throw new Error('Parsing failed')
+    }
     const outputInstr: any[] = compile_program(inputAst)
     expect(outputInstr).toStrictEqual(expectedInstr)
   })
@@ -81,7 +84,10 @@ describe('Basic compiler test', () => {
       { tag: 'DONE' }
     ]
 
-    const inputAst: ASTNode = parse(program)
+    const inputAst: ASTNode | null = parse(program)
+    if (!inputAst) {
+      throw new Error('Parsing failed')
+    }
     const outputInstr: any[] = compile_program(inputAst)
     expect(outputInstr).toStrictEqual(expectedInstr)
   })
@@ -152,7 +158,10 @@ describe('Basic compiler test', () => {
       { tag: 'DONE' }
     ]
 
-    const inputAst: ASTNode = parse(program)
+    const inputAst: ASTNode | null = parse(program)
+    if (!inputAst) {
+      throw new Error('Parsing failed')
+    }
     const outputInstr: any[] = compile_program(inputAst)
     expect(outputInstr).toStrictEqual(expectedInstr)
   })
@@ -197,7 +206,10 @@ describe('Basic compiler test', () => {
       { tag: 'DONE' }
     ]
 
-    const inputAst: ASTNode = parse(program)
+    const inputAst: ASTNode | null = parse(program)
+    if (!inputAst) {
+      throw new Error('Parsing failed')
+    }
     const outputInstr: any[] = compile_program(inputAst)
     //console.log(JSON.stringify(outputInstr));
     expect(outputInstr).toStrictEqual(expectedInstr)
@@ -241,7 +253,10 @@ describe('Basic compiler test', () => {
       { tag: 'DONE' }
     ]
 
-    const inputAst: ASTNode = parse(program)
+    const inputAst: ASTNode | null = parse(program)
+    if (!inputAst) {
+      throw new Error('Parsing failed')
+    }
     const outputInstr: any[] = compile_program(inputAst)
     expect(outputInstr).toStrictEqual(expectedInstr)
   })
@@ -287,7 +302,10 @@ describe('Basic compiler test', () => {
       { tag: 'DONE' }
     ]
 
-    const inputAst: ASTNode = parse(program)
+    const inputAst: ASTNode | null = parse(program)
+    if (!inputAst) {
+      throw new Error('Parsing failed')
+    }
     const outputInstr: any[] = compile_program(inputAst)
     // console.log(JSON.stringify(outputInstr));
     expect(outputInstr).toStrictEqual(expectedInstr)
@@ -346,7 +364,10 @@ describe('Basic compiler test', () => {
       { tag: 'DONE' }
     ]
 
-    const inputAst: ASTNode = parse(program)
+    const inputAst: ASTNode | null = parse(program)
+    if (!inputAst) {
+      throw new Error('Parsing failed')
+    }
     const outputInstr: any[] = compile_program(inputAst)
     // console.log(JSON.stringify(outputInstr));
     expect(outputInstr).toStrictEqual(expectedInstr)
@@ -408,7 +429,10 @@ describe('Basic compiler test', () => {
       { tag: 'DONE' }
     ]
 
-    const inputAst: ASTNode = parse(program)
+    const inputAst: ASTNode | null = parse(program)
+    if (!inputAst) {
+      throw new Error('Parsing failed')
+    }
     // console.dir(inputAst, {depth : 100});
     const outputInstr: any[] = compile_program(inputAst)
     // console.log(JSON.stringify(outputInstr));
@@ -467,7 +491,10 @@ describe('Basic compiler test', () => {
       { tag: 'DONE' }
     ]
 
-    const inputAst: ASTNode = parse(program)
+    const inputAst: ASTNode | null = parse(program)
+    if (!inputAst) {
+      throw new Error('Parsing failed')
+    }
     // console.dir(inputAst, {depth : 100});
     const outputInstr: any[] = compile_program(inputAst)
     // console.log(JSON.stringify(outputInstr));
@@ -501,7 +528,10 @@ describe('Basic compiler test', () => {
       { tag: 'DONE' }
     ]
 
-    const inputAst: ASTNode = parse(program)
+    const inputAst: ASTNode | null = parse(program)
+    if (!inputAst) {
+      throw new Error('Parsing failed')
+    }
     // console.dir(inputAst, {depth : 100});
     const outputInstr: any[] = compile_program(inputAst)
     // console.log(JSON.stringify(outputInstr));
@@ -537,7 +567,10 @@ describe('Basic compiler test', () => {
   {"tag": "EXIT_SCOPE"},
   {"tag": "DONE"}];
 
-    const inputAst: ASTNode = parse(program)
+    const inputAst: ASTNode | null = parse(program)
+    if (!inputAst) {
+      throw new Error('Parsing failed')
+    }
    // console.dir(inputAst, {depth : 100});
     const outputInstr: any[] = compile_program(inputAst)
     // console.log(JSON.stringify(outputInstr));
@@ -573,7 +606,10 @@ describe('Basic compiler test', () => {
       { tag: 'DONE' }
     ]
 
-    const inputAst: ASTNode = parse(program)
+    const inputAst: ASTNode | null = parse(program)
+    if (!inputAst) {
+      throw new Error('Parsing failed')
+    }
     //console.dir(inputAst, {depth : 100});
     const outputInstr: any[] = compile_program(inputAst)
     //console.log(JSON.stringify(outputInstr));
@@ -615,10 +651,13 @@ describe('Basic compiler test', () => {
       { tag: 'DONE' }
     ]
 
-    const inputAst: ASTNode = parse(program)
+    const inputAst: ASTNode | null = parse(program)
+    if (!inputAst) {
+      throw new Error('Parsing failed')
+    }
     //console.dir(inputAst, {depth : 100});
     const outputInstr: any[] = compile_program(inputAst)
-    //console.log(JSON.stringify(outputInstr)); 
+    //console.log(JSON.stringify(outputInstr));
     expect(outputInstr).toStrictEqual(expectedInstr)
   })
 
@@ -653,13 +692,16 @@ describe('Basic compiler test', () => {
       { tag: 'DONE' }
     ]
 
-    const inputAst: ASTNode = parse(program)
+    const inputAst: ASTNode | null = parse(program)
+    if (!inputAst) {
+      throw new Error('Parsing failed')
+    }
     //console.dir(inputAst, {depth : 100});
     const outputInstr: any[] = compile_program(inputAst)
     //console.log(JSON.stringify(outputInstr));
     expect(outputInstr).toStrictEqual(expectedInstr)
   })
-  
+
   test('basic sleep statement', async () => {
     const program = `
     func inc(x int) {
@@ -673,46 +715,50 @@ describe('Basic compiler test', () => {
     }
 `
 
-    const expectedInstr = 
-    [ {"tag": "ENTER_SCOPE", "num": 2},
-  {"tag": "LDF", "arity": 1, "addr": 3},
-  {"tag": "GOTO", "addr": 9},
-  {"tag": "LD", "sym": "x", "pos": [3, 0]},
-  {"tag": "LDC", "val": 1},
-  {"tag": "BINOP", "sym": "+"},
-  {"tag": "ASSIGN", "pos": [3, 0]},
-  {"tag": "LDC", "val": undefined},
-  {"tag": "RESET"},
-  {"tag": "ASSIGN", "pos": [2, 0]},
-  {"tag": "POP"},
-  {"tag": "LDF", "arity": 0, "addr": 13},
-  {"tag": "GOTO", "addr": 31},
-  {"tag": "ENTER_SCOPE", "num": 1},
-  {"tag": "LDC", "val": 0},
-  {"tag": "ASSIGN", "pos": [4, 0]},
-  {"tag": "POP"},
-  {"tag": "LD", "sym": "inc", "pos": [2, 0]},
-  {"tag": "LD", "sym": "x", "pos": [4, 0]},
-  {"tag": "GOCALL", "arity": 1},
-  {"tag": "LDC", "val": undefined},
-  {"tag": "POP"},
-  {"tag": "LD", "sym": "sleep", "pos": [0, 1]},
-  {"tag": "LDC", "val": 20},
-  {"tag": "CALL", "arity": 1},
-  {"tag": "POP"},
-  {"tag": "LD", "sym": "x", "pos": [4, 0]},
-  {"tag": "RESET"},
-  {"tag": "EXIT_SCOPE"},
-  {"tag": "LDC", "val": undefined},
-  {"tag": "RESET"},
-  {"tag": "ASSIGN", "pos": [2, 1]},
-  {"tag": "POP"},
-  {"tag": "LD", "sym": "main", "pos": [2, 1]},
-  {"tag": "CALL", "arity": 0},
-  {"tag": "EXIT_SCOPE"},
-  {"tag": "DONE"}]
+    const expectedInstr = [
+      { tag: 'ENTER_SCOPE', num: 2 },
+      { tag: 'LDF', arity: 1, addr: 3 },
+      { tag: 'GOTO', addr: 9 },
+      { tag: 'LD', sym: 'x', pos: [3, 0] },
+      { tag: 'LDC', val: 1 },
+      { tag: 'BINOP', sym: '+' },
+      { tag: 'ASSIGN', pos: [3, 0] },
+      { tag: 'LDC', val: undefined },
+      { tag: 'RESET' },
+      { tag: 'ASSIGN', pos: [2, 0] },
+      { tag: 'POP' },
+      { tag: 'LDF', arity: 0, addr: 13 },
+      { tag: 'GOTO', addr: 31 },
+      { tag: 'ENTER_SCOPE', num: 1 },
+      { tag: 'LDC', val: 0 },
+      { tag: 'ASSIGN', pos: [4, 0] },
+      { tag: 'POP' },
+      { tag: 'LD', sym: 'inc', pos: [2, 0] },
+      { tag: 'LD', sym: 'x', pos: [4, 0] },
+      { tag: 'GOCALL', arity: 1 },
+      { tag: 'LDC', val: undefined },
+      { tag: 'POP' },
+      { tag: 'LD', sym: 'sleep', pos: [0, 1] },
+      { tag: 'LDC', val: 20 },
+      { tag: 'CALL', arity: 1 },
+      { tag: 'POP' },
+      { tag: 'LD', sym: 'x', pos: [4, 0] },
+      { tag: 'RESET' },
+      { tag: 'EXIT_SCOPE' },
+      { tag: 'LDC', val: undefined },
+      { tag: 'RESET' },
+      { tag: 'ASSIGN', pos: [2, 1] },
+      { tag: 'POP' },
+      { tag: 'LD', sym: 'main', pos: [2, 1] },
+      { tag: 'CALL', arity: 0 },
+      { tag: 'EXIT_SCOPE' },
+      { tag: 'DONE' }
+    ]
 
-    const inputAst: ASTNode = parse(program)
+    const inputAst: ASTNode | null = parse(program)
+    if (!inputAst) {
+      throw new Error('Parsing failed')
+    }
     //console.dir(inputAst, {depth : 100});
     const outputInstr: any[] = compile_program(inputAst)
     // console.log(JSON.stringify(outputInstr));
@@ -734,63 +780,67 @@ describe('Basic compiler test', () => {
       sleep(40)
     }`
 
-    const expectedInstr:any[] = [
-      {"tag":"ENTER_SCOPE","num":2},
-      {"tag":"LDF","arity":1,"addr":3},
-      {"tag":"GOTO","addr":14},
-      {"tag":"ENTER_SCOPE","num":1},
-      {"tag":"LD","sym":"output","pos":[3,0]},
-      {"tag":"RECV"},
-      {"tag":"ASSIGN","pos":[4,0]},
-      {"tag":"POP"},
-      {"tag":"LD","sym":"Println","pos":[0,0]},
-      {"tag":"LD","sym":"msg","pos":[4,0]},
-      {"tag":"CALL","arity":1},
-      {"tag":"EXIT_SCOPE"},
-      {"tag":"LDC", "val": undefined},
-      {"tag":"RESET"},
-      {"tag":"ASSIGN","pos":[2,0]},
-      {"tag":"POP"},
-      {"tag":"LDF","arity":0,"addr":18},
-      {"tag":"GOTO","addr":48},
-      {"tag":"ENTER_SCOPE","num":1},
-      {"tag":"MAKE","capacity":2,"type":1,"elemType":"int"},
-      {"tag":"ASSIGN","pos":[4,0]},
-      {"tag":"POP"},
-      {"tag":"LD","sym":"inc","pos":[2,0]},
-      {"tag":"LD","sym":"input","pos":[4,0]},
-      {"tag":"GOCALL","arity":1},
-      {"tag":"LDC", "val": undefined},
-      {"tag":"POP"},
-      {"tag":"LD","sym":"inc","pos":[2,0]},
-      {"tag":"LD","sym":"input","pos":[4,0]},
-      {"tag":"GOCALL","arity":1},
-      {"tag":"LDC", "val": undefined},
-      {"tag":"POP"},
-      {"tag":"LDC","val":1},
-      {"tag":"LD","sym":"input","pos":[4,0]},
-      {"tag":"SEND"},
-      {"tag":"LDC", "val": undefined},
-      {"tag":"POP"},
-      {"tag":"LDC","val":2},
-      {"tag":"LD","sym":"input","pos":[4,0]},
-      {"tag":"SEND"},
-      {"tag":"LDC", "val": undefined},
-      {"tag":"POP"},
-      {"tag":"LD","sym":"sleep","pos":[0,1]},
-      {"tag":"LDC","val":40},
-      {"tag":"CALL","arity":1},
-      {"tag":"EXIT_SCOPE"},
-      {"tag":"LDC", "val": undefined},
-      {"tag":"RESET"},
-      {"tag":"ASSIGN","pos":[2,1]},
-      {"tag":"POP"},
-      {"tag":"LD","sym":"main","pos":[2,1]},
-      {"tag":"CALL","arity":0},
-      {"tag":"EXIT_SCOPE"},
-      {"tag":"DONE"}];
+    const expectedInstr: any[] = [
+      { tag: 'ENTER_SCOPE', num: 2 },
+      { tag: 'LDF', arity: 1, addr: 3 },
+      { tag: 'GOTO', addr: 14 },
+      { tag: 'ENTER_SCOPE', num: 1 },
+      { tag: 'LD', sym: 'output', pos: [3, 0] },
+      { tag: 'RECV' },
+      { tag: 'ASSIGN', pos: [4, 0] },
+      { tag: 'POP' },
+      { tag: 'LD', sym: 'Println', pos: [0, 0] },
+      { tag: 'LD', sym: 'msg', pos: [4, 0] },
+      { tag: 'CALL', arity: 1 },
+      { tag: 'EXIT_SCOPE' },
+      { tag: 'LDC', val: undefined },
+      { tag: 'RESET' },
+      { tag: 'ASSIGN', pos: [2, 0] },
+      { tag: 'POP' },
+      { tag: 'LDF', arity: 0, addr: 18 },
+      { tag: 'GOTO', addr: 48 },
+      { tag: 'ENTER_SCOPE', num: 1 },
+      { tag: 'MAKE', capacity: 2, type: 1, elemType: 'int' },
+      { tag: 'ASSIGN', pos: [4, 0] },
+      { tag: 'POP' },
+      { tag: 'LD', sym: 'inc', pos: [2, 0] },
+      { tag: 'LD', sym: 'input', pos: [4, 0] },
+      { tag: 'GOCALL', arity: 1 },
+      { tag: 'LDC', val: undefined },
+      { tag: 'POP' },
+      { tag: 'LD', sym: 'inc', pos: [2, 0] },
+      { tag: 'LD', sym: 'input', pos: [4, 0] },
+      { tag: 'GOCALL', arity: 1 },
+      { tag: 'LDC', val: undefined },
+      { tag: 'POP' },
+      { tag: 'LDC', val: 1 },
+      { tag: 'LD', sym: 'input', pos: [4, 0] },
+      { tag: 'SEND' },
+      { tag: 'LDC', val: undefined },
+      { tag: 'POP' },
+      { tag: 'LDC', val: 2 },
+      { tag: 'LD', sym: 'input', pos: [4, 0] },
+      { tag: 'SEND' },
+      { tag: 'LDC', val: undefined },
+      { tag: 'POP' },
+      { tag: 'LD', sym: 'sleep', pos: [0, 1] },
+      { tag: 'LDC', val: 40 },
+      { tag: 'CALL', arity: 1 },
+      { tag: 'EXIT_SCOPE' },
+      { tag: 'LDC', val: undefined },
+      { tag: 'RESET' },
+      { tag: 'ASSIGN', pos: [2, 1] },
+      { tag: 'POP' },
+      { tag: 'LD', sym: 'main', pos: [2, 1] },
+      { tag: 'CALL', arity: 0 },
+      { tag: 'EXIT_SCOPE' },
+      { tag: 'DONE' }
+    ]
 
-    const inputAst: ASTNode = parse(program)
+    const inputAst: ASTNode | null = parse(program)
+    if (!inputAst) {
+      throw new Error('Parsing failed')
+    }
     const outputInstr: any[] = compile_program(inputAst)
     expect(outputInstr).toStrictEqual(expectedInstr)
   })
@@ -817,82 +867,87 @@ describe('Basic compiler test', () => {
     }
     `
 
-    const expectedInstr:any[] = [{"tag":"ENTER_SCOPE","num":2},
-    {"tag":"LDF","arity":1,"addr":3},
-    {"tag":"GOTO","addr":14},
-    {"tag":"ENTER_SCOPE","num":1},
-    {"tag":"LD","sym":"output","pos":[3,0]},
-    {"tag":"RECV"},
-    {"tag":"ASSIGN","pos":[4,0]},
-    {"tag":"POP"},
-    {"tag":"LD","sym":"Println","pos":[0,0]},
-    {"tag":"LD","sym":"num","pos":[4,0]},
-    {"tag":"CALL","arity":1},
-    {"tag":"EXIT_SCOPE"},
-    {"tag":"LDC", "val" : undefined },
-    {"tag":"RESET"},
-    {"tag":"ASSIGN","pos":[2,0]},
-    {"tag":"POP"},
-    {"tag":"LDF","arity":0,"addr":18},
-    {"tag":"GOTO","addr":68},
-    {"tag":"ENTER_SCOPE","num":2},
-    {"tag":"MAKE","capacity":5,"type":1,"elemType":"int"},
-    {"tag":"ASSIGN","pos":[4,0]},
-    {"tag":"POP"},
-    {"tag":"LDC","val":0},
-    {"tag":"ASSIGN","pos":[4,1]},
-    {"tag":"POP"},
-    {"tag":"LD","sym":"i","pos":[4,1]},
-    {"tag":"LDC","val":5},
-    {"tag":"BINOP","sym":"<"},
-    {"tag":"JOF","addr":40},
-    {"tag":"LD","sym":"inc","pos":[2,0]},
-    {"tag":"LD","sym":"input","pos":[4,0]},
-    {"tag":"GOCALL","arity":1},
-    {"tag":"LDC", "val" : undefined },
-    {"tag":"POP"},
-    {"tag":"LD","sym":"i","pos":[4,1]},
-    {"tag":"LDC","val":1},
-    {"tag":"BINOP","sym":"+"},
-    {"tag":"ASSIGN","pos":[4,1]},
-    {"tag":"POP"},
-    {"tag":"GOTO","addr":25},
-    {"tag":"LDC", "val" : undefined },
-    {"tag":"POP"},
-    {"tag":"LDC","val":0},
-    {"tag":"ASSIGN","pos":[4,1]},
-    {"tag":"POP"},
-    {"tag":"LD","sym":"i","pos":[4,1]},
-    {"tag":"LDC","val":5},
-    {"tag":"BINOP","sym":"<"},
-    {"tag":"JOF","addr":60},
-    {"tag":"LD","sym":"i","pos":[4,1]},
-    {"tag":"LD","sym":"input","pos":[4,0]},
-    {"tag":"SEND"},
-    {"tag":"LDC", "val" : undefined },
-    {"tag":"POP"},
-    {"tag":"LD","sym":"i","pos":[4,1]},
-    {"tag":"LDC","val":1},
-    {"tag":"BINOP","sym":"+"},
-    {"tag":"ASSIGN","pos":[4,1]},
-    {"tag":"POP"},
-    {"tag":"GOTO","addr":45},
-    {"tag":"LDC", "val" : undefined },
-    {"tag":"POP"},
-    {"tag":"LD","sym":"sleep","pos":[0,1]},
-    {"tag":"LDC","val":35},
-    {"tag":"CALL","arity":1},
-    {"tag":"EXIT_SCOPE"},
-    {"tag":"LDC", "val" : undefined },
-    {"tag":"RESET"},
-    {"tag":"ASSIGN","pos":[2,1]},
-    {"tag":"POP"},
-    {"tag":"LD","sym":"main","pos":[2,1]},
-    {"tag":"CALL","arity":0},
-    {"tag":"EXIT_SCOPE"},
-    {"tag":"DONE"}];
+    const expectedInstr: any[] = [
+      { tag: 'ENTER_SCOPE', num: 2 },
+      { tag: 'LDF', arity: 1, addr: 3 },
+      { tag: 'GOTO', addr: 14 },
+      { tag: 'ENTER_SCOPE', num: 1 },
+      { tag: 'LD', sym: 'output', pos: [3, 0] },
+      { tag: 'RECV' },
+      { tag: 'ASSIGN', pos: [4, 0] },
+      { tag: 'POP' },
+      { tag: 'LD', sym: 'Println', pos: [0, 0] },
+      { tag: 'LD', sym: 'num', pos: [4, 0] },
+      { tag: 'CALL', arity: 1 },
+      { tag: 'EXIT_SCOPE' },
+      { tag: 'LDC', val: undefined },
+      { tag: 'RESET' },
+      { tag: 'ASSIGN', pos: [2, 0] },
+      { tag: 'POP' },
+      { tag: 'LDF', arity: 0, addr: 18 },
+      { tag: 'GOTO', addr: 68 },
+      { tag: 'ENTER_SCOPE', num: 2 },
+      { tag: 'MAKE', capacity: 5, type: 1, elemType: 'int' },
+      { tag: 'ASSIGN', pos: [4, 0] },
+      { tag: 'POP' },
+      { tag: 'LDC', val: 0 },
+      { tag: 'ASSIGN', pos: [4, 1] },
+      { tag: 'POP' },
+      { tag: 'LD', sym: 'i', pos: [4, 1] },
+      { tag: 'LDC', val: 5 },
+      { tag: 'BINOP', sym: '<' },
+      { tag: 'JOF', addr: 40 },
+      { tag: 'LD', sym: 'inc', pos: [2, 0] },
+      { tag: 'LD', sym: 'input', pos: [4, 0] },
+      { tag: 'GOCALL', arity: 1 },
+      { tag: 'LDC', val: undefined },
+      { tag: 'POP' },
+      { tag: 'LD', sym: 'i', pos: [4, 1] },
+      { tag: 'LDC', val: 1 },
+      { tag: 'BINOP', sym: '+' },
+      { tag: 'ASSIGN', pos: [4, 1] },
+      { tag: 'POP' },
+      { tag: 'GOTO', addr: 25 },
+      { tag: 'LDC', val: undefined },
+      { tag: 'POP' },
+      { tag: 'LDC', val: 0 },
+      { tag: 'ASSIGN', pos: [4, 1] },
+      { tag: 'POP' },
+      { tag: 'LD', sym: 'i', pos: [4, 1] },
+      { tag: 'LDC', val: 5 },
+      { tag: 'BINOP', sym: '<' },
+      { tag: 'JOF', addr: 60 },
+      { tag: 'LD', sym: 'i', pos: [4, 1] },
+      { tag: 'LD', sym: 'input', pos: [4, 0] },
+      { tag: 'SEND' },
+      { tag: 'LDC', val: undefined },
+      { tag: 'POP' },
+      { tag: 'LD', sym: 'i', pos: [4, 1] },
+      { tag: 'LDC', val: 1 },
+      { tag: 'BINOP', sym: '+' },
+      { tag: 'ASSIGN', pos: [4, 1] },
+      { tag: 'POP' },
+      { tag: 'GOTO', addr: 45 },
+      { tag: 'LDC', val: undefined },
+      { tag: 'POP' },
+      { tag: 'LD', sym: 'sleep', pos: [0, 1] },
+      { tag: 'LDC', val: 35 },
+      { tag: 'CALL', arity: 1 },
+      { tag: 'EXIT_SCOPE' },
+      { tag: 'LDC', val: undefined },
+      { tag: 'RESET' },
+      { tag: 'ASSIGN', pos: [2, 1] },
+      { tag: 'POP' },
+      { tag: 'LD', sym: 'main', pos: [2, 1] },
+      { tag: 'CALL', arity: 0 },
+      { tag: 'EXIT_SCOPE' },
+      { tag: 'DONE' }
+    ]
 
-    const inputAst: ASTNode = parse(program)
+    const inputAst: ASTNode | null = parse(program)
+    if (!inputAst) {
+      throw new Error('Parsing failed')
+    }
     const outputInstr: any[] = compile_program(inputAst)
     expect(outputInstr).toStrictEqual(expectedInstr)
   })
@@ -912,63 +967,67 @@ describe('Basic compiler test', () => {
       sleep(40)
     }`
 
-    const expectedInstr:any[] = [
-      {"tag":"ENTER_SCOPE","num":2},
-      {"tag":"LDF","arity":1,"addr":3},
-      {"tag":"GOTO","addr":14},
-      {"tag":"ENTER_SCOPE","num":1},
-      {"tag":"LD","sym":"output","pos":[3,0]},
-      {"tag":"RECV"},
-      {"tag":"ASSIGN","pos":[4,0]},
-      {"tag":"POP"},
-      {"tag":"LD","sym":"Println","pos":[0,0]},
-      {"tag":"LD","sym":"msg","pos":[4,0]},
-      {"tag":"CALL","arity":1},
-      {"tag":"EXIT_SCOPE"},
-      {"tag":"LDC", "val": undefined},
-      {"tag":"RESET"},
-      {"tag":"ASSIGN","pos":[2,0]},
-      {"tag":"POP"},
-      {"tag":"LDF","arity":0,"addr":18},
-      {"tag":"GOTO","addr":48},
-      {"tag":"ENTER_SCOPE","num":1},
-      {"tag":"MAKE","capacity":2,"type":1,"elemType":"int"},
-      {"tag":"ASSIGN","pos":[4,0]},
-      {"tag":"POP"},
-      {"tag":"LD","sym":"inc","pos":[2,0]},
-      {"tag":"LD","sym":"input","pos":[4,0]},
-      {"tag":"GOCALL","arity":1},
-      {"tag":"LDC", "val": undefined},
-      {"tag":"POP"},
-      {"tag":"LD","sym":"inc","pos":[2,0]},
-      {"tag":"LD","sym":"input","pos":[4,0]},
-      {"tag":"GOCALL","arity":1},
-      {"tag":"LDC", "val": undefined},
-      {"tag":"POP"},
-      {"tag":"LDC","val":1},
-      {"tag":"LD","sym":"input","pos":[4,0]},
-      {"tag":"SEND"},
-      {"tag":"LDC", "val": undefined},
-      {"tag":"POP"},
-      {"tag":"LDC","val":2},
-      {"tag":"LD","sym":"input","pos":[4,0]},
-      {"tag":"SEND"},
-      {"tag":"LDC", "val": undefined},
-      {"tag":"POP"},
-      {"tag":"LD","sym":"sleep","pos":[0,1]},
-      {"tag":"LDC","val":40},
-      {"tag":"CALL","arity":1},
-      {"tag":"EXIT_SCOPE"},
-      {"tag":"LDC", "val": undefined},
-      {"tag":"RESET"},
-      {"tag":"ASSIGN","pos":[2,1]},
-      {"tag":"POP"},
-      {"tag":"LD","sym":"main","pos":[2,1]},
-      {"tag":"CALL","arity":0},
-      {"tag":"EXIT_SCOPE"},
-      {"tag":"DONE"}];
+    const expectedInstr: any[] = [
+      { tag: 'ENTER_SCOPE', num: 2 },
+      { tag: 'LDF', arity: 1, addr: 3 },
+      { tag: 'GOTO', addr: 14 },
+      { tag: 'ENTER_SCOPE', num: 1 },
+      { tag: 'LD', sym: 'output', pos: [3, 0] },
+      { tag: 'RECV' },
+      { tag: 'ASSIGN', pos: [4, 0] },
+      { tag: 'POP' },
+      { tag: 'LD', sym: 'Println', pos: [0, 0] },
+      { tag: 'LD', sym: 'msg', pos: [4, 0] },
+      { tag: 'CALL', arity: 1 },
+      { tag: 'EXIT_SCOPE' },
+      { tag: 'LDC', val: undefined },
+      { tag: 'RESET' },
+      { tag: 'ASSIGN', pos: [2, 0] },
+      { tag: 'POP' },
+      { tag: 'LDF', arity: 0, addr: 18 },
+      { tag: 'GOTO', addr: 48 },
+      { tag: 'ENTER_SCOPE', num: 1 },
+      { tag: 'MAKE', capacity: 2, type: 1, elemType: 'int' },
+      { tag: 'ASSIGN', pos: [4, 0] },
+      { tag: 'POP' },
+      { tag: 'LD', sym: 'inc', pos: [2, 0] },
+      { tag: 'LD', sym: 'input', pos: [4, 0] },
+      { tag: 'GOCALL', arity: 1 },
+      { tag: 'LDC', val: undefined },
+      { tag: 'POP' },
+      { tag: 'LD', sym: 'inc', pos: [2, 0] },
+      { tag: 'LD', sym: 'input', pos: [4, 0] },
+      { tag: 'GOCALL', arity: 1 },
+      { tag: 'LDC', val: undefined },
+      { tag: 'POP' },
+      { tag: 'LDC', val: 1 },
+      { tag: 'LD', sym: 'input', pos: [4, 0] },
+      { tag: 'SEND' },
+      { tag: 'LDC', val: undefined },
+      { tag: 'POP' },
+      { tag: 'LDC', val: 2 },
+      { tag: 'LD', sym: 'input', pos: [4, 0] },
+      { tag: 'SEND' },
+      { tag: 'LDC', val: undefined },
+      { tag: 'POP' },
+      { tag: 'LD', sym: 'sleep', pos: [0, 1] },
+      { tag: 'LDC', val: 40 },
+      { tag: 'CALL', arity: 1 },
+      { tag: 'EXIT_SCOPE' },
+      { tag: 'LDC', val: undefined },
+      { tag: 'RESET' },
+      { tag: 'ASSIGN', pos: [2, 1] },
+      { tag: 'POP' },
+      { tag: 'LD', sym: 'main', pos: [2, 1] },
+      { tag: 'CALL', arity: 0 },
+      { tag: 'EXIT_SCOPE' },
+      { tag: 'DONE' }
+    ]
 
-    const inputAst: ASTNode = parse(program)
+    const inputAst: ASTNode | null = parse(program)
+    if (!inputAst) {
+      throw new Error('Parsing failed')
+    }
     const outputInstr: any[] = compile_program(inputAst)
     expect(outputInstr).toStrictEqual(expectedInstr)
   })
@@ -988,63 +1047,67 @@ describe('Basic compiler test', () => {
       sleep(40)
     }`
 
-    const expectedInstr:any[] = [
-      {"tag":"ENTER_SCOPE","num":2},
-      {"tag":"LDF","arity":1,"addr":3},
-      {"tag":"GOTO","addr":14},
-      {"tag":"ENTER_SCOPE","num":1},
-      {"tag":"LD","sym":"output","pos":[3,0]},
-      {"tag":"RECV"},
-      {"tag":"ASSIGN","pos":[4,0]},
-      {"tag":"POP"},
-      {"tag":"LD","sym":"Println","pos":[0,0]},
-      {"tag":"LD","sym":"msg","pos":[4,0]},
-      {"tag":"CALL","arity":1},
-      {"tag":"EXIT_SCOPE"},
-      {"tag":"LDC", "val": undefined},
-      {"tag":"RESET"},
-      {"tag":"ASSIGN","pos":[2,0]},
-      {"tag":"POP"},
-      {"tag":"LDF","arity":0,"addr":18},
-      {"tag":"GOTO","addr":48},
-      {"tag":"ENTER_SCOPE","num":1},
-      {"tag":"MAKE","capacity":0,"type":0,"elemType":"int"},
-      {"tag":"ASSIGN","pos":[4,0]},
-      {"tag":"POP"},
-      {"tag":"LD","sym":"inc","pos":[2,0]},
-      {"tag":"LD","sym":"input","pos":[4,0]},
-      {"tag":"GOCALL","arity":1},
-      {"tag":"LDC", "val": undefined},
-      {"tag":"POP"},
-      {"tag":"LD","sym":"inc","pos":[2,0]},
-      {"tag":"LD","sym":"input","pos":[4,0]},
-      {"tag":"GOCALL","arity":1},
-      {"tag":"LDC", "val": undefined},
-      {"tag":"POP"},
-      {"tag":"LDC","val":1},
-      {"tag":"LD","sym":"input","pos":[4,0]},
-      {"tag":"SEND"},
-      {"tag":"LDC", "val": undefined},
-      {"tag":"POP"},
-      {"tag":"LDC","val":2},
-      {"tag":"LD","sym":"input","pos":[4,0]},
-      {"tag":"SEND"},
-      {"tag":"LDC", "val": undefined},
-      {"tag":"POP"},
-      {"tag":"LD","sym":"sleep","pos":[0,1]},
-      {"tag":"LDC","val":40},
-      {"tag":"CALL","arity":1},
-      {"tag":"EXIT_SCOPE"},
-      {"tag":"LDC", "val": undefined},
-      {"tag":"RESET"},
-      {"tag":"ASSIGN","pos":[2,1]},
-      {"tag":"POP"},
-      {"tag":"LD","sym":"main","pos":[2,1]},
-      {"tag":"CALL","arity":0},
-      {"tag":"EXIT_SCOPE"},
-      {"tag":"DONE"}];
+    const expectedInstr: any[] = [
+      { tag: 'ENTER_SCOPE', num: 2 },
+      { tag: 'LDF', arity: 1, addr: 3 },
+      { tag: 'GOTO', addr: 14 },
+      { tag: 'ENTER_SCOPE', num: 1 },
+      { tag: 'LD', sym: 'output', pos: [3, 0] },
+      { tag: 'RECV' },
+      { tag: 'ASSIGN', pos: [4, 0] },
+      { tag: 'POP' },
+      { tag: 'LD', sym: 'Println', pos: [0, 0] },
+      { tag: 'LD', sym: 'msg', pos: [4, 0] },
+      { tag: 'CALL', arity: 1 },
+      { tag: 'EXIT_SCOPE' },
+      { tag: 'LDC', val: undefined },
+      { tag: 'RESET' },
+      { tag: 'ASSIGN', pos: [2, 0] },
+      { tag: 'POP' },
+      { tag: 'LDF', arity: 0, addr: 18 },
+      { tag: 'GOTO', addr: 48 },
+      { tag: 'ENTER_SCOPE', num: 1 },
+      { tag: 'MAKE', capacity: 0, type: 0, elemType: 'int' },
+      { tag: 'ASSIGN', pos: [4, 0] },
+      { tag: 'POP' },
+      { tag: 'LD', sym: 'inc', pos: [2, 0] },
+      { tag: 'LD', sym: 'input', pos: [4, 0] },
+      { tag: 'GOCALL', arity: 1 },
+      { tag: 'LDC', val: undefined },
+      { tag: 'POP' },
+      { tag: 'LD', sym: 'inc', pos: [2, 0] },
+      { tag: 'LD', sym: 'input', pos: [4, 0] },
+      { tag: 'GOCALL', arity: 1 },
+      { tag: 'LDC', val: undefined },
+      { tag: 'POP' },
+      { tag: 'LDC', val: 1 },
+      { tag: 'LD', sym: 'input', pos: [4, 0] },
+      { tag: 'SEND' },
+      { tag: 'LDC', val: undefined },
+      { tag: 'POP' },
+      { tag: 'LDC', val: 2 },
+      { tag: 'LD', sym: 'input', pos: [4, 0] },
+      { tag: 'SEND' },
+      { tag: 'LDC', val: undefined },
+      { tag: 'POP' },
+      { tag: 'LD', sym: 'sleep', pos: [0, 1] },
+      { tag: 'LDC', val: 40 },
+      { tag: 'CALL', arity: 1 },
+      { tag: 'EXIT_SCOPE' },
+      { tag: 'LDC', val: undefined },
+      { tag: 'RESET' },
+      { tag: 'ASSIGN', pos: [2, 1] },
+      { tag: 'POP' },
+      { tag: 'LD', sym: 'main', pos: [2, 1] },
+      { tag: 'CALL', arity: 0 },
+      { tag: 'EXIT_SCOPE' },
+      { tag: 'DONE' }
+    ]
 
-    const inputAst: ASTNode = parse(program)
+    const inputAst: ASTNode | null = parse(program)
+    if (!inputAst) {
+      throw new Error('Parsing failed')
+    }
     const outputInstr: any[] = compile_program(inputAst)
     expect(outputInstr).toStrictEqual(expectedInstr)
   })
@@ -1064,68 +1127,72 @@ describe('Basic compiler test', () => {
       sleep(40)
     }`
 
-    const expectedInstr:any[] = [
-      {"tag":"ENTER_SCOPE","num":2},
-      {"tag":"LDF","arity":1,"addr":3},
-      {"tag":"GOTO","addr":14},
-      {"tag":"ENTER_SCOPE","num":1},
-      {"tag":"LD","sym":"output","pos":[3,0]},
-      {"tag":"RECV"},
-      {"tag":"ASSIGN","pos":[4,0]},
-      {"tag":"POP"},
-      {"tag":"LD","sym":"Println","pos":[0,0]},
-      {"tag":"LD","sym":"msg","pos":[4,0]},
-      {"tag":"CALL","arity":1},
-      {"tag":"EXIT_SCOPE"},
-      {"tag":"LDC", "val": undefined},
-      {"tag":"RESET"},
-      {"tag":"ASSIGN","pos":[2,0]},
-      {"tag":"POP"},
-      {"tag":"LDF","arity":0,"addr":18},
-      {"tag":"GOTO","addr":48},
-      {"tag":"ENTER_SCOPE","num":1},
-      {"tag":"MAKE","capacity":0,"type":0,"elemType":"int"},
-      {"tag":"ASSIGN","pos":[4,0]},
-      {"tag":"POP"},
-      {"tag":"LD","sym":"inc","pos":[2,0]},
-      {"tag":"LD","sym":"input","pos":[4,0]},
-      {"tag":"GOCALL","arity":1},
-      {"tag":"LDC", "val": undefined},
-      {"tag":"POP"},
-      {"tag":"LD","sym":"inc","pos":[2,0]},
-      {"tag":"LD","sym":"input","pos":[4,0]},
-      {"tag":"GOCALL","arity":1},
-      {"tag":"LDC", "val": undefined},
-      {"tag":"POP"},
-      {"tag":"LDC","val":1},
-      {"tag":"LD","sym":"input","pos":[4,0]},
-      {"tag":"SEND"},
-      {"tag":"LDC", "val": undefined},
-      {"tag":"POP"},
-      {"tag":"LDC","val":2},
-      {"tag":"LD","sym":"input","pos":[4,0]},
-      {"tag":"SEND"},
-      {"tag":"LDC", "val": undefined},
-      {"tag":"POP"},
-      {"tag":"LD","sym":"sleep","pos":[0,1]},
-      {"tag":"LDC","val":40},
-      {"tag":"CALL","arity":1},
-      {"tag":"EXIT_SCOPE"},
-      {"tag":"LDC", "val": undefined},
-      {"tag":"RESET"},
-      {"tag":"ASSIGN","pos":[2,1]},
-      {"tag":"POP"},
-      {"tag":"LD","sym":"main","pos":[2,1]},
-      {"tag":"CALL","arity":0},
-      {"tag":"EXIT_SCOPE"},
-      {"tag":"DONE"}];
+    const expectedInstr: any[] = [
+      { tag: 'ENTER_SCOPE', num: 2 },
+      { tag: 'LDF', arity: 1, addr: 3 },
+      { tag: 'GOTO', addr: 14 },
+      { tag: 'ENTER_SCOPE', num: 1 },
+      { tag: 'LD', sym: 'output', pos: [3, 0] },
+      { tag: 'RECV' },
+      { tag: 'ASSIGN', pos: [4, 0] },
+      { tag: 'POP' },
+      { tag: 'LD', sym: 'Println', pos: [0, 0] },
+      { tag: 'LD', sym: 'msg', pos: [4, 0] },
+      { tag: 'CALL', arity: 1 },
+      { tag: 'EXIT_SCOPE' },
+      { tag: 'LDC', val: undefined },
+      { tag: 'RESET' },
+      { tag: 'ASSIGN', pos: [2, 0] },
+      { tag: 'POP' },
+      { tag: 'LDF', arity: 0, addr: 18 },
+      { tag: 'GOTO', addr: 48 },
+      { tag: 'ENTER_SCOPE', num: 1 },
+      { tag: 'MAKE', capacity: 0, type: 0, elemType: 'int' },
+      { tag: 'ASSIGN', pos: [4, 0] },
+      { tag: 'POP' },
+      { tag: 'LD', sym: 'inc', pos: [2, 0] },
+      { tag: 'LD', sym: 'input', pos: [4, 0] },
+      { tag: 'GOCALL', arity: 1 },
+      { tag: 'LDC', val: undefined },
+      { tag: 'POP' },
+      { tag: 'LD', sym: 'inc', pos: [2, 0] },
+      { tag: 'LD', sym: 'input', pos: [4, 0] },
+      { tag: 'GOCALL', arity: 1 },
+      { tag: 'LDC', val: undefined },
+      { tag: 'POP' },
+      { tag: 'LDC', val: 1 },
+      { tag: 'LD', sym: 'input', pos: [4, 0] },
+      { tag: 'SEND' },
+      { tag: 'LDC', val: undefined },
+      { tag: 'POP' },
+      { tag: 'LDC', val: 2 },
+      { tag: 'LD', sym: 'input', pos: [4, 0] },
+      { tag: 'SEND' },
+      { tag: 'LDC', val: undefined },
+      { tag: 'POP' },
+      { tag: 'LD', sym: 'sleep', pos: [0, 1] },
+      { tag: 'LDC', val: 40 },
+      { tag: 'CALL', arity: 1 },
+      { tag: 'EXIT_SCOPE' },
+      { tag: 'LDC', val: undefined },
+      { tag: 'RESET' },
+      { tag: 'ASSIGN', pos: [2, 1] },
+      { tag: 'POP' },
+      { tag: 'LD', sym: 'main', pos: [2, 1] },
+      { tag: 'CALL', arity: 0 },
+      { tag: 'EXIT_SCOPE' },
+      { tag: 'DONE' }
+    ]
 
-    const inputAst: ASTNode = parse(program)
+    const inputAst: ASTNode | null = parse(program)
+    if (!inputAst) {
+      throw new Error('Parsing failed')
+    }
     const outputInstr: any[] = compile_program(inputAst)
     expect(outputInstr).toStrictEqual(expectedInstr)
   })
 
-  test("basic rel ops test", async() => {
+  test('basic rel ops test', async () => {
     const program = `
     func main() {
       x int := 1
@@ -1149,137 +1216,147 @@ describe('Basic compiler test', () => {
       }
       Println(x)
     }`
-    const expectedInstr:any[] = [ {"tag": "ENTER_SCOPE", "num": 1},
-    {"tag": "LDF", "arity": 0, "addr": 3},
-    {"tag": "GOTO", "addr": 79},
-    {"tag": "ENTER_SCOPE", "num": 1},
-    {"tag": "LDC", "val": 1},
-    {"tag": "ASSIGN", "pos": [4, 0]},
-    {"tag": "POP"},
-    {"tag": "LD", "sym": "x", "pos": [4, 0]},
-    {"tag": "LDC", "val": 1},
-    {"tag": "BINOP", "sym": "=="},
-    {"tag": "JOF", "addr": 16},
-    {"tag": "LD", "sym": "x", "pos": [4, 0]},
-    {"tag": "LDC", "val": 1},
-    {"tag": "BINOP", "sym": "+"},
-    {"tag": "ASSIGN", "pos": [4, 0]},
-    {"tag": "GOTO", "addr": 17},
-    {"tag": "LDC", "val": undefined},
-    {"tag": "POP"},
-    {"tag": "LD", "sym": "x", "pos": [4, 0]},
-    {"tag": "LDC", "val": 1},
-    {"tag": "BINOP", "sym": "!="},
-    {"tag": "JOF", "addr": 27},
-    {"tag": "LD", "sym": "x", "pos": [4, 0]},
-    {"tag": "LDC", "val": 1},
-    {"tag": "BINOP", "sym": "+"},
-    {"tag": "ASSIGN", "pos": [4, 0]},
-    {"tag": "GOTO", "addr": 28},
-    {"tag": "LDC", "val": undefined},
-    {"tag": "POP"},
-    {"tag": "LD", "sym": "x", "pos": [4, 0]},
-    {"tag": "LDC", "val": 1},
-    {"tag": "BINOP", "sym": ">="},
-    {"tag": "JOF", "addr": 38},
-    {"tag": "LD", "sym": "x", "pos": [4, 0]},
-    {"tag": "LDC", "val": 1},
-    {"tag": "BINOP", "sym": "+"},
-    {"tag": "ASSIGN", "pos": [4, 0]},
-    {"tag": "GOTO", "addr": 39},
-    {"tag": "LDC", "val": undefined},
-    {"tag": "POP"},
-    {"tag": "LD", "sym": "x", "pos": [4, 0]},
-    {"tag": "LDC", "val": 10},
-    {"tag": "BINOP", "sym": "<="},
-    {"tag": "JOF", "addr": 49},
-    {"tag": "LD", "sym": "x", "pos": [4, 0]},
-    {"tag": "LDC", "val": 1},
-    {"tag": "BINOP", "sym": "+"},
-    {"tag": "ASSIGN", "pos": [4, 0]},
-    {"tag": "GOTO", "addr": 50},
-    {"tag": "LDC", "val": undefined},
-    {"tag": "POP"},
-    {"tag": "LD", "sym": "x", "pos": [4, 0]},
-    {"tag": "LDC", "val": 1},
-    {"tag": "BINOP", "sym": ">"},
-    {"tag": "JOF", "addr": 60},
-    {"tag": "LD", "sym": "x", "pos": [4, 0]},
-    {"tag": "LDC", "val": 1},
-    {"tag": "BINOP", "sym": "+"},
-    {"tag": "ASSIGN", "pos": [4, 0]},
-    {"tag": "GOTO", "addr": 61},
-    {"tag": "LDC", "val": undefined},
-    {"tag": "POP"},
-    {"tag": "LD", "sym": "x", "pos": [4, 0]},
-    {"tag": "LDC", "val": 10},
-    {"tag": "BINOP", "sym": "<"},
-    {"tag": "JOF", "addr": 71},
-    {"tag": "LD", "sym": "x", "pos": [4, 0]},
-    {"tag": "LDC", "val": 1},
-    {"tag": "BINOP", "sym": "+"},
-    {"tag": "ASSIGN", "pos": [4, 0]},
-    {"tag": "GOTO", "addr": 72},
-    {"tag": "LDC", "val": undefined},
-    {"tag": "POP"},
-    {"tag": "LD", "sym": "Println", "pos": [0, 0]},
-    {"tag": "LD", "sym": "x", "pos": [4, 0]},
-    {"tag": "CALL", "arity": 1},
-    {"tag": "EXIT_SCOPE"},
-    {"tag": "LDC", "val": undefined},
-    {"tag": "RESET"},
-    {"tag": "ASSIGN", "pos": [2, 0]},
-    {"tag": "POP"},
-    {"tag": "LD", "sym": "main", "pos": [2, 0]},
-    {"tag": "CALL", "arity": 0},
-    {"tag": "EXIT_SCOPE"},
-    {"tag": "DONE"}];
-    const inputAst: ASTNode = parse(program)
+    const expectedInstr: any[] = [
+      { tag: 'ENTER_SCOPE', num: 1 },
+      { tag: 'LDF', arity: 0, addr: 3 },
+      { tag: 'GOTO', addr: 79 },
+      { tag: 'ENTER_SCOPE', num: 1 },
+      { tag: 'LDC', val: 1 },
+      { tag: 'ASSIGN', pos: [4, 0] },
+      { tag: 'POP' },
+      { tag: 'LD', sym: 'x', pos: [4, 0] },
+      { tag: 'LDC', val: 1 },
+      { tag: 'BINOP', sym: '==' },
+      { tag: 'JOF', addr: 16 },
+      { tag: 'LD', sym: 'x', pos: [4, 0] },
+      { tag: 'LDC', val: 1 },
+      { tag: 'BINOP', sym: '+' },
+      { tag: 'ASSIGN', pos: [4, 0] },
+      { tag: 'GOTO', addr: 17 },
+      { tag: 'LDC', val: undefined },
+      { tag: 'POP' },
+      { tag: 'LD', sym: 'x', pos: [4, 0] },
+      { tag: 'LDC', val: 1 },
+      { tag: 'BINOP', sym: '!=' },
+      { tag: 'JOF', addr: 27 },
+      { tag: 'LD', sym: 'x', pos: [4, 0] },
+      { tag: 'LDC', val: 1 },
+      { tag: 'BINOP', sym: '+' },
+      { tag: 'ASSIGN', pos: [4, 0] },
+      { tag: 'GOTO', addr: 28 },
+      { tag: 'LDC', val: undefined },
+      { tag: 'POP' },
+      { tag: 'LD', sym: 'x', pos: [4, 0] },
+      { tag: 'LDC', val: 1 },
+      { tag: 'BINOP', sym: '>=' },
+      { tag: 'JOF', addr: 38 },
+      { tag: 'LD', sym: 'x', pos: [4, 0] },
+      { tag: 'LDC', val: 1 },
+      { tag: 'BINOP', sym: '+' },
+      { tag: 'ASSIGN', pos: [4, 0] },
+      { tag: 'GOTO', addr: 39 },
+      { tag: 'LDC', val: undefined },
+      { tag: 'POP' },
+      { tag: 'LD', sym: 'x', pos: [4, 0] },
+      { tag: 'LDC', val: 10 },
+      { tag: 'BINOP', sym: '<=' },
+      { tag: 'JOF', addr: 49 },
+      { tag: 'LD', sym: 'x', pos: [4, 0] },
+      { tag: 'LDC', val: 1 },
+      { tag: 'BINOP', sym: '+' },
+      { tag: 'ASSIGN', pos: [4, 0] },
+      { tag: 'GOTO', addr: 50 },
+      { tag: 'LDC', val: undefined },
+      { tag: 'POP' },
+      { tag: 'LD', sym: 'x', pos: [4, 0] },
+      { tag: 'LDC', val: 1 },
+      { tag: 'BINOP', sym: '>' },
+      { tag: 'JOF', addr: 60 },
+      { tag: 'LD', sym: 'x', pos: [4, 0] },
+      { tag: 'LDC', val: 1 },
+      { tag: 'BINOP', sym: '+' },
+      { tag: 'ASSIGN', pos: [4, 0] },
+      { tag: 'GOTO', addr: 61 },
+      { tag: 'LDC', val: undefined },
+      { tag: 'POP' },
+      { tag: 'LD', sym: 'x', pos: [4, 0] },
+      { tag: 'LDC', val: 10 },
+      { tag: 'BINOP', sym: '<' },
+      { tag: 'JOF', addr: 71 },
+      { tag: 'LD', sym: 'x', pos: [4, 0] },
+      { tag: 'LDC', val: 1 },
+      { tag: 'BINOP', sym: '+' },
+      { tag: 'ASSIGN', pos: [4, 0] },
+      { tag: 'GOTO', addr: 72 },
+      { tag: 'LDC', val: undefined },
+      { tag: 'POP' },
+      { tag: 'LD', sym: 'Println', pos: [0, 0] },
+      { tag: 'LD', sym: 'x', pos: [4, 0] },
+      { tag: 'CALL', arity: 1 },
+      { tag: 'EXIT_SCOPE' },
+      { tag: 'LDC', val: undefined },
+      { tag: 'RESET' },
+      { tag: 'ASSIGN', pos: [2, 0] },
+      { tag: 'POP' },
+      { tag: 'LD', sym: 'main', pos: [2, 0] },
+      { tag: 'CALL', arity: 0 },
+      { tag: 'EXIT_SCOPE' },
+      { tag: 'DONE' }
+    ]
+    const inputAst: ASTNode | null = parse(program)
+    if (!inputAst) {
+      throw new Error('Parsing failed')
+    }
     const outputInstr: any[] = compile_program(inputAst)
     expect(outputInstr).toStrictEqual(expectedInstr)
   })
 
-  test("basic bin ops test", async() => {
+  test('basic bin ops test', async () => {
     const program = `
     func main() {
       x int := 1
       Println(x + x - 4 * 3 / 2 % 5)
     }`
-    const expectedInstr:any[] = [ {"tag": "ENTER_SCOPE", "num": 1},
-    {"tag": "LDF", "arity": 0, "addr": 3},
-    {"tag": "GOTO", "addr": 23},
-    {"tag": "ENTER_SCOPE", "num": 1},
-    {"tag": "LDC", "val": 1},
-    {"tag": "ASSIGN", "pos": [4, 0]},
-    {"tag": "POP"},
-    {"tag": "LD", "sym": "Println", "pos": [0, 0]},
-    {"tag": "LD", "sym": "x", "pos": [4, 0]},
-    {"tag": "LD", "sym": "x", "pos": [4, 0]},
-    {"tag": "BINOP", "sym": "+"},
-    {"tag": "LDC", "val": 4},
-    {"tag": "LDC", "val": 3},
-    {"tag": "BINOP", "sym": "*"},
-    {"tag": "LDC", "val": 2},
-    {"tag": "BINOP", "sym": "/"},
-    {"tag": "LDC", "val": 5},
-    {"tag": "BINOP", "sym": "%"},
-    {"tag": "BINOP", "sym": "-"},
-    {"tag": "CALL", "arity": 1},
-    {"tag": "EXIT_SCOPE"},
-    {"tag": "LDC", "val": undefined},
-    {"tag": "RESET"},
-    {"tag": "ASSIGN", "pos": [2, 0]},
-    {"tag": "POP"},
-    {"tag": "LD", "sym": "main", "pos": [2, 0]},
-    {"tag": "CALL", "arity": 0},
-    {"tag": "EXIT_SCOPE"},
-    {"tag": "DONE"}];
-    const inputAst: ASTNode = parse(program)
+    const expectedInstr: any[] = [
+      { tag: 'ENTER_SCOPE', num: 1 },
+      { tag: 'LDF', arity: 0, addr: 3 },
+      { tag: 'GOTO', addr: 23 },
+      { tag: 'ENTER_SCOPE', num: 1 },
+      { tag: 'LDC', val: 1 },
+      { tag: 'ASSIGN', pos: [4, 0] },
+      { tag: 'POP' },
+      { tag: 'LD', sym: 'Println', pos: [0, 0] },
+      { tag: 'LD', sym: 'x', pos: [4, 0] },
+      { tag: 'LD', sym: 'x', pos: [4, 0] },
+      { tag: 'BINOP', sym: '+' },
+      { tag: 'LDC', val: 4 },
+      { tag: 'LDC', val: 3 },
+      { tag: 'BINOP', sym: '*' },
+      { tag: 'LDC', val: 2 },
+      { tag: 'BINOP', sym: '/' },
+      { tag: 'LDC', val: 5 },
+      { tag: 'BINOP', sym: '%' },
+      { tag: 'BINOP', sym: '-' },
+      { tag: 'CALL', arity: 1 },
+      { tag: 'EXIT_SCOPE' },
+      { tag: 'LDC', val: undefined },
+      { tag: 'RESET' },
+      { tag: 'ASSIGN', pos: [2, 0] },
+      { tag: 'POP' },
+      { tag: 'LD', sym: 'main', pos: [2, 0] },
+      { tag: 'CALL', arity: 0 },
+      { tag: 'EXIT_SCOPE' },
+      { tag: 'DONE' }
+    ]
+    const inputAst: ASTNode | null = parse(program)
+    if (!inputAst) {
+      throw new Error('Parsing failed')
+    }
     const outputInstr: any[] = compile_program(inputAst)
     expect(outputInstr).toStrictEqual(expectedInstr)
   })
 
-  test("basic mutex test", async() => {
+  test('basic mutex test', async () => {
     const program = `
     func main() {
       var x Mutex = mutex
@@ -1287,40 +1364,44 @@ describe('Basic compiler test', () => {
       Lock(x)
       Unlock(x)
     }`
-    const expectedInstr:any[] = 
-    [{"tag":"ENTER_SCOPE","num":1},
-    {"tag":"LDF","arity":0,"addr":3},
-    {"tag":"GOTO","addr":26},
-    {"tag":"ENTER_SCOPE","num":4},
-    {"tag":"MAKE","capacity":1,"type":2,"elemType":"mutex"},
-    {"tag":"ASSIGN","pos":[4,0]},
-    {"tag":"POP"},
-    {"tag":"MAKE","capacity":1,"type":2,"elemType":"mutex"},
-    {"tag":"MAKE","capacity":1,"type":2,"elemType":"mutex"},
-    {"tag":"MAKE","capacity":1,"type":2,"elemType":"mutex"},
-    {"tag":"ASSIGN","pos":[4,3]},
-    {"tag":"POP"},
-    {"tag":"ASSIGN","pos":[4,2]},
-    {"tag":"POP"},
-    {"tag":"ASSIGN","pos":[4,1]},
-    {"tag":"POP"},
-    {"tag":"LD","sym":"x","pos":[4,0]},
-    {"tag":"RECV"},
-    {"tag":"POP"},
-    {"tag":"LDC", "val" : undefined},
-    {"tag":"LD","sym":"x","pos":[4,0]},
-    {"tag":"SEND"},
-    {"tag":"LDC", "val" : undefined},
-    {"tag":"EXIT_SCOPE"},
-    {"tag":"LDC", "val" : undefined},
-    {"tag":"RESET"},
-    {"tag":"ASSIGN","pos":[2,0]},
-    {"tag":"POP"},
-    {"tag":"LD","sym":"main","pos":[2,0]},
-    {"tag":"CALL","arity":0},
-    {"tag":"EXIT_SCOPE"},
-    {"tag":"DONE"}];
-    const inputAst: ASTNode = parse(program)
+    const expectedInstr: any[] = [
+      { tag: 'ENTER_SCOPE', num: 1 },
+      { tag: 'LDF', arity: 0, addr: 3 },
+      { tag: 'GOTO', addr: 26 },
+      { tag: 'ENTER_SCOPE', num: 4 },
+      { tag: 'MAKE', capacity: 1, type: 2, elemType: 'mutex' },
+      { tag: 'ASSIGN', pos: [4, 0] },
+      { tag: 'POP' },
+      { tag: 'MAKE', capacity: 1, type: 2, elemType: 'mutex' },
+      { tag: 'MAKE', capacity: 1, type: 2, elemType: 'mutex' },
+      { tag: 'MAKE', capacity: 1, type: 2, elemType: 'mutex' },
+      { tag: 'ASSIGN', pos: [4, 3] },
+      { tag: 'POP' },
+      { tag: 'ASSIGN', pos: [4, 2] },
+      { tag: 'POP' },
+      { tag: 'ASSIGN', pos: [4, 1] },
+      { tag: 'POP' },
+      { tag: 'LD', sym: 'x', pos: [4, 0] },
+      { tag: 'RECV' },
+      { tag: 'POP' },
+      { tag: 'LDC', val: undefined },
+      { tag: 'LD', sym: 'x', pos: [4, 0] },
+      { tag: 'SEND' },
+      { tag: 'LDC', val: undefined },
+      { tag: 'EXIT_SCOPE' },
+      { tag: 'LDC', val: undefined },
+      { tag: 'RESET' },
+      { tag: 'ASSIGN', pos: [2, 0] },
+      { tag: 'POP' },
+      { tag: 'LD', sym: 'main', pos: [2, 0] },
+      { tag: 'CALL', arity: 0 },
+      { tag: 'EXIT_SCOPE' },
+      { tag: 'DONE' }
+    ]
+    const inputAst: ASTNode | null = parse(program)
+    if (!inputAst) {
+      throw new Error('Parsing failed')
+    }
     const outputInstr: any[] = compile_program(inputAst)
     expect(outputInstr).toStrictEqual(expectedInstr)
   })
