@@ -12,4 +12,8 @@ export class GlobalState {
   WAITGROUPS_COUNT: number = 0
 }
 
-export const globalState = new GlobalState()
+export let globalState = new GlobalState()
+
+export function resetGlobalState() {
+  globalState = new GlobalState
+}

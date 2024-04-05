@@ -1,4 +1,5 @@
 import { Result, createContext } from '../../..'
+// import { resetGlobalState } from '../../vm/globals'
 import { goRunner } from '../goRunner'
 
 const boilerplateAssert = (actual: Result, expected: any) => {
@@ -9,6 +10,9 @@ const boilerplateAssert = (actual: Result, expected: any) => {
     throw new Error(`result.status: ${actual.status}`)
   }
 }
+// beforeEach(() => {
+//   resetGlobalState();
+// });
 
 describe('Runner tests', () => {
   test('variable declaration in a new block scope', async () => {
@@ -733,23 +737,23 @@ describe('Runner tests', () => {
     )
   })
 
-  // test('test buffered channel allocation fail due to insufficient size', async () => {
-  //   const code = `
-  //   func inc() {
-  //     x int := 1
-  //     Println(x)
-  //   }
-  //   func main() {
-  //     c chan int := make(chan int, 65536)
-  //     go inc()
-  //     c <- 1
-  //     c <- 2
-  //     v chan int := make(chan int, 1)
-  //   }`
-  //   expect(() => goRunner(code, createContext())).rejects.toThrow('Ran out of heap space for buffered channels!')
-  // })
+  test('test buffered channel allocation fail due to insufficient size', async () => {
+    const code = `
+    func inc() {
+      x int := 1
+      Println(x)
+    }
+    func main() {
+      c chan int := make(chan int, 65536)
+      go inc()
+      c <- 1
+      c <- 2
+      v chan int := make(chan int, 1)
+    }`
+    expect(() => goRunner(code, createContext())).rejects.toThrow('Ran out of heap space for buffered channels!')
+  })
 
-  test.only('test buffered channel allocation pass with garbage collection', async () => {
+  test('test buffered channel allocation pass with garbage collection', async () => {
     const code = `
     func inc() {
       channeltest chan int := make(chan int, 65536)
