@@ -7,25 +7,39 @@ import { compile_program } from '../compiler/compiler'
 import { VM } from '../vm'
 import { preprocess } from '../preprocessor/preprocessor'
 import { resetGlobalState } from '../vm/globals'
+import { RuntimeSourceError } from '../../errors/runtimeSourceError'
+import { toSourceError } from '../../runner/errors'
+import { RawSourceMap } from 'source-map'
 
 export async function goRunner(
   code: string,
   context: Context,
   memory: number = 1500,
-  options: RecursivePartial<IOptions> = {}
+  options: RecursivePartial<IOptions> = {},
+  throwError: boolean = false // for testing purposes; helps us to check that the correct error is thrown in our test suite
 ): Promise<Result> {
-  let program: ASTNode | undefined = parse(code)
-  if (!program) {
+  try {
+    let program: ASTNode | null = parse(code, context)
+    if (!program) {
+      return resolvedErrorPromise
+    }
+    program = preprocess(program)
+    const compiledProgram: any[] = compile_program(program)
+    resetGlobalState()
+    const vm = new VM(memory)
+    return Promise.resolve({
+      status: 'finished',
+      context,
+      value: vm.run(compiledProgram)
+    })
+  } catch (error) {
+    if (throwError) {
+      throw error
+    }
+    let sourceMapJson: RawSourceMap | undefined
+    context.errors.push(
+      error instanceof RuntimeSourceError ? error : await toSourceError(error, sourceMapJson)
+    )
     return resolvedErrorPromise
   }
-  program = preprocess(program)
-  const compiledProgram: any[] = compile_program(program)
-  resetGlobalState()
-  const vm = new VM(memory)
-
-  return Promise.resolve({
-    status: 'finished',
-    context,
-    value: vm.run(compiledProgram)
-  })
 }
