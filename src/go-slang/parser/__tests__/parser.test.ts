@@ -20,6 +20,11 @@ describe('Basic parser test', () => {
               tag: 'fun',
               sym: 'main',
               prms: [],
+              type: {
+                tag: "fun",
+                paramTypes: [],
+                returnTypes: []
+              },
               body: {
                 tag: 'blk',
                 body: {
@@ -76,8 +81,7 @@ describe('Basic parser test', () => {
                 }
               },
               _arity: 0,
-              paramTypes: [],
-              returnTypes: []
+
             },
             {
               tag: 'app',
@@ -110,6 +114,11 @@ describe('Basic parser test', () => {
               tag: 'fun',
               sym: 'main',
               prms: [],
+              type: {
+                tag: "fun",
+                paramTypes: [],
+                returnTypes: []
+              },
               body: {
                 tag: 'blk',
                 body: {
@@ -166,8 +175,7 @@ describe('Basic parser test', () => {
                 }
               },
               _arity: 0,
-              paramTypes: [],
-              returnTypes: []
+
             },
             {
               tag: 'app',
@@ -328,6 +336,11 @@ describe('Basic parser test', () => {
             tag: 'fun',
             sym: 'main',
             prms: [],
+            type: {
+              tag: "fun",
+              paramTypes: [],
+              returnTypes: []
+            },
             body: {
               tag: 'blk',
               body: {
@@ -380,8 +393,7 @@ describe('Basic parser test', () => {
               }
             },
             _arity: 0,
-            paramTypes: [],
-            returnTypes: []
+
           },
           {
             tag: 'app',
@@ -414,6 +426,11 @@ describe('Basic parser test', () => {
             tag: 'fun',
             sym: 'main',
             prms: [],
+            type: {
+              tag: "fun",
+              paramTypes: [],
+              returnTypes: []
+            },
             body: {
               tag: 'blk',
               body: {
@@ -466,8 +483,7 @@ describe('Basic parser test', () => {
               }
             },
             _arity: 0,
-            paramTypes: [],
-            returnTypes: []
+
           },
           {
             tag: 'app',
@@ -500,6 +516,11 @@ describe('Basic parser test', () => {
             tag: 'fun',
             sym: 'main',
             prms: [],
+            type: {
+              tag: "fun",
+              paramTypes: [],
+              returnTypes: []
+            },
             body: {
               tag: 'blk',
               body: {
@@ -552,8 +573,7 @@ describe('Basic parser test', () => {
               }
             },
             _arity: 0,
-            paramTypes: [],
-            returnTypes: []
+
           },
           {
             tag: 'app',
@@ -582,6 +602,11 @@ describe('Basic parser test', () => {
             tag: 'fun',
             sym: 'main',
             prms: [],
+            type: {
+              tag: "fun",
+              paramTypes: [],
+              returnTypes: []
+            },
             body: {
               tag: 'blk',
               body: {
@@ -597,8 +622,7 @@ describe('Basic parser test', () => {
               }
             },
             _arity: 0,
-            paramTypes: [],
-            returnTypes: []
+
           },
           {
             tag: 'app',
@@ -627,6 +651,11 @@ describe('Basic parser test', () => {
             tag: 'fun',
             sym: 'main',
             prms: [],
+            type: {
+              tag: "fun",
+              paramTypes: [],
+              returnTypes: []
+            },
             body: {
               tag: 'blk',
               body: {
@@ -642,8 +671,6 @@ describe('Basic parser test', () => {
               }
             },
             _arity: 0,
-            paramTypes: [],
-            returnTypes: []
           },
           {
             tag: 'app',
@@ -672,6 +699,11 @@ describe('Basic parser test', () => {
             tag: 'fun',
             sym: 'main',
             prms: [],
+            type: {
+              tag: "fun",
+              paramTypes: [],
+              returnTypes: []
+            },
             body: {
               tag: 'blk',
               body: {
@@ -687,8 +719,6 @@ describe('Basic parser test', () => {
               }
             },
             _arity: 0,
-            paramTypes: [],
-            returnTypes: []
           },
           {
             tag: 'app',
@@ -717,6 +747,11 @@ describe('Basic parser test', () => {
             tag: 'fun',
             sym: 'main',
             prms: [],
+            type: {
+              tag: "fun",
+              paramTypes: [],
+              returnTypes: []
+            },
             body: {
               tag: 'blk',
               body: {
@@ -732,8 +767,6 @@ describe('Basic parser test', () => {
               }
             },
             _arity: 0,
-            paramTypes: [],
-            returnTypes: []
           },
           {
             tag: 'app',
@@ -765,6 +798,11 @@ describe('Basic parser test', () => {
             tag: 'fun',
             sym: 'main',
             prms: [],
+            type: {
+              tag: "fun",
+              paramTypes: [],
+              returnTypes: []
+            },
             body: {
               tag: 'blk',
               body: {
@@ -798,8 +836,6 @@ describe('Basic parser test', () => {
               }
             },
             _arity: 0,
-            paramTypes: [],
-            returnTypes: []
           },
           {
             tag: 'app',
@@ -831,6 +867,11 @@ describe('Basic parser test', () => {
             tag: 'fun',
             sym: 'main',
             prms: [],
+            type: {
+              tag: "fun",
+              paramTypes: [],
+              returnTypes: []
+            },
             body: {
               tag: 'blk',
               body: {
@@ -858,8 +899,6 @@ describe('Basic parser test', () => {
               }
             },
             _arity: 0,
-            paramTypes: [],
-            returnTypes: []
           },
           {
             tag: 'app',
