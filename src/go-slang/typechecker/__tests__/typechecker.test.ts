@@ -178,6 +178,7 @@ describe('Basic typecheck test', () => {
     const outputAst: ASTNode = parse(program)
     expect(() => typecheck(outputAst)).not.toThrow("expected return types int, int, string but got int, int, int in function inc")
   });
+
   test('basic function app but sequence does not end in terminating statement', async () => {
     const program = `
         func inc() (int, int, int) {
@@ -193,6 +194,25 @@ describe('Basic typecheck test', () => {
     const outputAst: ASTNode = parse(program)
     expect(() => typecheck(outputAst)).toThrow("type error in function declaration; expected return type: int, int, int actual return type: null")
   });
+
+  test('basic function app test is not terminating statement', async () => {
+    const program = `
+        func inc2() int {
+          return 1
+        }
+        func inc() int {
+            inc2()
+        }
+        func main() {
+          var x, y, z int = inc(), 2, 3
+          a string := "hello"
+          var f float = 1.1
+        }
+          `
+    const outputAst: ASTNode = parse(program)
+    expect(() => typecheck(outputAst)).toThrow("type error in function declaration; expected return type: int actual return type: null")
+  });
+
   test('basic conditional statement non terminating but correct return', async () => {
     const program = `
         func inc() (int, int, int) {
@@ -1099,6 +1119,63 @@ describe('Basic typecheck test', () => {
           `
     const outputAst: ASTNode = parse(program)
     expect(() => typecheck(outputAst)).toThrow("type error in chan send; expected type: chan, actual type: bool")
+  });
+
+  test('basic chan recv is not terminating statement', async () => {
+    const program = `
+        func inc2(c chan int) int {
+          return <- c
+        }
+        func inc() int {
+            var c chan int = make(chan int)
+            inc2(c)
+        }
+        func main() {
+          var x, y, z int = inc(), 2, 3
+          a string := "hello"
+          var f float = 1.1
+        }
+          `
+    const outputAst: ASTNode = parse(program)
+    expect(() => typecheck(outputAst)).toThrow("type error in function declaration; expected return type: int actual return type: null")
+  });
+
+  test('basic chan send is not terminating statement', async () => {
+    const program = `
+        func inc2(c chan int) int {
+          c <- 1
+        }
+        func inc() int {
+            var c chan int = make(chan int)
+            inc2(c)
+        }
+        func main() {
+          var x, y, z int = inc(), 2, 3
+          a string := "hello"
+          var f float = 1.1
+        }
+          `
+    const outputAst: ASTNode = parse(program)
+    expect(() => typecheck(outputAst)).toThrow("type error in function declaration; expected return type: int actual return type: null")
+  });
+
+  test('basic go stmt is not terminating statement', async () => {
+    const program = `
+        func inc2(c chan int) int {
+          return 1
+        }
+        func inc() int {
+            var c chan int = make(chan int)
+            go inc2(c)
+        }
+        func main() {
+          var x, y, z int = inc(), 2, 3
+          a string := "hello"
+          var f float = 1.1
+        }
+          `
+    const outputAst: ASTNode = parse(program)
+    expect(() => typecheck(outputAst)).toThrow("type error in function declaration; expected return type: int actual return type: null")
   });
   
 })
