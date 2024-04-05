@@ -1,5 +1,4 @@
 import { Result, createContext } from '../../..'
-// import { resetGlobalState } from '../../vm/globals'
 import { goRunner } from '../goRunner'
 
 const boilerplateAssert = (actual: Result, expected: any) => {
@@ -10,9 +9,6 @@ const boilerplateAssert = (actual: Result, expected: any) => {
     throw new Error(`result.status: ${actual.status}`)
   }
 }
-// beforeEach(() => {
-//   resetGlobalState();
-// });
 
 describe('Runner tests', () => {
   test('variable declaration in a new block scope', async () => {
@@ -567,7 +563,7 @@ describe('Runner tests', () => {
     const result = await goRunner(code, createContext())
     boilerplateAssert(result, undefined)
   })
-  
+
   test('wait - concurrent go routines', async () => {
     const code = `
     func worker(id int) {
@@ -750,7 +746,9 @@ describe('Runner tests', () => {
       c <- 2
       v chan int := make(chan int, 1)
     }`
-    expect(() => goRunner(code, createContext())).rejects.toThrow('Ran out of heap space for buffered channels!')
+    expect(() => goRunner(code, createContext())).rejects.toThrow(
+      'Ran out of heap space for buffered channels!'
+    )
   })
 
   test('test buffered channel allocation pass with garbage collection', async () => {
@@ -765,12 +763,10 @@ describe('Runner tests', () => {
     }`
     const result = await goRunner(code, createContext(), 3000)
     boilerplateAssert(result, undefined)
-    // expect(() => goRunner(code, createContext())).resolves.not.toThrow('Ran out of heap space for buffered channels!')
   })
 
   //to test this, temporarily set the memory to a ridiculously large number
-  /*
-  test.only('test channel low level queue does not bug out', async () => {
+  test('test channel low level queue does not bug out', async () => {
     const code = `
     func inc(output chan int) {
       num int := <-output
@@ -801,8 +797,7 @@ describe('Runner tests', () => {
         x = x + 1
       }
     }`
-    const result = await goRunner(code, createContext())
+    const result = await goRunner(code, createContext(), 200000)
     boilerplateAssert(result, undefined)
   })
-  */
 })
