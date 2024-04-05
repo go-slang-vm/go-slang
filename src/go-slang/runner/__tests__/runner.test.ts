@@ -1,12 +1,29 @@
-import { Result, createContext } from '../../..'
+import { createContext } from '../../..'
 import { goRunner } from '../goRunner'
 
-const boilerplateAssert = (actual: Result, expected: any) => {
-  if (actual.status === 'finished') {
-    expect(actual.value).toStrictEqual(expected)
-  } else {
-    console.log({ actual })
-    throw new Error(`result.status: ${actual.status}`)
+const boilerplateTest = async (
+  code: string,
+  expected: any,
+  throwError: boolean = false,
+  memory: number | undefined = undefined
+) => {
+  try {
+    const actual = await goRunner(code, createContext(), memory, {}, throwError)
+    if (throwError) {
+      // if we expect the code to throw an error
+      // but the code compiles successfully
+      // then we throw an error to cause the test case to fail
+      console.log({ actual })
+      throw new Error('Expect the code to throw an error')
+    }
+    if (actual.status === 'finished') {
+      expect(actual.value).toStrictEqual(expected)
+    } else {
+      console.log({ actual })
+      throw new Error(`result.status: ${actual.status}`)
+    }
+  } catch (error) {
+    expect(error.message).toStrictEqual(expected)
   }
 }
 
@@ -20,8 +37,8 @@ describe('Runner tests', () => {
         }
         return y
       }`
-    const result = await goRunner(code, createContext())
-    boilerplateAssert(result, 1)
+
+    boilerplateTest(code, 1)
   })
   test('variable declaration in a new block scope 2', async () => {
     const code = `
@@ -32,8 +49,8 @@ describe('Runner tests', () => {
           return y
         }
       }`
-    const result = await goRunner(code, createContext())
-    boilerplateAssert(result, 2)
+
+    boilerplateTest(code, 2)
   })
   test('function', async () => {
     const code = `
@@ -47,8 +64,8 @@ describe('Runner tests', () => {
       result int := f(33, 22)
       return result
     }`
-    const result = await goRunner(code, createContext())
-    boilerplateAssert(result, 11)
+
+    boilerplateTest(code, 11)
   })
   test('function 2', async () => {
     const code = `
@@ -61,8 +78,8 @@ describe('Runner tests', () => {
         x = inc(x)
         return x
       }`
-    const result = await goRunner(code, createContext())
-    boilerplateAssert(result, 1)
+
+    boilerplateTest(code, 1)
   })
   test('function 3', async () => {
     const code = `
@@ -76,8 +93,8 @@ describe('Runner tests', () => {
         // x should return 0 as the value from inc() is not reassigned to x
         return x
       }`
-    const result = await goRunner(code, createContext())
-    boilerplateAssert(result, 0)
+
+    boilerplateTest(code, 0)
   })
   test('factorial function (recursion) with memory management', async () => {
     const code = `
@@ -94,8 +111,7 @@ describe('Runner tests', () => {
     func main() (int) {
       return fact(5)
     }`
-    const result = await goRunner(code, createContext(), 1200)
-    boilerplateAssert(result, 120)
+    boilerplateTest(code, 120, false, 1200)
   })
   test('while loop', async () => {
     const code = `
@@ -108,8 +124,8 @@ describe('Runner tests', () => {
         }
         return y
       }`
-    const result = await goRunner(code, createContext())
-    boilerplateAssert(result, 55)
+
+    boilerplateTest(code, 55)
   })
   test('while loop 2', async () => {
     const code = `
@@ -127,8 +143,8 @@ describe('Runner tests', () => {
         }
         return x
       }`
-    const result = await goRunner(code, createContext())
-    boilerplateAssert(result, 990100)
+
+    boilerplateTest(code, 990100)
   })
   test('if statement with nesting and empty else', async () => {
     const code = `
@@ -145,8 +161,8 @@ describe('Runner tests', () => {
         }
         return x
       }`
-    const result = await goRunner(code, createContext())
-    boilerplateAssert(result, 20)
+
+    boilerplateTest(code, 20)
   })
   test('empty return', async () => {
     const code = `
@@ -162,8 +178,8 @@ describe('Runner tests', () => {
           x = 30
         }
       }`
-    const result = await goRunner(code, createContext())
-    boilerplateAssert(result, undefined)
+
+    boilerplateTest(code, undefined)
   })
   test('string', async () => {
     const code = `
@@ -171,16 +187,16 @@ describe('Runner tests', () => {
         x string := "this is a string"
         return x
       }`
-    const result = await goRunner(code, createContext())
-    boilerplateAssert(result, 'this is a string')
+
+    boilerplateTest(code, 'this is a string')
   })
   test('string 2', async () => {
     const code = `
       func main() {
         return "aaa" + "bbb"
       }`
-    const result = await goRunner(code, createContext())
-    boilerplateAssert(result, 'aaabbb')
+
+    boilerplateTest(code, 'aaabbb')
   })
   test('go statement', async () => {
     const code = `
@@ -192,8 +208,8 @@ describe('Runner tests', () => {
         go inc(1)
         return x
       }`
-    const result = await goRunner(code, createContext())
-    boilerplateAssert(result, 0)
+
+    boilerplateTest(code, 0)
   })
   test('go statement 2', async () => {
     const code = `
@@ -206,8 +222,8 @@ describe('Runner tests', () => {
         go inc(x)
         sleep(20)
       }`
-    const result = await goRunner(code, createContext())
-    boilerplateAssert(result, undefined)
+
+    boilerplateTest(code, undefined)
   })
   test('go statement 3', async () => {
     const code = `
@@ -221,8 +237,8 @@ describe('Runner tests', () => {
         sleep(20)
         return x
       }`
-    const result = await goRunner(code, createContext())
-    boilerplateAssert(result, 0)
+
+    boilerplateTest(code, 0)
   })
   test('go statement 4', async () => {
     const code = `
@@ -231,8 +247,8 @@ describe('Runner tests', () => {
         return x
       }(1);
     }`
-    const result = await goRunner(code, createContext())
-    boilerplateAssert(result, undefined)
+
+    boilerplateTest(code, undefined)
   })
 
   test('basic buffered channel test', async () => {
@@ -256,8 +272,8 @@ describe('Runner tests', () => {
       sleep(25000)
     }
     `
-    const result = await goRunner(code, createContext())
-    boilerplateAssert(result, undefined)
+
+    boilerplateTest(code, undefined)
   })
   // but this passes
   test('basic buffered channel test', async () => {
@@ -282,8 +298,8 @@ describe('Runner tests', () => {
       sleep(500000)
     }
     `
-    const result = await goRunner(code, createContext())
-    boilerplateAssert(result, undefined)
+
+    boilerplateTest(code, undefined)
   })
   test('go call in loop', async () => {
     const code = `
@@ -300,8 +316,8 @@ describe('Runner tests', () => {
       }
       sleep(15)
     }`
-    const result = await goRunner(code, createContext())
-    boilerplateAssert(result, undefined)
+
+    boilerplateTest(code, undefined)
   })
   test('test buffered channel deadlock detection', async () => {
     const code = `
@@ -315,9 +331,7 @@ describe('Runner tests', () => {
       c <- 1
       c <- 2
     }`
-    expect(() => goRunner(code, createContext())).rejects.toThrow(
-      'fatal error: all goroutines are asleep - deadlock!'
-    )
+    boilerplateTest(code, 'fatal error: all goroutines are asleep - deadlock!', true)
   })
   test('go call in loop unbuffered', async () => {
     const code = `
@@ -339,8 +353,8 @@ describe('Runner tests', () => {
       }
       sleep(15)
     }`
-    const result = await goRunner(code, createContext())
-    boilerplateAssert(result, undefined)
+
+    boilerplateTest(code, undefined)
   })
   // should print { value: 'Hello World' }
   test('unbuffered channels', async () => {
@@ -354,8 +368,8 @@ describe('Runner tests', () => {
         text string := <-input
         Println(text)
       }`
-    const result = await goRunner(code, createContext())
-    boilerplateAssert(result, undefined)
+
+    boilerplateTest(code, undefined)
   })
   test('unbuffered channels deadlock detection', async () => {
     const code = `
@@ -369,9 +383,7 @@ describe('Runner tests', () => {
         text string := <-input
         Println(text)
       }`
-    expect(() => goRunner(code, createContext())).rejects.toThrow(
-      'fatal error: all goroutines are asleep - deadlock!'
-    )
+    boilerplateTest(code, 'fatal error: all goroutines are asleep - deadlock!', true)
   })
   test('basic rel ops test', async () => {
     const code = `
@@ -397,8 +409,8 @@ describe('Runner tests', () => {
       }
       return x
     }`
-    const result = await goRunner(code, createContext())
-    boilerplateAssert(result, 7)
+
+    boilerplateTest(code, 7)
   })
   test('basic bin ops test', async () => {
     const code = `
@@ -406,8 +418,8 @@ describe('Runner tests', () => {
       x int := 1
       return x + x - 4 * 3 / 2 % 5
     }`
-    const result = await goRunner(code, createContext())
-    boilerplateAssert(result, 1)
+
+    boilerplateTest(code, 1)
   })
   test('basic bin op precedence test should print 4 instead of 6', async () => {
     const code = `
@@ -415,8 +427,8 @@ describe('Runner tests', () => {
       x int := 1
       return x + x * 3
     }`
-    const result = await goRunner(code, createContext())
-    boilerplateAssert(result, 4)
+
+    boilerplateTest(code, 4)
   })
   test('basic bin op precedence test should print 3 instead of 2', async () => {
     const code = `
@@ -424,8 +436,8 @@ describe('Runner tests', () => {
       x int := 2
       return x + x / 2
     }`
-    const result = await goRunner(code, createContext())
-    boilerplateAssert(result, 3)
+
+    boilerplateTest(code, 3)
   })
   test('sleep', async () => {
     const code = `
@@ -444,8 +456,8 @@ describe('Runner tests', () => {
       }
       return res
     }`
-    const result = await goRunner(code, createContext())
-    boilerplateAssert(result, 0)
+
+    boilerplateTest(code, 0)
   })
   test('basic mutex test', async () => {
     const code = `
@@ -455,8 +467,8 @@ describe('Runner tests', () => {
       Lock(x)
       Unlock(x)
     }`
-    const result = await goRunner(code, createContext())
-    boilerplateAssert(result, undefined)
+
+    boilerplateTest(code, undefined)
   })
   test('basic mutex test unlocking unlocked channel should throw an error', async () => {
     const code = `
@@ -467,7 +479,7 @@ describe('Runner tests', () => {
       Unlock(x)
       Unlock(b)
     }`
-    expect(() => goRunner(code, createContext())).rejects.toThrow('unlock of unlocked mutex')
+    boilerplateTest(code, 'unlock of unlocked mutex', true)
   })
   test('basic mutex test on other go routines blocks and deadlocks', async () => {
     const code = `
@@ -485,9 +497,7 @@ describe('Runner tests', () => {
       c <- 1
       Unlock(x)
     }`
-    expect(() => goRunner(code, createContext())).rejects.toThrow(
-      'fatal error: all goroutines are asleep - deadlock!'
-    )
+    boilerplateTest(code, 'fatal error: all goroutines are asleep - deadlock!', true)
   })
   test('basic mutex test on other go routines blocks no deadlocks', async () => {
     const code = `
@@ -509,8 +519,8 @@ describe('Runner tests', () => {
       Lock(x)
       Unlock(x)
     }`
-    const result = await goRunner(code, createContext())
-    boilerplateAssert(result, undefined)
+
+    boilerplateTest(code, undefined)
   })
 
   // should print { value: 1 }
@@ -534,8 +544,8 @@ describe('Runner tests', () => {
 
     var y int = 1
       `
-    const result = await goRunner(code, createContext())
-    boilerplateAssert(result, undefined)
+
+    boilerplateTest(code, undefined)
   })
 
   test('basic preprocessor test 4 declaration with reordering in func', async () => {
@@ -549,8 +559,8 @@ describe('Runner tests', () => {
     }
     var y int = 3
     `
-    const result = await goRunner(code, createContext())
-    boilerplateAssert(result, undefined)
+
+    boilerplateTest(code, undefined)
   })
   test('wait - syntax testing', async () => {
     const code = `
@@ -560,10 +570,10 @@ describe('Runner tests', () => {
       Done(x)
       Wait(x)
     }`
-    const result = await goRunner(code, createContext())
-    boilerplateAssert(result, undefined)
+
+    boilerplateTest(code, undefined)
   })
-  
+
   test('wait - concurrent go routines', async () => {
     const code = `
     func worker(id int) {
@@ -586,8 +596,8 @@ describe('Runner tests', () => {
       }
       return res
     }`
-    const result = await goRunner(code, createContext(), 3000)
-    boilerplateAssert(result, 12)
+
+    boilerplateTest(code, 12, false, 3000)
   })
   test('wait - test Add(wg, 2) functionality', async () => {
     const code = `
@@ -611,8 +621,8 @@ describe('Runner tests', () => {
 
       return x + y
     }`
-    const result = await goRunner(code, createContext(), 3000)
-    boilerplateAssert(result, 3)
+
+    boilerplateTest(code, 3, false, 3000)
   })
   test('wait - concurrent go routines WITHOUT WaitGroup', async () => {
     const code = `
@@ -631,8 +641,8 @@ describe('Runner tests', () => {
 
       return x + y
     }`
-    const result = await goRunner(code, createContext(), 3000)
-    boilerplateAssert(result, 0)
+
+    boilerplateTest(code, 0, false, 3000)
   })
   test('wait - negative waitgroup counter', async () => {
     const code = `
@@ -652,7 +662,7 @@ describe('Runner tests', () => {
       return x + y
     }`
 
-    expect(() => goRunner(code, createContext())).rejects.toThrow('negative waitgroup counter')
+    boilerplateTest(code, 'negative waitgroup counter', true)
   })
   test('wait - deadlock testing', async () => {
     const code = `
@@ -670,16 +680,14 @@ describe('Runner tests', () => {
 
       return x + y
     }`
-    expect(() => goRunner(code, createContext())).rejects.toThrow(
-      'fatal error: all goroutines are asleep - deadlock!'
-    )
+    boilerplateTest(code, 'fatal error: all goroutines are asleep - deadlock!', true)
   })
   test('wait - main thread should still complete even though go routines deadlock', async () => {
     const code = `
     func main() {
       var wg1 WaitGroup = waitgroup
       var wg2 WaitGroup = waitgroup
-      
+
       x int := 0
       y int := 0
       go func() {
@@ -697,20 +705,18 @@ describe('Runner tests', () => {
         Wait(wg2)
         Done(wg1)
       }()
-      
 
       return x + y
     }`
 
-    const result = await goRunner(code, createContext(), 3000)
-    boilerplateAssert(result, 0)
+    boilerplateTest(code, 0, false, 3000)
   })
   test('wait - deadlock testing with multiple waitgroups', async () => {
     const code = `
     func main() {
       var wg1 WaitGroup = waitgroup
       var wg2 WaitGroup = waitgroup
-      
+
       x int := 0
       y int := 0
       go func() {
@@ -728,8 +734,6 @@ describe('Runner tests', () => {
       return x + y
     }`
 
-    expect(() => goRunner(code, createContext())).rejects.toThrow(
-      'fatal error: all goroutines are asleep - deadlock!'
-    )
+    boilerplateTest(code, 'fatal error: all goroutines are asleep - deadlock!', true)
   })
 })
