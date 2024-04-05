@@ -16,6 +16,10 @@ const binary_arith_type =
     { tag: "fun", paramTypes: ["int", "int"], 
     returnTypes: ["int"] }
 
+export const string_concat_type = 
+    { tag: "fun", paramTypes: ['string', 'string'],
+    returnTypes: ['string'] }
+
 const number_comparison_type =
     { tag: "fun", paramTypes: ["int", "int"], 
     returnTypes: ["bool"] }
@@ -64,6 +68,7 @@ const global_type_frame = {
     "-unary": unary_arith_type,
     "!": unary_bool_type,
     "sleep": unary_arith_void_type,
+    "+string": string_concat_type,
 }
 
 export type TypeFrame = {} | null

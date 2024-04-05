@@ -1178,4 +1178,36 @@ describe('Basic typecheck test', () => {
     expect(() => typecheck(outputAst)).toThrow("type error in function declaration; expected return type: int actual return type: null")
   });
   
+  test('basic correct string concat', async () => {
+    const program = `
+        func main() {
+          var y string = "hello"
+          Println(y + " world")
+        }
+          `
+    const outputAst: ASTNode = parse(program)
+    expect(() => typecheck(outputAst)).not.toThrow()
+  });
+
+  test('basic wrong string concat', async () => {
+    const program = `
+        func main() {
+          var y int = 1
+          Println(y + " world")
+        }
+          `
+    const outputAst: ASTNode = parse(program)
+    expect(() => typecheck(outputAst)).toThrow("type error in application; expected argument types: int, int, actual argument types: int, string")
+  });
+
+  test('basic wrong string concat with string on left', async () => {
+    const program = `
+        func main() {
+          var y int = 1
+          Println("hello" + y)
+        }
+          `
+    const outputAst: ASTNode = parse(program)
+    expect(() => typecheck(outputAst)).toThrow("type error in application; expected argument types: string, string, actual argument types: string, int")
+  });
 })
