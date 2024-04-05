@@ -13,7 +13,7 @@ import {
 } from './utils'
 import { Instruction } from './types'
 import { Thread } from './thread'
-import { Channel_tag, numInstructions } from './constants'
+import { ChannelHeapSize, Channel_tag, numInstructions } from './constants'
 import { Channel } from './channel'
 
 export class VM {
@@ -152,6 +152,7 @@ export class VM {
 
     this.heapInstance.heap = this.heapInstance.heap_make(heapsize_words)
     this.heapInstance.heap_size = heapsize_words
+    this.heapInstance.channel_heap_size = ChannelHeapSize
 
     // initialize free list:
     // every free node carries the address
