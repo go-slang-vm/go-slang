@@ -8,9 +8,9 @@ export class LowLevelQueue {
 
 
     constructor(sz: number) {
-        this.byteArray = new ArrayBuffer((sz+channel_buffer + 3) * word_size)
+        this.byteArray = new ArrayBuffer((sz + channel_buffer + 3) * word_size)
         this.dataView = new DataView(this.byteArray)
-        this.setSize(sz+channel_buffer)
+        this.setSize(sz + channel_buffer)
         this.setHead(0)
         this.setTail(0)
     }
@@ -34,27 +34,30 @@ export class LowLevelQueue {
     }
 
     pop(): number {
+        if (this.empty()) {
+            throw new Error('low level queue is empty')
+        }
         const headIdx = this.getHead()
         const res = this.getWordAtIndex(headIdx + 3)
         this.setHead((headIdx + 1) % this.getSize())
         return res
     }
 
-  getTail(): number {
-    return this.getWordAtIndex(1)
-  }
+    getTail(): number {
+        return this.getWordAtIndex(1)
+    }
 
-  getHead(): number {
-    return this.getWordAtIndex(0)
-  }
+    getHead(): number {
+        return this.getWordAtIndex(0)
+    }
 
-  setHead(val: number) {
-    this.setWordAtIndex(0, val)
-  }
+    setHead(val: number) {
+        this.setWordAtIndex(0, val)
+    }
 
-  setTail(val: number) {
-    this.setWordAtIndex(1, val)
-  }
+    setTail(val: number) {
+        this.setWordAtIndex(1, val)
+    }
 
     getWordAtIndex(idx: number): number {
         const view = this.getDataView()
@@ -63,29 +66,37 @@ export class LowLevelQueue {
 
     setWordAtIndex(idx: number, val: number) {
         const view = this.getDataView()
-        view.setFloat64(idx * word_size, val) 
+        view.setFloat64(idx * word_size, val)
     }
 
-  clear() {
-    this.byteArray = null
-    this.dataView = null
-  }
-
-  getDataView(): DataView {
-    if (this.dataView === null) {
-      throw new Error('low level queue has either not been initialized or has been freed')
-    } else {
-      return this.dataView
+    clear() {
+        this.byteArray = null
+        this.dataView = null
     }
-  }
+
+    peek(): number {
+        return this.getWordAtIndex(this.getHead() + 3)
+    }
+
+    empty(): boolean {
+        return this.getHead() == this.getTail()
+    }
+
+    getDataView(): DataView {
+        if (this.dataView === null) {
+            throw new Error('low level queue has either not been initialized or has been freed')
+        } else {
+            return this.dataView
+        }
+    }
 
     getAllItems(): number[] {
-        const items:number[] = []
+        const items: number[] = []
         let curPointer = this.getHead()
-        while(curPointer != this.getTail()) {
-            const item = this.getWordAtIndex(curPointer+3)
+        while (curPointer != this.getTail()) {
+            const item = this.getWordAtIndex(curPointer + 3)
             items.push(item)
-            curPointer = (curPointer + 1)%this.getSize()
+            curPointer = (curPointer + 1) % this.getSize()
         }
         return items
     }
