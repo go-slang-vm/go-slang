@@ -30,7 +30,7 @@ export class Channel {
     }
 
     popFromItemQueue(): number {
-        if(this.items.sz == 0) {
+        if (this.items.getSize() == 0) {
             throw new Error("Channel is empty should not have been popped")
         }
         return this.items.pop()

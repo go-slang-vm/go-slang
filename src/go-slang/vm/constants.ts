@@ -30,3 +30,5 @@ export const Waitgroup_tag = 14
 
 
 export const ChannelHeapSize = 65536
+export const word_size = 8
+export const channel_buffer = 7
