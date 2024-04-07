@@ -15,5 +15,5 @@ export class GlobalState {
 export let globalState = new GlobalState()
 
 export function resetGlobalState() {
-  globalState = new GlobalState
+  globalState = new GlobalState()
 }
