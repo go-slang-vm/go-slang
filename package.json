@@ -16,12 +16,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/source-academy/js-slang.git"
+    "url": "git+https://github.com/seancze/cs4215-go-slang.git"
   },
   "bugs": {
-    "url": "https://github.com/source-academy/js-slang/issues"
+    "url": "https://github.com/seancze/cs4215-go-slang/issues"
   },
-  "homepage": "https://github.com/source-academy/js-slang",
+  "homepage": "https://github.com/seancze/cs4215-go-slang",
   "main": "dist/index",
   "types": "dist/index",
   "files": [
