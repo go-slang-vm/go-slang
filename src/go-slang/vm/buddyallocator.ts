@@ -25,6 +25,11 @@ export class BuddyAllocator {
     }
 
     allocate(size: number): DataView | null {
+        if (size > this.largestblocksize) {
+            return null
+        }
+
+
         const smallestBlockNeeded = 1 << Math.ceil(Math.log2(size))
         if (this.hasBlockOfSize(smallestBlockNeeded)) {
             const addr = this.FreeList.get(smallestBlockNeeded)![0]
