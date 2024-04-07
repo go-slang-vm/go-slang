@@ -6,6 +6,7 @@ import { Context, RecursivePartial } from '../../types'
 import { compile_program } from '../compiler/compiler'
 import { VM } from '../vm'
 import { preprocess } from '../preprocessor/preprocessor'
+import { resetGlobalState } from '../vm/globals'
 import { RuntimeSourceError } from '../../errors/runtimeSourceError'
 import { toSourceError } from '../../runner/errors'
 import { RawSourceMap } from 'source-map'
@@ -24,6 +25,7 @@ export async function goRunner(
     }
     program = preprocess(program)
     const compiledProgram: any[] = compile_program(program)
+    resetGlobalState()
     const vm = new VM(memory)
     return Promise.resolve({
       status: 'finished',

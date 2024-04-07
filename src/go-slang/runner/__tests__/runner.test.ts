@@ -736,4 +736,68 @@ describe('Runner tests', () => {
 
     boilerplateTest(code, 'fatal error: all goroutines are asleep - deadlock!', true)
   })
+
+  test('test buffered channel allocation fail due to insufficient size', async () => {
+    const code = `
+    func inc() {
+      x int := 1
+      Println(x)
+    }
+    func main() {
+      c chan int := make(chan int, 65536)
+      go inc()
+      c <- 1
+      c <- 2
+      v chan int := make(chan int, 1)
+    }`
+    boilerplateTest(code, 'Ran out of heap space for buffered channels!', true)
+  })
+
+  test('test buffered channel allocation pass with garbage collection', async () => {
+    const code = `
+    func inc() {
+      channeltest chan int := make(chan int, 65536)
+      channeltest <- 1
+    }
+    func main() {
+      inc()
+      v chan int := make(chan int, 2)
+    }`
+    boilerplateTest(code, undefined, false, 3000)
+  })
+
+  //to test this, temporarily set the memory to a ridiculously large number
+  test('test channel low level queue does not bug out', async () => {
+    const code = `
+    func inc(output chan int) {
+      num int := <-output
+      Println(num)
+    }
+    func main() {
+      var input chan int = make(chan int)
+      x int := 0
+      for x < 5 {
+        go inc(input)
+        x = x + 1
+      }
+      x = 0
+      for x < 5 {
+        input <- x
+        x = x + 1
+      }
+
+      var input2 chan int = make(chan int, 256)
+      x = 0
+      for x < 500 {
+        go inc(input2)
+        x = x + 1
+      }
+      x = 0
+      for x < 500 {
+        input2 <- x
+        x = x + 1
+      }
+    }`
+    boilerplateTest(code, undefined, false, 200000)
+  })
 })

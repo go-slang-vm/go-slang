@@ -3,7 +3,7 @@
 import { isArray } from "lodash"
 import { ASTNode, AssignNode, BinOpNode, BlockNode, ForStmtNode, FuncAppNode, FuncDeclNode, FunctionLiteralNode, GoStmtNode, IfStmtNode, LiteralNode, LogicalNode, MakeAppNode, NameNode, RecvExprNode, ReturnStmtNode, SendStmtNode, SequenceNode, Tag, UnOpNode, VarDeclNode } from "../ast/AST"
 import { is_boolean, is_number, is_string, is_undefined } from "../vm/utils"
-import { equal_array_types, equal_type, extend_type_environment, global_type_environment, lookup_type, unparse_type, unparse_types } from "./typeenvironment"
+import { equal_array_types, equal_type, extend_type_environment, global_type_environment, lookup_type, string_concat_type, unparse_type, unparse_types } from "./typeenvironment"
 
 
 // functions for each component tag
@@ -104,21 +104,34 @@ const type_comp = {
             // Special case handling for Println
             if (comp.fun.tag === "nam") {
                 const sym = (comp.fun as NameNode).sym;
-                if(sym === "Println") {
+                if (sym === "Println") {
                     if(comp.args.length !== 1) {
                         throw new Error("Println expects 1 arguement of any type")
                     }
+
+                    // type check the 1 arg
+                    type(comp.args[0], te)
                     return []
                 }
             }
-            const fun_type = type(comp.fun, te)
+            let fun_type = type(comp.fun, te)
             if (fun_type.tag !== "fun")
                 throw new Error("type error in application; function " +
                     "expression must have function type; " +
                     "actual type: " + unparse_type(fun_type))
             // paramTypes is a list of types                          
-            const expected_arg_types = fun_type.paramTypes
+            let expected_arg_types = fun_type.paramTypes
             const actual_arg_types = comp.args.map(e => type(e, te)).map(e => (isArray(e) && e.length == 1) ? e[0] : e)
+            
+            if (comp.fun.tag === "nam") {
+                const sym = (comp.fun as NameNode).sym;
+                if (sym === "+") {
+                    if (actual_arg_types[0] === "string") {
+                        expected_arg_types = ['string', 'string']
+                        fun_type = string_concat_type
+                    }
+                } 
+            }
 
             //console.log(actual_arg_types)
             if (equal_array_types(actual_arg_types, expected_arg_types)) {

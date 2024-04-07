@@ -16,7 +16,7 @@ import {
   Builtin_tag,
   String_tag,
   Channel_tag,
-  Waitgroup_tag
+  Waitgroup_tag,
 } from './constants'
 
 export class Heap {
@@ -37,6 +37,7 @@ export class Heap {
   node_size = 20
   free: number
   heap_bottom: number
+  channel_heap_size: number
 
   constructor() {
     this.stringPool = {}
@@ -266,6 +267,17 @@ export class Heap {
     elemType: string,
     idx: number
   ): number => {
+
+    if (capacity > this.channel_heap_size) {
+      // trigger mark sweep to potentially clean up heap space
+      console.log("old channel heap size before mark and sweep: " + this.channel_heap_size)
+      this.mark_sweep()
+      if (capacity > this.channel_heap_size) {
+        throw new Error("Ran out of heap space for buffered channels!")
+      }
+    }
+    console.log("allocating channel with capacity: " + capacity)
+
     const address = this.heap_allocate(Channel_tag, 3)
     this.heap_set_4_bytes_at_offset(address, 1, idx)
 
@@ -274,6 +286,10 @@ export class Heap {
     const initialCounter = type === 2 ? 1 : 0
     this.heap_set_channel_counter(address, initialCounter)
     this.heap_set_channel_capacity(address, capacity)
+
+    // decrement channel heap size
+    this.channel_heap_size -= capacity
+
     return address
   }
 
@@ -462,7 +478,8 @@ export class Heap {
       }
       
       // items in the channel item queues should be marked in case
-      for (const item of channel.items) {
+      const itemQ = channel.items
+      for (const item of itemQ.getAllItems()) {
         this.mark(item)
       }
     }
@@ -489,6 +506,18 @@ export class Heap {
 
     while (v < this.heap_size) {
       if (this.is_unmarked(v)) {
+        // clear JS runtime resources related to this channel
+        if (this.heap_get_tag(v) === Channel_tag) {
+          console.log("should have reached here")
+          const idx = this.heap_get_channel_idx(v)
+          const capacity = this.heap_get_channel_capacity(v)
+          console.log("old channel heap size: " + this.channel_heap_size)
+          globalState.CHANNELARRAY[idx].clear()
+
+          this.channel_heap_size += capacity
+          console.log("new channel heap size: " + this.channel_heap_size)
+        }
+        
         this.free_node(v)
       } else {
         this.heap_set_byte_at_offset(v, this.mark_bit, this.UNMARKED)
