@@ -28,6 +28,8 @@ export class LowLevelQueue {
     }
 
     push(val: number) {
+        // IMPORTANT NOTE, WE ARE NOT CHECKING THAT QUEUE IS FULL AND ASSUME THAT CHANNEL IMPLEMENTATION IS CORRECT
+        // IF CHANNEL IMPLEMENTATION IS WRONG, THIS IS POTENTIALLY WRONG AND WILL CAUSE OVERRIDING ERRORS
         const tailIdx = this.getTail()
         this.setWordAtIndex(tailIdx + 3, val)
         this.setTail((tailIdx + 1) % this.getSize())

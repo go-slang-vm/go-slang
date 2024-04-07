@@ -31,4 +31,5 @@ export const Waitgroup_tag = 14
 
 export const ChannelHeapSize = 65536
 export const word_size = 8
-export const channel_buffer = 7
+// NOTE WE NEED THIS TO BE AT LEAST 2 SINCE OUR IMPLEMENTATION MAY TEMPORARILY INCREASE THE SIZE OF QUEUE BY 1 FOR CONVENIENCE AND ALSO FOR CONVENIENCE UNBUFFERED CHANNELS USE 1 SLOT
+export const channel_buffer = 2
