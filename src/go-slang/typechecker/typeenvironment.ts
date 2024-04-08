@@ -80,12 +80,15 @@ export const empty_type_environment: TypeFrame = null
 export const global_type_environment: any = 
     pair(global_type_frame, empty_type_environment)
 
-export const lookup_type = (x: any, e: any): string =>
-    is_null(e)
-    ? Error("unbound name: " + x)
-    : head(e).hasOwnProperty(x) 
-    ? head(e)[x]
-    : lookup_type(x, tail(e))
+export const lookup_type = (x: any, e: any): string => {
+    if (is_null(e)) {
+        throw new Error("unbound name: " + x)
+    } else if (head(e).hasOwnProperty(x)) {
+        return head(e)[x]
+    } else {
+       return lookup_type(x, tail(e)) 
+    }
+}
 
 export const extend_type_environment = (xs: any, ts: any, e: any) => {
     if (ts.length > xs.length) 

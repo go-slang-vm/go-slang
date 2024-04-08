@@ -94,6 +94,8 @@ const type_comp = {
             if (isArray(body) && !equal_array_types(body, comp.type.returnTypes)) {
                 throw new Error("type error in function declaration; expected return type: " + unparse_types(comp.type.returnTypes) + " actual return type: " + unparse_types(body))
             } else if (!isArray(body) && comp.type.returnTypes.length != 0) {
+                // if body is not array it will be "undefined"
+                // in func body, body will be a stmt list so it will return either [] or [...] so should not actually reach here
                 throw new Error("type error in function declaration; expected return type: " + unparse_types(comp.type.returnTypes) + " actual return type: " + unparse_type(body))
             }
             return "undefined"
@@ -115,12 +117,16 @@ const type_comp = {
                 }
             }
             let fun_type = type(comp.fun, te)
+            
             if (fun_type.tag !== "fun")
                 throw new Error("type error in application; function " +
                     "expression must have function type; " +
                     "actual type: " + unparse_type(fun_type))
+
             // paramTypes is a list of types                          
             let expected_arg_types = fun_type.paramTypes
+
+            // if arg ret value is in an array we only take it out if there is 1 value
             const actual_arg_types = comp.args.map(e => type(e, te)).map(e => (isArray(e) && e.length == 1) ? e[0] : e)
             
             if (comp.fun.tag === "nam") {
@@ -151,7 +157,7 @@ const type_comp = {
             const actual_types = [];
             for (const assgn of comp.assignments.list) {
                 const res = type(assgn, te)
-                console.log("assgn: " + JSON.stringify(assgn) + " res: " + res);
+                // console.log("assgn: " + JSON.stringify(assgn) + " res: " + res);
                 if (isArray(res)) {
                     // type of funcApp can be an array
                     actual_types.push(...res)
@@ -167,7 +173,7 @@ const type_comp = {
             }
 
             for (const actType of actual_types) {
-                console.log("actType: " + actType)
+                // console.log("actType: " + actType)
                 if (!equal_type(actType, declared_type)) {
                     throw new Error("type error in variable declaration; " +
                         "declared type: " +
@@ -271,14 +277,14 @@ const type_comp = {
                 comp.prms,
                 comp.type.paramTypes,
                 te)
-            // TODO: FIX THIS... seems fine with name lambda?
+
             const body = type_fun_body(comp.body, extended_te, { retType: comp.type.returnTypes, name: "lambda" })
             if (isArray(body) && !equal_array_types(body, comp.type.returnTypes)) {
                 throw new Error("type error in function declaration; expected return type: " + unparse_types(comp.type.returnTypes) + " actual return type: " + unparse_types(body))
             } else if (!isArray(body) && comp.type.returnTypes.length != 0) {
                 throw new Error("type error in function declaration; expected return type: " + unparse_types(comp.type.returnTypes) + " actual return type: " + unparse_type(body))
             }
-            // TODO: think if this should be undefined or the func type also check for function declarations
+            
             return comp.type
         },
     make:
@@ -471,10 +477,18 @@ const type_fun_body_stmt = {
     cond:
         (comp: IfStmtNode, te: any, func_ctx: any) => {
             const t0 = type(comp.pred, te)
-            if ((isArray(t0) && t0.length != 1 && t0[0] !== "bool") || (is_string(t0) && t0 !== "bool"))
+            if ((isArray(t0) && (t0.length != 1 || t0[0] !== "bool"))) {
                 throw new Error("expected predicate type: bool, " +
                     "actual predicate type: " +
-                    unparse_type(t0))
+                    unparse_types(t0))
+            }
+            
+            if ((is_string(t0) && t0 !== "bool")) {
+                throw new Error("expected predicate type: bool, " +
+                "actual predicate type: " +
+                unparse_type(t0)) 
+            }
+
             const t1 = type_fun_body(comp.cons, te, func_ctx)
 
             if (comp.alt.tag === Tag.BLOCK) {
@@ -488,7 +502,7 @@ const type_fun_body_stmt = {
             // else if block present
             const t2 = type_fun_body(comp.alt, te, func_ctx)
             // terminating if both statements are return values and the same
-            // TODO: check correctness of this
+            // return types will always be in an array so we require both to be arrays else not terminating
             if (isArray(t1) && isArray(t2) && equal_array_types(t1, t2)) {
                 return t1
             } else {
@@ -501,7 +515,8 @@ const type_fun_body_stmt = {
             for (let i = 0; i < comp.stmts.length; ++i) {
                 const stmt = comp.stmts[i];
                 const stmt_type = type_fun_body(stmt, te, func_ctx)
-                // return values can only be arrays or "undefined" in functions how about literals?
+                // return values of stmts can only be arrays or "undefined" in functions?
+                // if it's a literal experession or name node that returns smth other than undefined, type_fun_body will return "undefined"
                 if (!isArray(stmt_type)) {
                 } else if (i == comp.stmts.length - 1) {
                     // only if final stmt is terminating then this seq is terminating

@@ -1715,4 +1715,62 @@ describe('Basic typecheck test', () => {
       'type error in chan send; expected type: int, actual type: int, int, int'
     )
   })
+
+  test('basic if predicate multiple return vals', async () => {
+    const program = `
+        func inc(y, p int) (int, int, int) {
+            return 1, 2, 3
+        }
+        func main() {
+          if(inc(1,2)) {
+            x int := 1
+          }
+        }
+          `
+    const outputAst: ASTNode | null = parse(program)
+    if (!outputAst) {
+      throw new Error('Parsing failed')
+    }
+    expect(() => typecheck(outputAst)).toThrow(
+      'expected predicate type: bool, actual predicate type: int, int, int'
+    )
+  })
+
+  test('basic if predicate string but not bool', async () => {
+    const program = `
+        func inc(y, p int) (int, int, int) {
+            return 1, 2, 3
+        }
+        func main() {
+          if(1) {
+            x int := 1
+          }
+        }
+          `
+    const outputAst: ASTNode | null = parse(program)
+    if (!outputAst) {
+      throw new Error('Parsing failed')
+    }
+    expect(() => typecheck(outputAst)).toThrow(
+      'expected predicate type: bool, actual predicate type: int'
+    )
+  })
+
+  test.only('basic if predicate string but not bool', async () => {
+    const program = `
+        func inc(y, p int) int {
+            1;
+        }
+        func main() {
+          inc(1,2)
+        }
+          `
+    const outputAst: ASTNode | null = parse(program)
+    if (!outputAst) {
+      throw new Error('Parsing failed')
+    }
+    expect(() => typecheck(outputAst)).toThrow(
+      'type error in function declaration; expected return type: int actual return type: null'
+    )
+  })
 })
