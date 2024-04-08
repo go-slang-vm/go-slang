@@ -1584,4 +1584,135 @@ describe('Basic typecheck test', () => {
       'type error in application; expected argument types: int, int, actual argument types: int, string'
     )
   })
+
+  test('basic func body no return', async () => {
+    const program = `
+        func inc() int {
+          x int := 1
+        }
+        func main() {
+        }
+          `
+    const outputAst: ASTNode | null = parse(program)
+    if (!outputAst) {
+      throw new Error('Parsing failed')
+    }
+    expect(() => typecheck(outputAst)).toThrow(
+      'type error in function declaration; expected return type: int actual return type: null'
+    )
+  })
+
+  test('basic func app with no declaration', async () => {
+    const program = `
+        func main() {
+          inc()
+        }
+          `
+    const outputAst: ASTNode | null = parse(program)
+    if (!outputAst) {
+      throw new Error('Parsing failed')
+    }
+    // console.dir(outputAst, {depth: 100})
+    expect(() => typecheck(outputAst)).toThrow(
+      'unbound name: inc'
+    )
+  })
+
+  test('basic func app with wrong declaration', async () => {
+    const program = `
+        func main() {
+          inc int := 1
+          inc()
+        }
+          `
+    const outputAst: ASTNode | null = parse(program)
+    if (!outputAst) {
+      throw new Error('Parsing failed')
+    }
+    // console.dir(outputAst, {depth: 100})
+    expect(() => typecheck(outputAst)).toThrow(
+      'type error in application; function expression must have function type; actual type: int'
+    )
+  })
+
+  test('basic function app but wrong param types', async () => {
+    const program = `
+        func inc(y, p int) (int, int, int) {
+            return 1, 2, 3
+        }
+        func main() {
+          var x, y, z int = inc("hi")
+          a string := "hello"
+          var f float = 1.1
+        }
+          `
+    const outputAst: ASTNode | null = parse(program)
+    if (!outputAst) {
+      throw new Error('Parsing failed')
+    }
+    expect(() => typecheck(outputAst)).toThrow(
+      'type error in application; expected argument types: int, int, actual argument types: string'
+    )
+  })
+
+  test('basic chan recv multiple return expr', async () => {
+    const program = `
+        func inc(y, p int) (int, int, int) {
+            return 1, 2, 3
+        }
+        func main() {
+          <- inc(1, 2)
+          a string := "hello"
+          var f float = 1.1
+        }
+          `
+    const outputAst: ASTNode | null = parse(program)
+    if (!outputAst) {
+      throw new Error('Parsing failed')
+    }
+    expect(() => typecheck(outputAst)).toThrow(
+      'type error in chan recv; expected type: chan actual type: int, int, int'
+    )
+  })
+
+  test('basic chan send multiple return expr on LHS', async () => {
+    const program = `
+        func inc(y, p int) (int, int, int) {
+            return 1, 2, 3
+        }
+        func main() {
+          inc(1,2) <- 1
+          a string := "hello"
+          var f float = 1.1
+        }
+          `
+    const outputAst: ASTNode | null = parse(program)
+    if (!outputAst) {
+      throw new Error('Parsing failed')
+    }
+    expect(() => typecheck(outputAst)).toThrow(
+      'type error in chan send; expected type: chan, actual type: int, int, int'
+    )
+  })
+
+  test('basic chan send multiple return expr on RHS', async () => {
+    const program = `
+        func inc(y, p int) (int, int, int) {
+            return 1, 2, 3
+        }
+        func main() {
+          var c chan int = make(chan int, 5)
+          c <- inc(1,2)
+          a string := "hello"
+          var f float = 1.1
+        }
+          `
+    const outputAst: ASTNode | null = parse(program)
+    if (!outputAst) {
+      throw new Error('Parsing failed')
+    }
+    expect(() => typecheck(outputAst)).toThrow(
+      'type error in chan send; expected type: int, actual type: int, int, int'
+    )
+  })
 })
