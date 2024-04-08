@@ -48,7 +48,7 @@ describe('basic buddy allocator tests', () => {
         expect(allocator.FreeList.get(1 << 2)).toStrictEqual([])
         expect(allocator.FreeList.get(1 << 1)).toStrictEqual([])
 
-        allocator.free(ptr2!.byteOffset, ptr2!.byteLength); // Free the previously allocated block
+        allocator.free(ptr2); // Free the previously allocated block
         /*
         The list should look like this now:
         16: []
@@ -129,7 +129,7 @@ describe('basic buddy allocator tests', () => {
         expect(allocator.FreeList.get(1 << 2)).toStrictEqual([])
         expect(allocator.FreeList.get(1 << 1)).toStrictEqual([])
 
-        allocator.free(ptr1!.byteOffset, ptr1!.byteLength); // Free the previously allocated block
+        allocator.free(ptr1); // Free the previously allocated block
         /*
         The list should look like this now:
         16: []

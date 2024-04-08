@@ -72,7 +72,14 @@ export class BuddyAllocator {
         }
     }
 
-    free(addr: number, size: number) {
+    free(dataView: DataView | null) {
+        if (dataView === null) {
+            return
+        }
+        
+        let addr = dataView.byteOffset
+        const size = dataView.byteLength
+
         const smallestBlockNeeded = 1 << Math.ceil(Math.log2(size)) 
 
         let currBlock = smallestBlockNeeded

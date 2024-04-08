@@ -3,13 +3,13 @@ import { channel_buffer, word_size } from "./constants"
 // NOTE NO BOUNDS CHECKING, ASSUMED TO ONLY BE USED IN CHANNEL WHICH ALREADY DOES BOUNDS CHECKING
 export class LowLevelQueue {
     // first 3 words of the byte array are the head, tail and size (sz in number of words) respectively
-    byteArray: ArrayBuffer | null
+    // byteArray: ArrayBuffer | null
     dataView: DataView | null
 
 
-    constructor(sz: number) {
-        this.byteArray = new ArrayBuffer((sz + channel_buffer + 3) * word_size)
-        this.dataView = new DataView(this.byteArray)
+    constructor(sz: number, data: DataView) {
+        // this.byteArray = new ArrayBuffer((sz + channel_buffer + 3) * word_size)
+        this.dataView = data
         this.setSize(sz + channel_buffer)
         this.setHead(0)
         this.setTail(0)
@@ -72,7 +72,7 @@ export class LowLevelQueue {
     }
 
     clear() {
-        this.byteArray = null
+        // this.byteArray = null
         this.dataView = null
     }
 

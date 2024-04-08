@@ -17,7 +17,10 @@ import {
   String_tag,
   Channel_tag,
   Waitgroup_tag,
+  channel_buffer,
+  word_size,
 } from './constants'
+import { BuddyAllocator } from './buddyallocator'
 
 export class Heap {
   heap_size: number
@@ -38,6 +41,7 @@ export class Heap {
   free: number
   heap_bottom: number
   channel_heap_size: number
+  buddy_alloc: BuddyAllocator
 
   constructor() {
     this.stringPool = {}
@@ -266,16 +270,19 @@ export class Heap {
     type: number,
     elemType: string,
     idx: number
-  ): number => {
+  ): [number, DataView] => {
 
-    if (capacity > this.channel_heap_size) {
+    let buffer = this.heap_allocate_array_buffer(capacity)
+    if(buffer === null) {
       // trigger mark sweep to potentially clean up heap space
-      console.log("old channel heap size before mark and sweep: " + this.channel_heap_size)
       this.mark_sweep()
-      if (capacity > this.channel_heap_size) {
+
+      buffer = this.heap_allocate_array_buffer(capacity)
+      if (buffer === null) {
         throw new Error("Ran out of heap space for buffered channels!")
       }
     }
+
     console.log("allocating channel with capacity: " + capacity)
 
     const address = this.heap_allocate(Channel_tag, 3)
@@ -287,10 +294,12 @@ export class Heap {
     this.heap_set_channel_counter(address, initialCounter)
     this.heap_set_channel_capacity(address, capacity)
 
-    // decrement channel heap size
-    this.channel_heap_size -= capacity
+    return [address, buffer]
+  }
 
-    return address
+  heap_allocate_array_buffer(capacity: number): DataView | null {
+    // + 3 for the head, tail, and size spots
+    return this.buddy_alloc.allocate((capacity + channel_buffer + 3) * word_size)
   }
 
   heap_get_channel_idx = (address: number): number => this.heap_get_4_bytes_at_offset(address, 1)
@@ -510,12 +519,13 @@ export class Heap {
         if (this.heap_get_tag(v) === Channel_tag) {
           console.log("should have reached here")
           const idx = this.heap_get_channel_idx(v)
-          const capacity = this.heap_get_channel_capacity(v)
-          console.log("old channel heap size: " + this.channel_heap_size)
+          // const capacity = this.heap_get_channel_capacity(v)
+          // console.log("old channel heap size: " + this.channel_heap_size)
+          this.buddy_alloc.free(globalState.CHANNELARRAY[idx].items.dataView!) 
           globalState.CHANNELARRAY[idx].clear()
 
-          this.channel_heap_size += capacity
-          console.log("new channel heap size: " + this.channel_heap_size)
+          //this.channel_heap_size += capacity
+          //console.log("new channel heap size: " + this.channel_heap_size)
         }
         
         this.free_node(v)

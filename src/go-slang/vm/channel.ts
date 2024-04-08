@@ -11,10 +11,10 @@ export class Channel {
     sendBlockedQueue: Thread[]
     // this contains the Thread objects that blocked on a recv call
     recvBlockedQueue: Thread[]
-    constructor(idx: number, capacity: number) {
+    constructor(idx: number, capacity: number, buffer: DataView) {
         this.idx = idx
         this.capacity = capacity
-        this.items = new LowLevelQueue(capacity)
+        this.items = new LowLevelQueue(capacity, buffer)
         this.sendBlockedQueue = []
         this.recvBlockedQueue = []
     }
