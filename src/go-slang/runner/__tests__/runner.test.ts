@@ -54,13 +54,13 @@ describe('Runner tests', () => {
   })
   test('function', async () => {
     const code = `
-    func g(x, y int) {
+    func g(x, y int) int {
       return x - y
     }
-    func f(x, y int) {
+    func f(x, y int) int {
       return g(x, y)
     }
-    func main() {
+    func main() int {
       result int := f(33, 22)
       return result
     }`
@@ -69,11 +69,11 @@ describe('Runner tests', () => {
   })
   test('function 2', async () => {
     const code = `
-      func inc(x int) {
+      func inc(x int) int {
         x = x + 1
         return x
       }
-      func main() {
+      func main() int {
         x int := 0
         x = inc(x)
         return x
@@ -83,11 +83,11 @@ describe('Runner tests', () => {
   })
   test('function 3', async () => {
     const code = `
-      func inc(x int) {
+      func inc(x int) int {
         x = x + 1
         return x
       }
-      func main() {
+      func main() int {
         x int := 0
         inc(x)
         // x should return 0 as the value from inc() is not reassigned to x
@@ -183,7 +183,7 @@ describe('Runner tests', () => {
   })
   test('string', async () => {
     const code = `
-      func main() {
+      func main() string {
         x string := "this is a string"
         return x
       }`
@@ -192,7 +192,7 @@ describe('Runner tests', () => {
   })
   test('string 2', async () => {
     const code = `
-      func main() {
+      func main() string {
         return "aaa" + "bbb"
       }`
 
@@ -200,10 +200,10 @@ describe('Runner tests', () => {
   })
   test('go statement', async () => {
     const code = `
-      func inc(x int) {
+      func inc(x int) int {
         return x
       }
-      func main() {
+      func main() int {
         x int := 0
         go inc(1)
         return x
@@ -213,7 +213,7 @@ describe('Runner tests', () => {
   })
   test('go statement 2', async () => {
     const code = `
-      func inc(x int) {
+      func inc(x int) int {
         x = x + 1
         return x
       }
@@ -227,11 +227,11 @@ describe('Runner tests', () => {
   })
   test('go statement 3', async () => {
     const code = `
-      func inc(x int) {
+      func inc(x int) int {
         x = x + 1
         return x
       }
-      func main() {
+      func main() int {
         x int := 0
         go inc(x)
         sleep(20)
@@ -243,7 +243,7 @@ describe('Runner tests', () => {
   test('go statement 4', async () => {
     const code = `
     func main() {
-      go func(x int){
+      go func(x int) int {
         return x
       }(1);
     }`
@@ -386,7 +386,7 @@ describe('Runner tests', () => {
   })
   test('basic rel ops test', async () => {
     const code = `
-    func main() {
+    func main() int {
       x int := 1
       if x == 1 {
         x = x + 1
@@ -413,7 +413,7 @@ describe('Runner tests', () => {
   })
   test('basic bin ops test', async () => {
     const code = `
-    func main() {
+    func main() int {
       x int := 1
       return x + x - 4 * 3 / 2 % 5
     }`
@@ -422,7 +422,7 @@ describe('Runner tests', () => {
   })
   test('basic bin op precedence test should print 4 instead of 6', async () => {
     const code = `
-    func main() {
+    func main() int {
       x int := 1
       return x + x * 3
     }`
@@ -431,7 +431,7 @@ describe('Runner tests', () => {
   })
   test('basic bin op precedence test should print 3 instead of 2', async () => {
     const code = `
-    func main() {
+    func main() int {
       x int := 2
       return x + x / 2
     }`
@@ -440,11 +440,11 @@ describe('Runner tests', () => {
   })
   test('sleep', async () => {
     const code = `
-    func worker(id int) {
+    func worker(id int) int {
       sleep(500)
       return id * 2
     }
-    func main() {
+    func main() int {
       res int := 0
       i int := 0
       for i < 3 {
@@ -550,7 +550,7 @@ describe('Runner tests', () => {
   test('basic preprocessor test 4 declaration with reordering in func', async () => {
     const code = `
     var x int = inc()
-    func inc() {
+    func inc() int {
       return y
     }
     func main() {
@@ -575,11 +575,11 @@ describe('Runner tests', () => {
 
   test('wait - concurrent go routines', async () => {
     const code = `
-    func worker(id int) {
+    func worker(id int) int {
       sleep(500)
       return id * 2
     }
-    func main() {
+    func main() int {
       var wg WaitGroup = waitgroup
       res int := 0
       i int := 0
@@ -600,7 +600,7 @@ describe('Runner tests', () => {
   })
   test('wait - test Add(wg, 2) functionality', async () => {
     const code = `
-    func main() {
+    func main() int {
       var wg WaitGroup = waitgroup
       x int := 0
       y int := 0
@@ -625,7 +625,7 @@ describe('Runner tests', () => {
   })
   test('wait - concurrent go routines WITHOUT WaitGroup', async () => {
     const code = `
-    func main() {
+    func main() int {
       x int := 0
       y int := 0
 
@@ -645,7 +645,7 @@ describe('Runner tests', () => {
   })
   test('wait - negative waitgroup counter', async () => {
     const code = `
-    func main() {
+    func main() int {
       var wg WaitGroup = waitgroup
       x int := 0
       y int := 0
@@ -665,7 +665,7 @@ describe('Runner tests', () => {
   })
   test('wait - deadlock testing', async () => {
     const code = `
-    func main() {
+    func main() int {
       var wg WaitGroup = waitgroup
       x int := 0
       y int := 0
@@ -683,7 +683,7 @@ describe('Runner tests', () => {
   })
   test('wait - main thread should still complete even though go routines deadlock', async () => {
     const code = `
-    func main() {
+    func main() int {
       var wg1 WaitGroup = waitgroup
       var wg2 WaitGroup = waitgroup
 
@@ -712,7 +712,7 @@ describe('Runner tests', () => {
   })
   test('wait - deadlock testing with multiple waitgroups', async () => {
     const code = `
-    func main() {
+    func main() int {
       var wg1 WaitGroup = waitgroup
       var wg2 WaitGroup = waitgroup
 
