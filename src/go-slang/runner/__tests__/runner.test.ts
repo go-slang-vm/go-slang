@@ -272,7 +272,6 @@ describe('Runner tests', () => {
       sleep(25000)
     }
     `
-
     boilerplateTest(code, undefined)
   })
   // but this passes
@@ -744,7 +743,7 @@ describe('Runner tests', () => {
       Println(x)
     }
     func main() {
-      c chan int := make(chan int, 65536)
+      c chan int := make(chan int, 65531)
       go inc()
       c <- 1
       c <- 2
@@ -756,7 +755,7 @@ describe('Runner tests', () => {
   test('test buffered channel allocation pass with garbage collection', async () => {
     const code = `
     func inc() {
-      channeltest chan int := make(chan int, 65536)
+      channeltest chan int := make(chan int, 65531)
       channeltest <- 1
     }
     func main() {

@@ -13,8 +13,9 @@ import {
 } from './utils'
 import { Instruction } from './types'
 import { Thread } from './thread'
-import { ChannelHeapSize, Channel_tag, numInstructions } from './constants'
+import { ChannelHeapSize, Channel_tag, numInstructions, word_size } from './constants'
 import { Channel } from './channel'
+import { BuddyAllocator } from './buddyallocator'
 
 export class VM {
   heapInstance: Heap
@@ -152,7 +153,8 @@ export class VM {
 
     this.heapInstance.heap = this.heapInstance.heap_make(heapsize_words)
     this.heapInstance.heap_size = heapsize_words
-    this.heapInstance.channel_heap_size = ChannelHeapSize
+    this.heapInstance.channel_heap_size = ChannelHeapSize * word_size
+    this.heapInstance.buddy_alloc = new BuddyAllocator(Math.ceil(Math.log2(this.heapInstance.channel_heap_size)))
 
     // initialize free list:
     // every free node carries the address
@@ -418,13 +420,15 @@ export class VM {
     },
     MAKE: instr => {
       const idx = globalState.CHANNELARRAY.length
-      this.createNewChannel(instr.capacity, idx)
-      const addr = this.heapInstance.heap_allocate_Channel(
+      const [addr, buffer] = this.heapInstance.heap_allocate_Channel(
         instr.capacity,
         instr.type,
         instr.elemType,
         idx
       )
+
+      this.createNewChannel(instr.capacity, idx, buffer)
+
       // if it is a mutex, we populate it with 1 UNDEFINED
       if (instr.type === 2) {
         globalState.CHANNELARRAY[idx].pushToItemQueue(this.heapInstance.Undefined)
@@ -653,8 +657,8 @@ export class VM {
     globalState.THREADQUEUE.push(thread)
   }
 
-  createNewChannel(capacity: number, idx: number) {
-    globalState.CHANNELARRAY.push(new Channel(idx, capacity))
+  createNewChannel(capacity: number, idx: number, buffer: DataView) {
+    globalState.CHANNELARRAY.push(new Channel(idx, capacity, buffer))
   }
 
   addItemToChannel(idx: number, val: number) {
