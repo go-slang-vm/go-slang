@@ -521,7 +521,7 @@ export class Heap {
           const idx = this.heap_get_channel_idx(v)
           // const capacity = this.heap_get_channel_capacity(v)
           // console.log("old channel heap size: " + this.channel_heap_size)
-          this.buddy_alloc.free(globalState.CHANNELARRAY[idx].items.dataView!) 
+          this.buddy_alloc.free(globalState.CHANNELARRAY[idx].items.getDataView()) 
           globalState.CHANNELARRAY[idx].clear()
 
           //this.channel_heap_size += capacity
