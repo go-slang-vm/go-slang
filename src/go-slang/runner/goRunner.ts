@@ -16,7 +16,7 @@ import { cloneDeep } from 'lodash'
 export async function goRunner(
   code: string,
   context: Context,
-  memory: number = 1500,
+  memory: number = 15000,
   options: RecursivePartial<IOptions> = {},
   throwError: boolean = false // for testing purposes; helps us to check that the correct error is thrown in our test suite
 ): Promise<Result> {
