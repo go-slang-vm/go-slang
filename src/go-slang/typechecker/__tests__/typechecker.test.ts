@@ -1756,7 +1756,7 @@ describe('Basic typecheck test', () => {
     )
   })
 
-  test.only('basic if predicate string but not bool', async () => {
+  test('basic if predicate string but not bool', async () => {
     const program = `
         func inc(y, p int) int {
             1;
@@ -1772,5 +1772,102 @@ describe('Basic typecheck test', () => {
     expect(() => typecheck(outputAst)).toThrow(
       'type error in function declaration; expected return type: int actual return type: null'
     )
+  })
+
+  test('basic conditional statement terminating correct return, but 1 of the blocks is not terminating', async () => {
+    const program = `
+        func inc() (int, int, int) {
+            x int:= 1
+            if x < 1 {
+                return 11, 22, 33
+            } else if x < 1 || x < 2 {
+            } else {
+                return 31, 32, 33
+            }
+        }
+        func main() {
+          var x, y, z int = inc()
+          a string := "hello"
+          var f float = 1.1
+        }
+          `
+    const outputAst: ASTNode | null = parse(program)
+    if (!outputAst) {
+      throw new Error('Parsing failed')
+    }
+    //console.dir(outputAst, {depth: 100})
+    expect(() => typecheck(outputAst)).toThrow("type error in function declaration; expected return type: int, int, int actual return type: null")
+  })
+
+  test('basic conditional statement terminating correct return, both blocks terminating', async () => {
+    const program = `
+        func inc() (int, int, int) {
+            x int:= 1
+            if x < 1 {
+                return 11, 22, 33
+            } else {
+                return 31, 32, 33
+            }
+        }
+        func main() {
+          var x, y, z int = inc()
+          a string := "hello"
+          var f float = 1.1
+        }
+          `
+    const outputAst: ASTNode | null = parse(program)
+    if (!outputAst) {
+      throw new Error('Parsing failed')
+    }
+    //console.dir(outputAst, {depth: 100})
+    expect(() => typecheck(outputAst)).not.toThrow("type error in function declaration; expected return type: int, int, int actual return type: null")
+  })
+
+
+  test('basic conditional statement terminating correct return, if block not terminating', async () => {
+    const program = `
+        func inc() (int, int, int) {
+            x int:= 1
+            if x < 1 {
+            } else {
+                return 31, 32, 33
+            }
+        }
+        func main() {
+          var x, y, z int = inc()
+          a string := "hello"
+          var f float = 1.1
+        }
+          `
+    const outputAst: ASTNode | null = parse(program)
+    if (!outputAst) {
+      throw new Error('Parsing failed')
+    }
+    //console.dir(outputAst, {depth: 100})
+    expect(() => typecheck(outputAst)).toThrow("type error in function declaration; expected return type: int, int, int actual return type: null")
+  })
+
+  test('basic conditional statement terminating correct return, else block not terminating', async () => {
+    const program = `
+        func inc() (int, int, int) {
+            x int:= 1
+            if x < 1 {
+              return 31, 32, 33
+            } else {
+                inc()
+            }
+        }
+        func main() {
+          var x, y, z int = inc()
+          a string := "hello"
+          var f float = 1.1
+        }
+          `
+    const outputAst: ASTNode | null = parse(program)
+    if (!outputAst) {
+      throw new Error('Parsing failed')
+    }
+    //console.dir(outputAst, {depth: 100})
+    expect(() => typecheck(outputAst)).toThrow("type error in function declaration; expected return type: int, int, int actual return type: null")
   })
 })
