@@ -184,7 +184,7 @@ export class VM {
 
   address_to_TS_value = (x: number): any =>
     this.heapInstance.is_Boolean(x)
-      ? this.heapInstance.is_True(x)
+      ? this.heapInstance.True === x
         ? true
         : false
       : this.heapInstance.is_Number(x)
