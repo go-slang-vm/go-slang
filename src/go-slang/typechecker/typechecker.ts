@@ -59,6 +59,7 @@ const type_comp = {
             return type(convertToApp, te)
         },
     // NO COND EXPR IN GO SLANG ONLY COND STMT                            
+    // we dont allo cond statements outside of funcbody so actually this might not be necessary
     cond:
         (comp: IfStmtNode, te: any) => {
             const t0 = type(comp.pred, te)
@@ -91,9 +92,15 @@ const type_comp = {
                 comp.type.paramTypes,
                 te)
             const body = type_fun_body(comp.body, extended_te, { retType: comp.type.returnTypes, name: comp.sym })
+            // type_fun_body will return 2 things, either an array of values or empty array or the string "undefined"
+            // if returned "undefined" then no return values so we check if the return types length is 0
+            // is it possible to get a return of "int" etc?... i dont think so since type_func_body returns "undefined" for lit and nam expr statements
+
             if (isArray(body) && !equal_array_types(body, comp.type.returnTypes)) {
                 throw new Error("type error in function declaration; expected return type: " + unparse_types(comp.type.returnTypes) + " actual return type: " + unparse_types(body))
             } else if (!isArray(body) && comp.type.returnTypes.length != 0) {
+                // if body is not array it will be "undefined"
+                // in func body, body will be a stmt list so it will return either [] or [...] so should not actually reach here
                 throw new Error("type error in function declaration; expected return type: " + unparse_types(comp.type.returnTypes) + " actual return type: " + unparse_type(body))
             }
             return "undefined"
@@ -114,13 +121,21 @@ const type_comp = {
                     return []
                 }
             }
+            // comp.fun here can be a nam node or a func lit node which means it will call lookuptypes which should return a func type
+            // or lam will return the type of the func which is a func type
+
             let fun_type = type(comp.fun, te)
+
+            // if the tag is not fun, then it will be "int" etc so unparse_type is correct
             if (fun_type.tag !== "fun")
                 throw new Error("type error in application; function " +
                     "expression must have function type; " +
                     "actual type: " + unparse_type(fun_type))
+
             // paramTypes is a list of types                          
             let expected_arg_types = fun_type.paramTypes
+
+            // if arg ret value is in an array we only take it out if there is 1 value
             const actual_arg_types = comp.args.map(e => type(e, te)).map(e => (isArray(e) && e.length == 1) ? e[0] : e)
             
             if (comp.fun.tag === "nam") {
@@ -134,8 +149,10 @@ const type_comp = {
             }
 
             //console.log(actual_arg_types)
+            // actual args and expect arg types should be arrays
             if (equal_array_types(actual_arg_types, expected_arg_types)) {
                 //console.log("ret type for sym: "+ (comp.fun as NameNode).sym + " " + fun_type.returnTypes)
+                // return types of functions should be arrays
                 return fun_type.returnTypes
             } else {
                 throw new Error("type error in application; " +
@@ -147,18 +164,21 @@ const type_comp = {
         },
     let:
         (comp: VarDeclNode, te: any) => {
+            // should only have 1 type for all the vars on LHS
             const declared_type = comp.type
             const actual_types = [];
             for (const assgn of comp.assignments.list) {
                 const res = type(assgn, te)
-                console.log("assgn: " + JSON.stringify(assgn) + " res: " + res);
+                // console.log("assgn: " + JSON.stringify(assgn) + " res: " + res);
                 if (isArray(res)) {
                     // type of funcApp can be an array
                     actual_types.push(...res)
                 } else {
+                    // these are nam or literal nodes which will return strings "int" etc
                     actual_types.push(res)
                 }
             }
+
             // check length
             if (comp.syms.IDENTS.length > actual_types.length) {
                 throw new Error("Too few expressions on the RHS of variable declaration!")
@@ -167,7 +187,17 @@ const type_comp = {
             }
 
             for (const actType of actual_types) {
-                console.log("actType: " + actType)
+                // console.log("actType: " + actType)
+
+                // should not happen but just incase something slips through
+                if (isArray(actType)) {
+                    throw new Error("type error in variable declaration; " +
+                        "declared type: " +
+                        unparse_type(declared_type) + ", " +
+                        "actual type: " +
+                        unparse_types(actType)) 
+                }
+
                 if (!equal_type(actType, declared_type)) {
                     throw new Error("type error in variable declaration; " +
                         "declared type: " +
@@ -193,6 +223,7 @@ const type_comp = {
                     // type of funcApp can be an array
                     actual_types.push(...res)
                 } else {
+                    // these are nam or literal nodes which will return strings "int" etc
                     actual_types.push(res)
                 }
             }
@@ -204,6 +235,15 @@ const type_comp = {
             }
 
             for (let i = 0; i < actual_types.length; ++i) {
+                // should not happen but just incase something slips through
+                if (isArray(actual_types[i])) {
+                    throw new Error("type error in variable declaration; " +
+                        "declared type: " +
+                        unparse_type(declared_types[i]) + ", " +
+                        "actual type: " +
+                        unparse_types(actual_types[i])) 
+                }
+
                 if (!equal_type(actual_types[i], declared_types[i])) {
                     throw new Error("type error in assignment; " +
                         "declared type: " +
@@ -212,13 +252,16 @@ const type_comp = {
                         unparse_type(actual_types[i]))
                 }
             }
+
+            // TODO: check if this is necessary
+            return "undefined"
         },
     // we ignore the RHS    
     mut:
-        (comp: VarDeclNode, te: any) => { },
+        (comp: VarDeclNode, te: any) => "undefined",
     // we ignore the RHS
     waitgroup:
-        (comp: VarDeclNode, te: any) => { },
+        (comp: VarDeclNode, te: any) => "undefined",
     // the global scope rules for go slang means we only allow varDecl and funcDecl, so no
     // return statements outside of func body by default since varDecl requires expression on RHS
     // and expressions dont include return statements
@@ -239,13 +282,16 @@ const type_comp = {
                 comp.body = seq
             }
 
+            // notice no "lam" tags as we do not want to have bindings to lambdas
             const decls = (comp.body as SequenceNode).stmts.filter(
                 comp => comp.tag === "let" ||
                     comp.tag === "mut" ||
                     comp.tag === "waitgroup" ||
                     comp.tag === "fun")
+
             const declared_symbols = [];
             const declared_types = [];
+
             for (const comp of decls) {
                 if (comp.tag === "let" || comp.tag === "mut" || comp.tag === "waitgroup") {
                     declared_symbols.push(...(comp as VarDeclNode).syms.IDENTS)
@@ -257,6 +303,7 @@ const type_comp = {
                     declared_types.push((comp as FuncDeclNode).type)
                 }
             }
+
             const extended_te = extend_type_environment(
                 declared_symbols,
                 declared_types,
@@ -271,18 +318,21 @@ const type_comp = {
                 comp.prms,
                 comp.type.paramTypes,
                 te)
-            // TODO: FIX THIS... seems fine with name lambda?
+
             const body = type_fun_body(comp.body, extended_te, { retType: comp.type.returnTypes, name: "lambda" })
             if (isArray(body) && !equal_array_types(body, comp.type.returnTypes)) {
                 throw new Error("type error in function declaration; expected return type: " + unparse_types(comp.type.returnTypes) + " actual return type: " + unparse_types(body))
             } else if (!isArray(body) && comp.type.returnTypes.length != 0) {
                 throw new Error("type error in function declaration; expected return type: " + unparse_types(comp.type.returnTypes) + " actual return type: " + unparse_type(body))
             }
-            // TODO: think if this should be undefined or the func type also check for function declarations
+
+            // this is a literal so we return it's type instead of "undefined", func decl is a statement so we return "undefined"
             return comp.type
         },
+
     make:
         (comp: MakeAppNode, te: any) => {
+            // we are forcing the second arg to be a decimal lit and the number of args as 2 in the parser so dont need to check
             return comp.chanType
         },
     go:
@@ -391,9 +441,11 @@ const type_comp = {
             return "undefined"
         },
     recv:
+        // must receive from a channel
         (comp: RecvExprNode, te: any) => {
             const res = type(comp.frst, te)
             if(isArray(res)) {
+                // this block is if the RHS is a funcApp that returns a channel
                 if(res.length != 1) {
                     throw new Error("type error in chan recv; expected type: chan" + " actual type: " + unparse_types(res))
                 }
@@ -401,6 +453,7 @@ const type_comp = {
                 if(resString.length < 4 || resString.substring(0, 4) !== "chan") {
                     throw new Error("type error in chan recv; expected type: chan" + " actual type: " + unparse_types(res))
                 }
+                // recv is an expression so we return the type of the elem in the chan
                 return resString.slice(5)
             }
 
@@ -408,6 +461,7 @@ const type_comp = {
                 if(res.length < 4 || res.substring(0, 4) !== "chan") {
                     throw new Error("type error in chan recv; expected type: chan" + " actual type: " + res)
                 }
+                // recv is an expression so we return the type of the elem in the chan
                 return res.slice(5)
             }
 
@@ -420,6 +474,7 @@ const type_comp = {
             const res = type(comp.frst, te)
             let chanElemType: string | undefined = undefined;
             if(isArray(res)) {
+                // this block is if the LHS is a funcApp that returns a channel
                 if(res.length != 1) {
                     throw new Error("type error in chan send; expected type: chan" + ", actual type: " + unparse_types(res))
                 }
@@ -445,6 +500,7 @@ const type_comp = {
             // now we check the right hand side is the same
             const rhsType = type(comp.scnd, te)
             if(isArray(rhsType)) {
+                // this block is if the RHS is a funcApp that returns multiple elements
                if(!equal_array_types(rhsType, [chanElemType])) {
                 throw new Error("type error in chan send; expected type: " + chanElemType +", actual type: " + unparse_types(rhsType))
                }
@@ -466,15 +522,23 @@ const type = (comp: ASTNode, te: any) =>
 // type_fun_body_stmt has the typing
 // functions for function body statements
 // for each component tag
-// TODO: IF STMT HANDLING CAUSE IT MIGHT NOT BE TERMINATING
+
 const type_fun_body_stmt = {
     cond:
         (comp: IfStmtNode, te: any, func_ctx: any) => {
             const t0 = type(comp.pred, te)
-            if ((isArray(t0) && t0.length != 1 && t0[0] !== "bool") || (is_string(t0) && t0 !== "bool"))
+            if ((isArray(t0) && (t0.length != 1 || t0[0] !== "bool"))) {
                 throw new Error("expected predicate type: bool, " +
                     "actual predicate type: " +
-                    unparse_type(t0))
+                    unparse_types(t0))
+            }
+            
+            if ((is_string(t0) && t0 !== "bool")) {
+                throw new Error("expected predicate type: bool, " +
+                "actual predicate type: " +
+                unparse_type(t0)) 
+            }
+
             const t1 = type_fun_body(comp.cons, te, func_ctx)
 
             if (comp.alt.tag === Tag.BLOCK) {
@@ -488,7 +552,7 @@ const type_fun_body_stmt = {
             // else if block present
             const t2 = type_fun_body(comp.alt, te, func_ctx)
             // terminating if both statements are return values and the same
-            // TODO: check correctness of this
+            // return types will always be in an array so we require both to be arrays else not terminating
             if (isArray(t1) && isArray(t2) && equal_array_types(t1, t2)) {
                 return t1
             } else {
@@ -501,7 +565,8 @@ const type_fun_body_stmt = {
             for (let i = 0; i < comp.stmts.length; ++i) {
                 const stmt = comp.stmts[i];
                 const stmt_type = type_fun_body(stmt, te, func_ctx)
-                // return values can only be arrays or "undefined" in functions how about literals?
+                // return values of stmts can only be arrays or "undefined" in functions?
+                // if it's a literal experession or name node that returns smth other than undefined, type_fun_body will return "undefined"
                 if (!isArray(stmt_type)) {
                 } else if (i == comp.stmts.length - 1) {
                     // only if final stmt is terminating then this seq is terminating

@@ -10,6 +10,8 @@ import { resetGlobalState } from '../vm/globals'
 import { RuntimeSourceError } from '../../errors/runtimeSourceError'
 import { toSourceError } from '../../runner/errors'
 import { RawSourceMap } from 'source-map'
+import { typecheck } from '../typechecker/typechecker'
+import { cloneDeep } from 'lodash'
 
 export async function goRunner(
   code: string,
@@ -24,6 +26,8 @@ export async function goRunner(
       return resolvedErrorPromise
     }
     program = preprocess(program)
+    const copyOfProgram = cloneDeep(program)
+    typecheck(copyOfProgram)
     const compiledProgram: any[] = compile_program(program)
     resetGlobalState()
     const vm = new VM(memory)
