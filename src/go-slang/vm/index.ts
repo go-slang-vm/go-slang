@@ -283,7 +283,7 @@ export class VM {
       push(globalState.OS, this.apply_binop(instr.sym, pop(globalState.OS), pop(globalState.OS))),
     POP: _ => pop(globalState.OS),
     JOF: instr =>
-      (this.curThread.PC = this.heapInstance.is_True(pop(globalState.OS))
+      (this.curThread.PC = pop(globalState.OS) == this.heapInstance.True
         ? this.curThread.PC
         : instr.addr),
     GOTO: instr => (this.curThread.PC = instr.addr),
