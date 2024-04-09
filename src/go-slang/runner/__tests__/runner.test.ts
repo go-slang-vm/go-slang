@@ -8,7 +8,8 @@ const boilerplateTest = async (
   memory: number | undefined = undefined
 ) => {
   try {
-    const actual = await goRunner(code, createContext(), memory, {}, throwError)
+    // for debugging purposes, we always set the goRunner to throw any error that occurs
+    const actual = await goRunner(code, createContext(), memory, {}, true)
     if (throwError) {
       // if we expect the code to throw an error
       // but the code compiles successfully
@@ -816,7 +817,12 @@ describe('Runner tests', () => {
           var f float = 1.1
         }
           `
-        boilerplateTest(code, "type error in function declaration; expected return type: int, int, int actual return type: null", true, 200000)
+    boilerplateTest(
+      code,
+      'type error in function declaration; expected return type: int, int, int actual return type: null',
+      true,
+      200000
+    )
   })
 
   test('test preprocessing reordering', async () => {
@@ -835,6 +841,6 @@ describe('Runner tests', () => {
           }
       }
           `
-        boilerplateTest(code, undefined, false, 200000)
+    boilerplateTest(code, undefined, false, 200000)
   })
 })
