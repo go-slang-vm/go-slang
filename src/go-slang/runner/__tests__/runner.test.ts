@@ -799,4 +799,42 @@ describe('Runner tests', () => {
     }`
     boilerplateTest(code, undefined, false, 200000)
   })
+
+  test('test type check fail should throw', async () => {
+    const code = `
+        func inc() (int, int, int) {
+            x int:= 1
+            if x < 1 {
+              return 31, 32, 33
+            } else {
+                inc()
+            }
+        }
+        func main() {
+          var x, y, z int = inc()
+          a string := "hello"
+          var f float = 1.1
+        }
+          `
+        boilerplateTest(code, "type error in function declaration; expected return type: int, int, int actual return type: null", true, 200000)
+  })
+
+  test('test preprocessing reordering', async () => {
+    const code = `
+        func main() {
+          var x, y, z int = inc()
+          a string := "hello"
+          var f float = 1.1
+        }
+        func inc() (int, int, int) {
+          x int:= 1
+          if x < 1 {
+            return 31, 32, 33
+          } else {
+            return 1, 2, 3
+          }
+      }
+          `
+        boilerplateTest(code, undefined, false, 200000)
+  })
 })
