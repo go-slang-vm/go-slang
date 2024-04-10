@@ -870,4 +870,33 @@ describe('Runner tests', () => {
 
     boilerplateTest(code, "unbound name: main", true, 200000)
   })
+
+  // should print 6
+  test("basic division", async()=> {
+    const code = `
+    func main() {
+      x int := y+8
+      x = x / 2
+      Println(x)
+    }
+    var y int = 4
+    `
+
+    boilerplateTest(code, undefined, false, 200000)
+  })
+
+  // should print 5
+  test("basic modulo", async()=> {
+    const code = `
+    func main() {
+      x int := y+8
+      x = x %7
+      Println(x)
+    }
+    var y int = 4
+    `
+
+    boilerplateTest(code, undefined, false, 200000)
+  })
+
 })
