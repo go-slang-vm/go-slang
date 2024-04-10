@@ -843,4 +843,31 @@ describe('Runner tests', () => {
           `
     boilerplateTest(code, undefined, false, 200000)
   })
+
+  // should print 22
+  test("basic multiplication", async()=> {
+    const code = `
+    func main() {
+      x int := y+7
+      x = x * 2
+      Println(x)
+    }
+    var y int = 4
+    `
+
+    boilerplateTest(code, undefined, false, 200000)
+  })
+
+  test("test no main function defined", async()=> {
+    const code = `
+    func inc() {
+      x int := y+7
+      x = x * 2
+      Println(x)
+    }
+    var y int = 4
+    `
+
+    boilerplateTest(code, "unbound name: main", true, 200000)
+  })
 })
