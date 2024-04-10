@@ -333,6 +333,19 @@ const type_comp = {
     make:
         (comp: MakeAppNode, te: any) => {
             // we are forcing the second arg to be a decimal lit and the number of args as 2 in the parser so dont need to check
+            const ty = type(comp.capacity, te)
+            if (isArray(ty)) {
+                if(!equal_array_types(ty, ["int"])) {
+                    throw new Error("type error in make expression; expected return type: int, actual return type: " + unparse_types(ty))
+                }
+            }
+
+            if(is_string(ty)) {
+                if(!equal_type(ty, "int")) {
+                    throw new Error("type error in make expression; expected return type: int, actual return type: " + unparse_type(ty))
+                }
+            }
+
             return comp.chanType
         },
     go:
