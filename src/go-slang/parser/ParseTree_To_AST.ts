@@ -547,12 +547,12 @@ export class ParseTree_To_AST implements SimpleParserVisitor<ASTNode> {
   }
 
   visitMakeExpr(ctx: MakeExprContext): MakeAppNode {
-    const decimalLit = ctx.DECIMAL_LIT();
+    const decimalLit = ctx.expression();
     const isBuffered = decimalLit !== undefined;
-    const capacity = decimalLit !== undefined ? parseInt(this.visitTerminal(decimalLit), 10) : 0;
+    const capacity = decimalLit !== undefined ? this.visitExpression(decimalLit) : { tag: Tag.LIT, val: 0 };
 
     // make a channel with capacity zero should make it unbuffered
-    return { tag: Tag.MAKE, chanType: this.visitChannelType(ctx.channelType()).type, buffered: isBuffered && capacity != 0, capacity: capacity };
+    return { tag: Tag.MAKE, chanType: this.visitChannelType(ctx.channelType()).type, buffered: isBuffered, capacity: capacity };
   }
 
   visitOperand(ctx: OperandContext): ExprNode {

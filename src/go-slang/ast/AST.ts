@@ -323,5 +323,5 @@ export interface MakeAppNode extends ExprNode, ExpressionStmtNode {
     tag: Tag.MAKE;
     chanType: string;
     buffered: boolean;
-    capacity: number;
+    capacity: ExprNode;
 }

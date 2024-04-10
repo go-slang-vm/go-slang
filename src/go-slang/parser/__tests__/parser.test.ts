@@ -41,7 +41,7 @@ describe('Basic parser test', () => {
                           tag: 'make',
                           chanType: 'chan int',
                           buffered: true,
-                          capacity: 10
+                          capacity: { 'tag' : 'lit', 'val' : 10}
                         }
                       ]
                     },
@@ -57,7 +57,7 @@ describe('Basic parser test', () => {
                           tag: 'make',
                           chanType: 'chan int',
                           buffered: false,
-                          capacity: 0
+                          capacity: { 'tag' : 'lit', 'val' : 0}
                         }
                       ]
                     },
@@ -134,7 +134,7 @@ describe('Basic parser test', () => {
                           tag: 'make',
                           chanType: 'chan chan chan int',
                           buffered: true,
-                          capacity: 10
+                          capacity: { 'tag' : 'lit', 'val' : 10}
                         }
                       ]
                     },
@@ -150,7 +150,7 @@ describe('Basic parser test', () => {
                           tag: 'make',
                           chanType: 'chan int',
                           buffered: false,
-                          capacity: 0
+                          capacity: { 'tag' : 'lit', 'val' : 0}
                         }
                       ]
                     },
