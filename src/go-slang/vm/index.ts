@@ -65,7 +65,8 @@ export class VM {
       const address = pop(globalState.OS)
       // before switching threads, we complete the apply_builtin() function by popping fun off the stack and pushing undefined
       pop(globalState.OS) // pop fun
-      push(globalState.OS, undefined)
+      push(globalState.OS, address)
+
       const steps: number = this.address_to_TS_value(address)
       this.curThread.sleepEndTime = this.globalTime + steps
 
