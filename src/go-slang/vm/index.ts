@@ -59,6 +59,7 @@ export class VM {
       const address = pop(globalState.OS)
       const value = this.address_to_TS_value(address)
       console.log(value)
+      return address;
     },
     sleep: () => {
       const address = pop(globalState.OS)
