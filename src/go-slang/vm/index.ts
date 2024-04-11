@@ -241,7 +241,12 @@ export class VM {
     // todo: add error handling to JS for the following, too
     '*': (x, y) => (x as number) * (y as number),
     '-': (x, y) => (x as number) - (y as number),
-    '/': (x, y) => Math.floor((x as number) / (y as number)),
+    '/': (x, y) =>  {
+      if (y === 0) {
+        throw new Error("Error! division by zero")
+      }
+      return Math.floor((x as number) / (y as number))
+    },
     '%': (x, y) => (x as number) % (y as number),
     '<': (x, y) => x < y,
     '<=': (x, y) => x <= y,
