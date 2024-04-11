@@ -190,7 +190,7 @@ export class VM {
         ? true
         : false
       : this.heapInstance.is_Number(x)
-      ? this.heapInstance.heap_get(x + 1)
+      ? Math.floor(this.heapInstance.heap_get(x + 1))
       : this.heapInstance.is_Undefined(x)
       ? undefined
       : this.heapInstance.is_Unassigned(x)
@@ -240,7 +240,7 @@ export class VM {
     // todo: add error handling to JS for the following, too
     '*': (x, y) => (x as number) * (y as number),
     '-': (x, y) => (x as number) - (y as number),
-    '/': (x, y) => (x as number) / (y as number),
+    '/': (x, y) => Math.floor((x as number) / (y as number)),
     '%': (x, y) => (x as number) % (y as number),
     '<': (x, y) => x < y,
     '<=': (x, y) => x <= y,
