@@ -918,4 +918,46 @@ describe('Runner tests', () => {
 
     boilerplateTest(code, 151)
   })
+
+  test('basic division test should throw error if divisor is 0', async () => {
+    const code = `
+    func main() int {
+      x int := 455
+      return x/0
+    }`
+
+    boilerplateTest(code, "Error! division by zero", true)
+  })
+
+  test('basic division test should throw error if divisor is evaluates to 0', async () => {
+    const code = `
+    func main() int {
+      x int := 455
+      return x/(5-6+1+0+1-1)
+    }`
+
+    boilerplateTest(code, "Error! division by zero", true)
+  })
+
+  test('basic go call of builtin Println should fail', async () => {
+    const code = `
+    func main() int {
+      x int := 455
+      go Println("hi this should fail")
+      return x/(5-6+1+0+1)
+    }`
+
+    boilerplateTest(code, "Cannot run builtin functions in seperate Go Call!", true)
+  })
+
+  test('basic go call of builtin sleep should fail', async () => {
+    const code = `
+    func main() int {
+      x int := 455
+      go sleep(x)
+      return x/(5-6+1+0+1)
+    }`
+
+    boilerplateTest(code, "Cannot run builtin functions in seperate Go Call!", true)
+  })
 })

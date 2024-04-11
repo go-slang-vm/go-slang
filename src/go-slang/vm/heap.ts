@@ -436,7 +436,7 @@ export class Heap {
     // mark r for r in roots
 
     // current thread
-    let roots = [...globalState.OS, globalState.E, ...globalState.RTS, ...globalState.ALLOCATING]
+    let roots = [...globalState.OS, globalState.E, ...globalState.RTS, ...globalState.ALLOCATING, ...globalState.GOALLOCATING]
     for (let i = 0; i < roots.length; i++) {
       this.mark(roots[i])
     }
