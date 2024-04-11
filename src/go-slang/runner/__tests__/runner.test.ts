@@ -899,4 +899,23 @@ describe('Runner tests', () => {
     boilerplateTest(code, undefined, false, 200000)
   })
 
+  test('basic division test should be int division', async () => {
+    const code = `
+    func main() int {
+      x int := 1
+      return x/2
+    }`
+
+    boilerplateTest(code, 0)
+  })
+
+  test('basic division test should be int division', async () => {
+    const code = `
+    func main() int {
+      x int := 455
+      return x/3
+    }`
+
+    boilerplateTest(code, 151)
+  })
 })
