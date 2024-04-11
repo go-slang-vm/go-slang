@@ -392,8 +392,10 @@ export class VM {
       const arity = instr.arity
       const fun = peek(globalState.OS, arity)
       // TODO: still need to handle this
+      // we default to not allowing this for now
       if (this.heapInstance.is_Builtin(fun)) {
-        return this.apply_builtin(this.heapInstance.heap_get_Builtin_id(fun))
+        throw new Error("Cannot run builtin functions in seperate Go Call!")
+        // return this.apply_builtin(this.heapInstance.heap_get_Builtin_id(fun))
       }
 
       if (this.heapInstance.is_Closure(fun)) {
