@@ -371,9 +371,10 @@ const compile_comp = {
     const elemType = getChanType(comp.chanType)
     // this should call heap_allocate_channel(capacity, buffered, elemType) then throw the address on the OS
     // notice that we dont have to compile comp.capacity because we force the syntax to be a DECIMAL_LIT()
+    compile(comp.capacity, ce)
     instrs[wc++] = {
       tag: 'MAKE',
-      capacity: comp.capacity,
+      // capacity: comp.capacity,
       type: comp.buffered ? 1 : 0,
       elemType: elemType
     }
@@ -382,7 +383,8 @@ const compile_comp = {
     // create a channel with capacity 1 for every symbol
     // we abuse make channel here
     for (let i = 0; i < comp.syms.IDENTS.length; ++i) {
-      instrs[wc++] = { tag: 'MAKE', capacity: 1, type: 2, elemType: 'mutex' }
+      instrs[wc++] = { tag: 'LDC', val: 1 }
+      instrs[wc++] = { tag: 'MAKE', type: 2, elemType: 'mutex' }
     }
 
     const symsLen = comp.syms.IDENTS.length

@@ -265,12 +265,16 @@ export class VM {
 
   apply_builtin = (builtin_id: number) => {
     const result = this.builtin_array[builtin_id]()
+    //console.log("res: " + result)
 
     // workaround: only pop and push if builtin is not sleep
     // sleep is a special case because threads might be swapped out when it is called
     if (this.builtins['sleep'].id !== builtin_id) {
+      //console.log("OS BEFORE: " + globalState.OS)
+      //this.print_OS(globalState.OS)
       pop(globalState.OS) // pop fun
       push(globalState.OS, result)
+      //console.log("OS after: " + globalState.OS)
     }
   }
 
@@ -421,15 +425,16 @@ export class VM {
       throw new Error(`GOCALL expects a function, got: ${fun}`)
     },
     MAKE: instr => {
+      const capacity = this.address_to_TS_value(pop(globalState.OS))
       const idx = globalState.CHANNELARRAY.length
       const [addr, buffer] = this.heapInstance.heap_allocate_Channel(
-        instr.capacity,
-        instr.type,
+        capacity,
+        capacity === 0 ? 0 : instr.type,
         instr.elemType,
         idx
       )
 
-      this.createNewChannel(instr.capacity, idx, buffer)
+      this.createNewChannel(capacity, idx, buffer)
 
       // if it is a mutex, we populate it with 1 UNDEFINED
       if (instr.type === 2) {

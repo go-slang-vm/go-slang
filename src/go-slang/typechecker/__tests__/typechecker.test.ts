@@ -1870,4 +1870,56 @@ describe('Basic typecheck test', () => {
     //console.dir(outputAst, {depth: 100})
     expect(() => typecheck(outputAst)).toThrow("type error in function declaration; expected return type: int, int, int actual return type: null")
   })
+
+  test('basic make channel outside of func body with expr', async () => {
+    const program = `
+        var x, y, z int = 1, 2, 3
+        var a chan int = make(chan int)
+        var b bool = true
+        var c, d chan bool = make(chan bool, 2 + 2 *5 / 4), make(chan bool)
+        func main() {
+        }
+          `
+    const outputAst: ASTNode | null = parse(program)
+    if (!outputAst) {
+      throw new Error('Parsing failed')
+    }
+    expect(() => typecheck(outputAst)).not.toThrow()
+  })
+
+  test('basic make channel outside of func body with expr but wrong type', async () => {
+    const program = `
+        var x, y, z int = 1, 2, 3
+        var a chan int = make(chan int)
+        var b bool = true
+        var c, d chan bool = make(chan bool, 2 + 2 *5 / 4), make(chan bool, "this is a string")
+        func main() {
+        }
+          `
+    const outputAst: ASTNode | null = parse(program)
+    if (!outputAst) {
+      throw new Error('Parsing failed')
+    }
+    expect(() => typecheck(outputAst)).toThrow("type error in make expression; expected return type: int, actual return type: string")
+  })
+
+  test('basic make channel outside of func body with expr but wrong number of ints', async () => {
+    const program = `
+        var x, y, z int = 1, 2, 3
+        var a chan int = make(chan int)
+        var b bool = true
+        var c, d chan bool = make(chan bool, inc()), make(chan bool)
+        func main() {
+        }
+
+        func inc() (int, int) {
+          return 1, 2
+        }
+          `
+    const outputAst: ASTNode | null = parse(program)
+    if (!outputAst) {
+      throw new Error('Parsing failed')
+    }
+    expect(() => typecheck(outputAst)).toThrow("type error in make expression; expected return type: int, actual return type: int, int")
+  })
 })

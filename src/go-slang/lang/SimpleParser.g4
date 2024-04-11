@@ -170,7 +170,7 @@ sendStmt
 // we only allow making channels for now so we make this very restrictive
 // if the comma and DECIMAL_LIT is not present, it is an unbuffered channel
 makeExpr
-    : MAKE L_PAREN channelType (COMMA DECIMAL_LIT)? R_PAREN
+    : MAKE L_PAREN channelType (COMMA expression)? R_PAREN
     ;
 
 expressionList

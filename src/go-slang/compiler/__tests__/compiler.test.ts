@@ -798,9 +798,10 @@ describe('Basic compiler test', () => {
       { tag: 'ASSIGN', pos: [2, 0] },
       { tag: 'POP' },
       { tag: 'LDF', arity: 0, addr: 18 },
-      { tag: 'GOTO', addr: 48 },
+      { tag: 'GOTO', addr: 49 },
       { tag: 'ENTER_SCOPE', num: 1 },
-      { tag: 'MAKE', capacity: 2, type: 1, elemType: 'int' },
+      { tag: 'LDC', val: 2 },
+      { tag: 'MAKE', type: 1, elemType: 'int' },
       { tag: 'ASSIGN', pos: [4, 0] },
       { tag: 'POP' },
       { tag: 'LD', sym: 'inc', pos: [2, 0] },
@@ -885,9 +886,10 @@ describe('Basic compiler test', () => {
       { tag: 'ASSIGN', pos: [2, 0] },
       { tag: 'POP' },
       { tag: 'LDF', arity: 0, addr: 18 },
-      { tag: 'GOTO', addr: 68 },
+      { tag: 'GOTO', addr: 69 },
       { tag: 'ENTER_SCOPE', num: 2 },
-      { tag: 'MAKE', capacity: 5, type: 1, elemType: 'int' },
+      { tag: 'LDC', val: 5 },
+      { tag: 'MAKE', type: 1, elemType: 'int' },
       { tag: 'ASSIGN', pos: [4, 0] },
       { tag: 'POP' },
       { tag: 'LDC', val: 0 },
@@ -896,7 +898,7 @@ describe('Basic compiler test', () => {
       { tag: 'LD', sym: 'i', pos: [4, 1] },
       { tag: 'LDC', val: 5 },
       { tag: 'BINOP', sym: '<' },
-      { tag: 'JOF', addr: 40 },
+      { tag: 'JOF', addr: 41 },
       { tag: 'LD', sym: 'inc', pos: [2, 0] },
       { tag: 'LD', sym: 'input', pos: [4, 0] },
       { tag: 'GOCALL', arity: 1 },
@@ -907,7 +909,7 @@ describe('Basic compiler test', () => {
       { tag: 'BINOP', sym: '+' },
       { tag: 'ASSIGN', pos: [4, 1] },
       { tag: 'POP' },
-      { tag: 'GOTO', addr: 25 },
+      { tag: 'GOTO', addr: 26 },
       { tag: 'LDC', val: undefined },
       { tag: 'POP' },
       { tag: 'LDC', val: 0 },
@@ -916,7 +918,7 @@ describe('Basic compiler test', () => {
       { tag: 'LD', sym: 'i', pos: [4, 1] },
       { tag: 'LDC', val: 5 },
       { tag: 'BINOP', sym: '<' },
-      { tag: 'JOF', addr: 60 },
+      { tag: 'JOF', addr: 61 },
       { tag: 'LD', sym: 'i', pos: [4, 1] },
       { tag: 'LD', sym: 'input', pos: [4, 0] },
       { tag: 'SEND' },
@@ -927,7 +929,7 @@ describe('Basic compiler test', () => {
       { tag: 'BINOP', sym: '+' },
       { tag: 'ASSIGN', pos: [4, 1] },
       { tag: 'POP' },
-      { tag: 'GOTO', addr: 45 },
+      { tag: 'GOTO', addr: 46 },
       { tag: 'LDC', val: undefined },
       { tag: 'POP' },
       { tag: 'LD', sym: 'sleep', pos: [0, 1] },
@@ -985,9 +987,10 @@ describe('Basic compiler test', () => {
       { tag: 'ASSIGN', pos: [2, 0] },
       { tag: 'POP' },
       { tag: 'LDF', arity: 0, addr: 18 },
-      { tag: 'GOTO', addr: 48 },
+      { tag: 'GOTO', addr: 49 },
       { tag: 'ENTER_SCOPE', num: 1 },
-      { tag: 'MAKE', capacity: 2, type: 1, elemType: 'int' },
+      { tag: 'LDC', val: 2 },
+      { tag: 'MAKE', type: 1, elemType: 'int' },
       { tag: 'ASSIGN', pos: [4, 0] },
       { tag: 'POP' },
       { tag: 'LD', sym: 'inc', pos: [2, 0] },
@@ -1065,9 +1068,10 @@ describe('Basic compiler test', () => {
       { tag: 'ASSIGN', pos: [2, 0] },
       { tag: 'POP' },
       { tag: 'LDF', arity: 0, addr: 18 },
-      { tag: 'GOTO', addr: 48 },
+      { tag: 'GOTO', addr: 49 },
       { tag: 'ENTER_SCOPE', num: 1 },
-      { tag: 'MAKE', capacity: 0, type: 0, elemType: 'int' },
+      { tag: 'LDC', val: 0 },
+      { tag: 'MAKE', type: 0, elemType: 'int' },
       { tag: 'ASSIGN', pos: [4, 0] },
       { tag: 'POP' },
       { tag: 'LD', sym: 'inc', pos: [2, 0] },
@@ -1145,9 +1149,10 @@ describe('Basic compiler test', () => {
       { tag: 'ASSIGN', pos: [2, 0] },
       { tag: 'POP' },
       { tag: 'LDF', arity: 0, addr: 18 },
-      { tag: 'GOTO', addr: 48 },
+      { tag: 'GOTO', addr: 49 },
       { tag: 'ENTER_SCOPE', num: 1 },
-      { tag: 'MAKE', capacity: 0, type: 0, elemType: 'int' },
+      { tag: 'LDC', val: 0 },
+      { tag: 'MAKE',  type: 1, elemType: 'int' },
       { tag: 'ASSIGN', pos: [4, 0] },
       { tag: 'POP' },
       { tag: 'LD', sym: 'inc', pos: [2, 0] },
@@ -1367,14 +1372,18 @@ describe('Basic compiler test', () => {
     const expectedInstr: any[] = [
       { tag: 'ENTER_SCOPE', num: 1 },
       { tag: 'LDF', arity: 0, addr: 3 },
-      { tag: 'GOTO', addr: 26 },
+      { tag: 'GOTO', addr: 30 },
       { tag: 'ENTER_SCOPE', num: 4 },
-      { tag: 'MAKE', capacity: 1, type: 2, elemType: 'mutex' },
+      { tag: 'LDC', val: 1 },
+      { tag: 'MAKE',  type: 2, elemType: 'mutex' },
       { tag: 'ASSIGN', pos: [4, 0] },
       { tag: 'POP' },
-      { tag: 'MAKE', capacity: 1, type: 2, elemType: 'mutex' },
-      { tag: 'MAKE', capacity: 1, type: 2, elemType: 'mutex' },
-      { tag: 'MAKE', capacity: 1, type: 2, elemType: 'mutex' },
+      { tag: 'LDC', val: 1 },
+      { tag: 'MAKE', type: 2, elemType: 'mutex' },
+      { tag: 'LDC', val: 1 },
+      { tag: 'MAKE',  type: 2, elemType: 'mutex' },
+      { tag: 'LDC', val: 1 },
+      { tag: 'MAKE', type: 2, elemType: 'mutex' },
       { tag: 'ASSIGN', pos: [4, 3] },
       { tag: 'POP' },
       { tag: 'ASSIGN', pos: [4, 2] },
@@ -1398,6 +1407,177 @@ describe('Basic compiler test', () => {
       { tag: 'EXIT_SCOPE' },
       { tag: 'DONE' }
     ]
+    const inputAst: ASTNode | null = parse(program)
+    if (!inputAst) {
+      throw new Error('Parsing failed')
+    }
+    const outputInstr: any[] = compile_program(inputAst)
+    expect(outputInstr).toStrictEqual(expectedInstr)
+  })
+
+  test('basic make statment for buffered channels with expression as capacity', async () => {
+    const program = `
+    func inc(output chan int) {
+      msg int := <-output
+      Println(msg)
+    }
+    func main() {
+      input chan int := make(chan int, (1 + 5)/ 2)
+      go inc(input)
+      go inc(input)
+      input <- 1
+      input <- 2
+      sleep(40)
+    }`
+
+    const expectedInstr: any[] = [
+      { tag: 'ENTER_SCOPE', num: 2 },
+      { tag: 'LDF', arity: 1, addr: 3 },
+      { tag: 'GOTO', addr: 14 },
+      { tag: 'ENTER_SCOPE', num: 1 },
+      { tag: 'LD', sym: 'output', pos: [3, 0] },
+      { tag: 'RECV' },
+      { tag: 'ASSIGN', pos: [4, 0] },
+      { tag: 'POP' },
+      { tag: 'LD', sym: 'Println', pos: [0, 0] },
+      { tag: 'LD', sym: 'msg', pos: [4, 0] },
+      { tag: 'CALL', arity: 1 },
+      { tag: 'EXIT_SCOPE' },
+      { tag: 'LDC', val: undefined },
+      { tag: 'RESET' },
+      { tag: 'ASSIGN', pos: [2, 0] },
+      { tag: 'POP' },
+      { tag: 'LDF', arity: 0, addr: 18 },
+      { tag: 'GOTO', addr: 53 },
+      { tag: 'ENTER_SCOPE', num: 1 },
+      { tag: 'LDC', val: 1 },
+      { tag: 'LDC', val: 5 },
+      { tag: 'BINOP', sym: '+' },
+      { tag: 'LDC', val: 2 },
+      { tag: 'BINOP', sym: '/' },
+      { tag: 'MAKE', type: 1, elemType: 'int' },
+      { tag: 'ASSIGN', pos: [4, 0] },
+      { tag: 'POP' },
+      { tag: 'LD', sym: 'inc', pos: [2, 0] },
+      { tag: 'LD', sym: 'input', pos: [4, 0] },
+      { tag: 'GOCALL', arity: 1 },
+      { tag: 'LDC', val: undefined },
+      { tag: 'POP' },
+      { tag: 'LD', sym: 'inc', pos: [2, 0] },
+      { tag: 'LD', sym: 'input', pos: [4, 0] },
+      { tag: 'GOCALL', arity: 1 },
+      { tag: 'LDC', val: undefined },
+      { tag: 'POP' },
+      { tag: 'LDC', val: 1 },
+      { tag: 'LD', sym: 'input', pos: [4, 0] },
+      { tag: 'SEND' },
+      { tag: 'LDC', val: undefined },
+      { tag: 'POP' },
+      { tag: 'LDC', val: 2 },
+      { tag: 'LD', sym: 'input', pos: [4, 0] },
+      { tag: 'SEND' },
+      { tag: 'LDC', val: undefined },
+      { tag: 'POP' },
+      { tag: 'LD', sym: 'sleep', pos: [0, 1] },
+      { tag: 'LDC', val: 40 },
+      { tag: 'CALL', arity: 1 },
+      { tag: 'EXIT_SCOPE' },
+      { tag: 'LDC', val: undefined },
+      { tag: 'RESET' },
+      { tag: 'ASSIGN', pos: [2, 1] },
+      { tag: 'POP' },
+      { tag: 'LD', sym: 'main', pos: [2, 1] },
+      { tag: 'CALL', arity: 0 },
+      { tag: 'EXIT_SCOPE' },
+      { tag: 'DONE' }
+    ]
+
+    const inputAst: ASTNode | null = parse(program)
+    if (!inputAst) {
+      throw new Error('Parsing failed')
+    }
+    const outputInstr: any[] = compile_program(inputAst)
+    expect(outputInstr).toStrictEqual(expectedInstr)
+  })
+
+
+  test('basic make statment for unbuffered channels with capacity = 0 as expression', async () => {
+    const program = `
+    func inc(output chan int) {
+      msg int := <-output
+      Println(msg)
+    }
+    func main() {
+      input chan int := make(chan int, 5-6+1)
+      go inc(input)
+      go inc(input)
+      input <- 1
+      input <- 2
+      sleep(40)
+    }`
+
+    const expectedInstr: any[] = [
+      { tag: 'ENTER_SCOPE', num: 2 },
+      { tag: 'LDF', arity: 1, addr: 3 },
+      { tag: 'GOTO', addr: 14 },
+      { tag: 'ENTER_SCOPE', num: 1 },
+      { tag: 'LD', sym: 'output', pos: [3, 0] },
+      { tag: 'RECV' },
+      { tag: 'ASSIGN', pos: [4, 0] },
+      { tag: 'POP' },
+      { tag: 'LD', sym: 'Println', pos: [0, 0] },
+      { tag: 'LD', sym: 'msg', pos: [4, 0] },
+      { tag: 'CALL', arity: 1 },
+      { tag: 'EXIT_SCOPE' },
+      { tag: 'LDC', val: undefined },
+      { tag: 'RESET' },
+      { tag: 'ASSIGN', pos: [2, 0] },
+      { tag: 'POP' },
+      { tag: 'LDF', arity: 0, addr: 18 },
+      { tag: 'GOTO', addr: 53 },
+      { tag: 'ENTER_SCOPE', num: 1 },
+      { tag: 'LDC', val: 5 },
+      { tag: 'LDC', val: 6 },
+      { tag: 'BINOP', sym: '-' },
+      { tag: 'LDC', val: 1 },
+      { tag: 'BINOP', sym: '+' },
+      { tag: 'MAKE',  type: 1, elemType: 'int' },
+      { tag: 'ASSIGN', pos: [4, 0] },
+      { tag: 'POP' },
+      { tag: 'LD', sym: 'inc', pos: [2, 0] },
+      { tag: 'LD', sym: 'input', pos: [4, 0] },
+      { tag: 'GOCALL', arity: 1 },
+      { tag: 'LDC', val: undefined },
+      { tag: 'POP' },
+      { tag: 'LD', sym: 'inc', pos: [2, 0] },
+      { tag: 'LD', sym: 'input', pos: [4, 0] },
+      { tag: 'GOCALL', arity: 1 },
+      { tag: 'LDC', val: undefined },
+      { tag: 'POP' },
+      { tag: 'LDC', val: 1 },
+      { tag: 'LD', sym: 'input', pos: [4, 0] },
+      { tag: 'SEND' },
+      { tag: 'LDC', val: undefined },
+      { tag: 'POP' },
+      { tag: 'LDC', val: 2 },
+      { tag: 'LD', sym: 'input', pos: [4, 0] },
+      { tag: 'SEND' },
+      { tag: 'LDC', val: undefined },
+      { tag: 'POP' },
+      { tag: 'LD', sym: 'sleep', pos: [0, 1] },
+      { tag: 'LDC', val: 40 },
+      { tag: 'CALL', arity: 1 },
+      { tag: 'EXIT_SCOPE' },
+      { tag: 'LDC', val: undefined },
+      { tag: 'RESET' },
+      { tag: 'ASSIGN', pos: [2, 1] },
+      { tag: 'POP' },
+      { tag: 'LD', sym: 'main', pos: [2, 1] },
+      { tag: 'CALL', arity: 0 },
+      { tag: 'EXIT_SCOPE' },
+      { tag: 'DONE' }
+    ]
+
     const inputAst: ASTNode | null = parse(program)
     if (!inputAst) {
       throw new Error('Parsing failed')

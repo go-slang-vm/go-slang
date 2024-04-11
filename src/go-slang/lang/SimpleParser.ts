@@ -1707,7 +1707,7 @@ export class SimpleParser extends GoParserBase {
 				this.state = 286;
 				this.match(SimpleParser.COMMA);
 				this.state = 287;
-				this.match(SimpleParser.DECIMAL_LIT);
+				this.expression(0);
 				}
 			}
 
@@ -2268,7 +2268,7 @@ export class SimpleParser extends GoParserBase {
 		"\u01185\x03\x02\x02\x02\u0119\u011A\x05&\x14\x02\u011A\u011B\x07I\x02" +
 		"\x02\u011B\u011C\x05&\x14\x02\u011C7\x03\x02\x02\x02\u011D\u011E\x07\x1C" +
 		"\x02\x02\u011E\u011F\x07%\x02\x02\u011F\u0122\x05\x1E\x10\x02\u0120\u0121" +
-		"\x07,\x02\x02\u0121\u0123\x07J\x02\x02\u0122\u0120\x03\x02\x02\x02\u0122" +
+		"\x07,\x02\x02\u0121\u0123\x05&\x14\x02\u0122\u0120\x03\x02\x02\x02\u0122" +
 		"\u0123\x03\x02\x02\x02\u0123\u0124\x03\x02\x02\x02\u0124\u0125\x07&\x02" +
 		"\x02\u01259\x03\x02\x02\x02\u0126\u012B\x05&\x14\x02\u0127\u0128\x07," +
 		"\x02\x02\u0128\u012A\x05&\x14\x02\u0129\u0127\x03\x02\x02\x02\u012A\u012D" +
@@ -3641,7 +3641,9 @@ export class MakeExprContext extends ParserRuleContext {
 	}
 	public R_PAREN(): TerminalNode { return this.getToken(SimpleParser.R_PAREN, 0); }
 	public COMMA(): TerminalNode | undefined { return this.tryGetToken(SimpleParser.COMMA, 0); }
-	public DECIMAL_LIT(): TerminalNode | undefined { return this.tryGetToken(SimpleParser.DECIMAL_LIT, 0); }
+	public expression(): ExpressionContext | undefined {
+		return this.tryGetRuleContext(0, ExpressionContext);
+	}
 	constructor(parent: ParserRuleContext | undefined, invokingState: number) {
 		super(parent, invokingState);
 	}
