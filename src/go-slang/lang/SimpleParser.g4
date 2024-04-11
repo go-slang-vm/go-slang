@@ -69,7 +69,6 @@ type_
     : INT
     | BOOL
     | STRING
-    | FLOAT
     | channelType
     | MUTEX
     | WAITGROUP
@@ -128,7 +127,6 @@ operandName
 literal
     : NIL_LIT
     | DECIMAL_LIT
-    | FLOAT_LIT
     | string_
     | functionLit
     ;

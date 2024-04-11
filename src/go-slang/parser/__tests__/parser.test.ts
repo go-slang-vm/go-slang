@@ -217,7 +217,7 @@ describe('Basic parser test', () => {
       }
     }`
     expect(() => parse(program, createContext(), true)).toThrow(
-      "Syntax Error at line 4, col 13: extraneous input '=' expecting {'func', 'make', 'nil', IDENTIFIER, '(', '!', '-', '<-', DECIMAL_LIT, FLOAT_LIT, RAW_STRING_LIT, INTERPRETED_STRING_LIT}"
+      "Syntax Error at line 4, col 13: extraneous input '=' expecting {'func', 'make', 'nil', IDENTIFIER, '(', '!', '-', '<-', DECIMAL_LIT, RAW_STRING_LIT, INTERPRETED_STRING_LIT}"
     )
   })
 
@@ -231,7 +231,7 @@ describe('Basic parser test', () => {
     }`
 
     expect(() => parse(program, createContext(), true)).toThrow(
-      "Syntax Error at line 4, col 13: extraneous input '=' expecting {'func', 'make', 'nil', IDENTIFIER, '(', '!', '-', '<-', DECIMAL_LIT, FLOAT_LIT, RAW_STRING_LIT, INTERPRETED_STRING_LIT}"
+      "Syntax Error at line 4, col 13: extraneous input '=' expecting {'func', 'make', 'nil', IDENTIFIER, '(', '!', '-', '<-', DECIMAL_LIT, RAW_STRING_LIT, INTERPRETED_STRING_LIT}"
     )
   })
 
@@ -330,7 +330,7 @@ describe('Basic parser test', () => {
     const program = `
     func main(){
       var x int = 1
-      var y float = 1
+      var y int = 1
       var b bool = false
       var s string = "hello"
       var a, b, c int = 1, 2, 3
@@ -364,7 +364,7 @@ describe('Basic parser test', () => {
                     tag: 'let',
                     syms: { tag: 'idents', IDENTS: ['y'] },
                     assignments: { tag: 'exprlist', list: [{ tag: 'lit', val: 1 }] },
-                    type: 'float'
+                    type: 'int'
                   },
                   {
                     tag: 'let',
@@ -412,6 +412,7 @@ describe('Basic parser test', () => {
       }
     }
     const outputAst: ASTNode | null = parse(program, createContext(), true)
+    console.log(JSON.stringify(outputAst))
     expect(outputAst).toStrictEqual(expectedAst)
   })
 
@@ -419,7 +420,7 @@ describe('Basic parser test', () => {
     const program = `
     func main(){
       x int := 1
-      y float := 1
+      y int := 1
       b bool := false
       s string := "hello"
       a, b, c int := 1, 2, 3
@@ -453,7 +454,7 @@ describe('Basic parser test', () => {
                     tag: 'let',
                     syms: { tag: 'idents', IDENTS: ['y'] },
                     assignments: { tag: 'exprlist', list: [{ tag: 'lit', val: 1 }] },
-                    type: 'float'
+                    type: 'int'
                   },
                   {
                     tag: 'let',
@@ -508,7 +509,7 @@ describe('Basic parser test', () => {
     const program = `
     func main(){
       var x int = 1
-      y float := 1
+      y int := 1
       var b bool = false
       var s string = "hello"
       a, bb, c int := 1, 2, 3
@@ -542,7 +543,7 @@ describe('Basic parser test', () => {
                     tag: 'let',
                     syms: { tag: 'idents', IDENTS: ['y'] },
                     assignments: { tag: 'exprlist', list: [{ tag: 'lit', val: 1 }] },
-                    type: 'float'
+                    type: 'int'
                   },
                   {
                     tag: 'let',

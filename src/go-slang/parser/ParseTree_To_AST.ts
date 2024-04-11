@@ -246,8 +246,6 @@ export class ParseTree_To_AST implements SimpleParserVisitor<ASTNode> {
     let type = undefined;
     if (ctx.BOOL()) {
       type = "bool";
-    } else if (ctx.FLOAT()) {
-      type = "float";
     } else if (ctx.INT()) {
       type = "int";
     } else if (ctx.STRING()) {
@@ -588,8 +586,6 @@ export class ParseTree_To_AST implements SimpleParserVisitor<ASTNode> {
 
     if ((k = ctx.NIL_LIT())) {
       ret.val = this.visitTerminal(k);
-    } else if ((k = ctx.FLOAT_LIT())) {
-      ret.val = parseFloat(this.visitTerminal(k));
     } else if ((k = ctx.string_())) {
       // string node is strange
       let str = k.RAW_STRING_LIT()
