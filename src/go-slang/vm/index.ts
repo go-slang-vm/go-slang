@@ -152,6 +152,7 @@ export class VM {
     globalState.ALLOCATING = []
     globalState.THREADQUEUE = []
     globalState.CHANNELARRAY = []
+    globalState.GOALLOCATING = []
 
     this.heapInstance.heap = this.heapInstance.heap_make(heapsize_words)
     this.heapInstance.heap_size = heapsize_words
@@ -393,6 +394,7 @@ export class VM {
       if (this.heapInstance.is_Closure(fun)) {
         // store our function in the heap
         const newFrame = this.heapInstance.heap_allocate_Frame(arity)
+        globalState.GOALLOCATING.push(newFrame)
         for (let i = arity - 1; i >= 0; i--) {
           this.heapInstance.heap_set_child(newFrame, i, pop(globalState.OS))
         }
@@ -401,9 +403,11 @@ export class VM {
         const newPC = this.heapInstance.heap_get_Closure_pc(fun)
 
         const newRTS: any[] = []
+        const newRTSFrame = this.heapInstance.heap_allocate_Callframe(globalState.E, this.lastInstructionIndex)
+        globalState.GOALLOCATING.push(newRTSFrame)
         push(
           newRTS,
-          this.heapInstance.heap_allocate_Callframe(globalState.E, this.lastInstructionIndex)
+          newRTSFrame
         )
 
         const newThread: Thread = new Thread(
@@ -419,6 +423,7 @@ export class VM {
           -1 // sleepEndTime
         )
         globalState.THREADQUEUE.push(newThread)
+        globalState.GOALLOCATING = []
         return
       }
 

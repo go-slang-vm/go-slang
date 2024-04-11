@@ -6,6 +6,7 @@ export class GlobalState {
   E: number = 0
   RTS: number[] = []
   ALLOCATING: number[] = []
+  GOALLOCATING: number[] = []
   THREADQUEUE: Thread[] = []
   CHANNELARRAY: Channel[] = []
   BLOCKEDQUEUE: { [key: number]: Set<Thread> } = {}
