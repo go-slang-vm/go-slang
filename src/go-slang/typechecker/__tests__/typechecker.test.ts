@@ -7,7 +7,7 @@ describe('Basic typecheck test', () => {
         var x, y, z int = 1, 2, 3
         var a string = "hello"
         var b bool = true
-        var f float = 1.1
+        var f int = 1
         var mut1,mut2 Mutex = mutex
         var wg WaitGroup = mutex
         var xx int = x
@@ -27,7 +27,7 @@ describe('Basic typecheck test', () => {
         var x, y, z int = 1, 2, 3
         a string := "hello"
         var b bool = true
-        var f float = 1.1
+        var f int = 1
         var mut1,mut2 Mutex = mutex
         var wg WaitGroup = mutex
         xx int := x
@@ -45,7 +45,7 @@ describe('Basic typecheck test', () => {
         var x, y, z int = 1, 2, 3
         var a string = 1
         var b bool = true
-        var f float = 1.1
+        var f int = 1
         func main() {
         }
           `
@@ -63,7 +63,7 @@ describe('Basic typecheck test', () => {
         var x, y, z int = 1, 2, 3
         a string := "hello"
         var b bool = 1
-        var f float = 1.1
+        var f int = 1
       }
         `
     const outputAst: ASTNode | null = parse(program)
@@ -79,7 +79,7 @@ describe('Basic typecheck test', () => {
     const program = `
         var x, y, z int = 1, 2
         var b bool = true
-        var f float = 1.1
+        var f int = 1
         func main() {
         }
           `
@@ -97,7 +97,7 @@ describe('Basic typecheck test', () => {
       func main() {
         var x, y, z int = 1, 2
         a string := "hello"
-        var f float = 1.1
+        var f int = 1
       }
         `
     const outputAst: ASTNode | null = parse(program)
@@ -113,7 +113,7 @@ describe('Basic typecheck test', () => {
     const program = `
         var x, y, z int = 1, 2, 3, 4
         var b bool = true
-        var f float = 1.1
+        var f int = 1
         func main() {
         }
           `
@@ -131,7 +131,7 @@ describe('Basic typecheck test', () => {
       func main() {
         var x, y, z int = 1, 2, 3, 4
         a string := "hello"
-        var f float = 1.1
+        var f int = 1
       }
         `
     const outputAst: ASTNode | null = parse(program)
@@ -151,7 +151,7 @@ describe('Basic typecheck test', () => {
         func main() {
           var x, y, z int = inc(), 2, 3
           a string := "hello"
-          var f float = 1.1
+          var f int = 1
         }
           `
     const outputAst: ASTNode | null = parse(program)
@@ -169,7 +169,7 @@ describe('Basic typecheck test', () => {
         func main() {
           var x, y, z int = inc()
           a string := "hello"
-          var f float = 1.1
+          var f int = 1
         }
           `
     const outputAst: ASTNode | null = parse(program)
@@ -188,7 +188,7 @@ describe('Basic typecheck test', () => {
         func main() {
           var x, y, z int = inc()
           a string := "hello"
-          var f float = 1.1
+          var f int = 1
         }
           `
     const outputAst: ASTNode | null = parse(program)
@@ -205,7 +205,7 @@ describe('Basic typecheck test', () => {
         func main() {
           var x, y, z int = inc()
           a string := "hello"
-          var f float = 1.1
+          var f int = 1
         }
           `
     const outputAst: ASTNode | null = parse(program)
@@ -224,7 +224,7 @@ describe('Basic typecheck test', () => {
         func main() {
           var x, y, z int = inc()
           a string := "hello"
-          var f float = 1.1
+          var f int = 1
         }
           `
     const outputAst: ASTNode | null = parse(program)
@@ -245,7 +245,7 @@ describe('Basic typecheck test', () => {
         func main() {
           var x, y, z int = inc()
           a string := "hello"
-          var f float = 1.1
+          var f int = 1
         }
           `
     const outputAst: ASTNode | null = parse(program)
@@ -268,7 +268,7 @@ describe('Basic typecheck test', () => {
         func main() {
           var x, y, z int = inc(), 2, 3
           a string := "hello"
-          var f float = 1.1
+          var f int = 1
         }
           `
     const outputAst: ASTNode | null = parse(program)
@@ -292,7 +292,7 @@ describe('Basic typecheck test', () => {
         func main() {
           var x, y, z int = inc()
           a string := "hello"
-          var f float = 1.1
+          var f int = 1
         }
           `
     const outputAst: ASTNode | null = parse(program)
@@ -315,7 +315,7 @@ describe('Basic typecheck test', () => {
         func main() {
           var x, y, z int = inc()
           a string := "hello"
-          var f float = 1.1
+          var f int = 1
         }
           `
     const outputAst: ASTNode | null = parse(program)
@@ -344,7 +344,7 @@ describe('Basic typecheck test', () => {
         func main() {
           var x, y, z int = inc()
           a string := "hello"
-          var f float = 1.1
+          var f int = 1
         }
           `
     const outputAst: ASTNode | null = parse(program)
@@ -371,7 +371,7 @@ describe('Basic typecheck test', () => {
         func main() {
           var x, y, z int = inc()
           a string := "hello"
-          var f float = 1.1
+          var f int = 1
         }
           `
     const outputAst: ASTNode | null = parse(program)
@@ -396,7 +396,7 @@ describe('Basic typecheck test', () => {
         func main() {
           var x, y, z int = inc()
           a string := "hello"
-          var f float = 1.1
+          var f int = 1
         }
           `
     const outputAst: ASTNode | null = parse(program)
@@ -423,7 +423,7 @@ describe('Basic typecheck test', () => {
         func main() {
           var x, y, z int = inc()
           a string := "hello"
-          var f float = 1.1
+          var f int = 1
         }
           `
     const outputAst: ASTNode | null = parse(program)
@@ -443,7 +443,7 @@ describe('Basic typecheck test', () => {
             return a,b,c
           }(1,2,3)
           a string := "hello"
-          var f float = 1.1
+          var f int = 1
         }
           `
     const outputAst: ASTNode | null = parse(program)
@@ -463,7 +463,7 @@ describe('Basic typecheck test', () => {
             return a,b,c
           }(1,2,3)
           a string := "hello"
-          var f float = 1.1
+          var f int = 1
         }
           `
     const outputAst: ASTNode | null = parse(program)
@@ -483,7 +483,7 @@ describe('Basic typecheck test', () => {
             return a,b,c
           }(1,2,"world")
           a string := "hello"
-          var f float = 1.1
+          var f int = 1
         }
           `
     const outputAst: ASTNode | null = parse(program)
@@ -642,14 +642,14 @@ describe('Basic typecheck test', () => {
         var x, y, z int = 1, 2, 3
         var a string = "hello"
         var b bool = true
-        var f float = 1.1
+        var f int = 1
         var mut1,mut2 Mutex = mutex
         var wg1, wg2 WaitGroup = mutex
         var xx int = x
         func main() {
           x = 2
           a = "world"
-          y,z,b,f,mut1, wg1, wg2 = x, 6, false, 3.3, mut2, wg2, wg1
+          y,z,b,f,mut1, wg1, wg2 = x, 6, false, 3, mut2, wg2, wg1
         }
           `
     const outputAst: ASTNode | null = parse(program)
@@ -665,14 +665,14 @@ describe('Basic typecheck test', () => {
         var x, y, z int = 1, 2, 3
         a string := "hello"
         var b bool = true
-        var f float = 1.1
+        var f int = 1
         var mut1,mut2 Mutex = mutex
         var wg1,wg2 WaitGroup = mutex
         xx int := x
 
         x = 2
         a = "world"
-        y,z,b,f,mut1, wg1, wg2 = x, 6, false, 3.3, mut2, wg2, wg1
+        y,z,b,f,mut1, wg1, wg2 = x, 6, false, 3, mut2, wg2, wg1
       }
         `
     const outputAst: ASTNode | null = parse(program)
@@ -687,13 +687,13 @@ describe('Basic typecheck test', () => {
         var x, y, z int = 1, 2, 3
         var a string = "hello"
         var b bool = true
-        var f float = 1.1
+        var f int = 1
         var mut1,mut2 Mutex = mutex
         var wg1,wg2 WaitGroup = mutex
         func main() {
           x = 2
           a = "world"
-          y,z,b,f,mut1 = x, 6, false, 3.3, wg2
+          y,z,b,f,mut1 = x, 6, false, 3, wg2
         }
           `
     const outputAst: ASTNode | null = parse(program)
@@ -712,13 +712,13 @@ describe('Basic typecheck test', () => {
           var x, y, z int = 1, 2, 3
           var a string = "hello"
           var b bool = true
-          var f float = 1.1
+          var f int = 1
           var mut1,mut2 Mutex = mutex
           var wg1,wg2 WaitGroup = mutex
 
           x = 2
           a = "world"
-          y,z,b,f,mut1 = x, 6, false, 3.3, wg2
+          y,z,b,f,mut1 = x, 6, false, 3, wg2
         }
           `
     const outputAst: ASTNode | null = parse(program)
@@ -734,7 +734,7 @@ describe('Basic typecheck test', () => {
     const program = `
         var x, y int = 1, 2
         var b bool = true
-        var f float = 1.1
+        var f int = 1
         func main() {
           x, b, f = 10
         }
@@ -751,7 +751,7 @@ describe('Basic typecheck test', () => {
       func main() {
         var x, y int = 1, 2
         a string := "hello"
-        var f float = 1.1
+        var f int = 1
 
         x, y = 3
       }
@@ -767,7 +767,7 @@ describe('Basic typecheck test', () => {
     const program = `
       var x, y, z int = 1, 2, 3
       var b bool = true
-      var f float = 1.1
+      var f int = 1
       func main() {
         x,y,z = 10, 90, 99, 1000
       }
@@ -784,7 +784,7 @@ describe('Basic typecheck test', () => {
     func main() {
       var x, y, z int = 1, 2, 3
       a string := "hello"
-      var f float = 1.1
+      var f int = 1
       x,y,z = 10, 90, 99, 1000
     }
       `
@@ -803,14 +803,14 @@ describe('Basic typecheck test', () => {
         var x, y, z int = 1, 2, 3
         var a string = "hello"
         var b bool = true
-        var f float = 1.1
+        var f int = 1
         var mut1,mut2 Mutex = mutex
         var wg1, wg2 WaitGroup = mutex
         var xx int = x
         func main() {
           x = 2
           a = "world"
-          b,f,x,y,z,mut1, wg1, wg2 = false, 3.3, inc(), mut2, wg2, wg1
+          b,f,x,y,z,mut1, wg1, wg2 = false, 3, inc(), mut2, wg2, wg1
         }
           `
     const outputAst: ASTNode | null = parse(program)
@@ -828,14 +828,14 @@ describe('Basic typecheck test', () => {
         var x, y, z int = 1, 2, 3
         var a string = "hello"
         var b bool = true
-        var f float = 1.1
+        var f int = 1
         var mut1,mut2 Mutex = mutex
         var wg1, wg2 WaitGroup = mutex
         var xx int = x
         func main() {
           x = 2
           a = "world"
-          b,f,x,y,mut1, wg1, wg2 = false, 3.3, inc(), mut2, wg2, wg1
+          b,f,x,y,mut1, wg1, wg2 = false, 3, inc(), mut2, wg2, wg1
         }
           `
     const outputAst: ASTNode | null = parse(program)
@@ -1447,7 +1447,7 @@ describe('Basic typecheck test', () => {
         func main() {
           var x, y, z int = inc(), 2, 3
           a string := "hello"
-          var f float = 1.1
+          var f int = 1
         }
           `
     const outputAst: ASTNode | null = parse(program)
@@ -1471,7 +1471,7 @@ describe('Basic typecheck test', () => {
         func main() {
           var x, y, z int = inc(), 2, 3
           a string := "hello"
-          var f float = 1.1
+          var f int = 1
         }
           `
     const outputAst: ASTNode | null = parse(program)
@@ -1495,7 +1495,7 @@ describe('Basic typecheck test', () => {
         func main() {
           var x, y, z int = inc(), 2, 3
           a string := "hello"
-          var f float = 1.1
+          var f int = 1
         }
           `
     const outputAst: ASTNode | null = parse(program)
@@ -1643,7 +1643,7 @@ describe('Basic typecheck test', () => {
         func main() {
           var x, y, z int = inc("hi")
           a string := "hello"
-          var f float = 1.1
+          var f int = 1
         }
           `
     const outputAst: ASTNode | null = parse(program)
@@ -1663,7 +1663,7 @@ describe('Basic typecheck test', () => {
         func main() {
           <- inc(1, 2)
           a string := "hello"
-          var f float = 1.1
+          var f int = 1
         }
           `
     const outputAst: ASTNode | null = parse(program)
@@ -1683,7 +1683,7 @@ describe('Basic typecheck test', () => {
         func main() {
           inc(1,2) <- 1
           a string := "hello"
-          var f float = 1.1
+          var f int = 1
         }
           `
     const outputAst: ASTNode | null = parse(program)
@@ -1704,7 +1704,7 @@ describe('Basic typecheck test', () => {
           var c chan int = make(chan int, 5)
           c <- inc(1,2)
           a string := "hello"
-          var f float = 1.1
+          var f int = 1
         }
           `
     const outputAst: ASTNode | null = parse(program)
@@ -1788,7 +1788,7 @@ describe('Basic typecheck test', () => {
         func main() {
           var x, y, z int = inc()
           a string := "hello"
-          var f float = 1.1
+          var f int = 1
         }
           `
     const outputAst: ASTNode | null = parse(program)
@@ -1812,7 +1812,7 @@ describe('Basic typecheck test', () => {
         func main() {
           var x, y, z int = inc()
           a string := "hello"
-          var f float = 1.1
+          var f int = 1
         }
           `
     const outputAst: ASTNode | null = parse(program)
@@ -1836,7 +1836,7 @@ describe('Basic typecheck test', () => {
         func main() {
           var x, y, z int = inc()
           a string := "hello"
-          var f float = 1.1
+          var f int = 1
         }
           `
     const outputAst: ASTNode | null = parse(program)
@@ -1860,7 +1860,7 @@ describe('Basic typecheck test', () => {
         func main() {
           var x, y, z int = inc()
           a string := "hello"
-          var f float = 1.1
+          var f int = 1
         }
           `
     const outputAst: ASTNode | null = parse(program)

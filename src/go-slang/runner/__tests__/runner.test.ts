@@ -814,7 +814,7 @@ describe('Runner tests', () => {
         func main() {
           var x, y, z int = inc()
           a string := "hello"
-          var f float = 1.1
+          var f int = 1
         }
           `
     boilerplateTest(
@@ -830,7 +830,7 @@ describe('Runner tests', () => {
         func main() {
           var x, y, z int = inc()
           a string := "hello"
-          var f float = 1.1
+          var f int = 1
         }
         func inc() (int, int, int) {
           x int:= 1

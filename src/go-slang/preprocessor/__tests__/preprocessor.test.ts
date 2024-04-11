@@ -855,7 +855,7 @@ describe('Basic compiler test', () => {
                   tag: 'make',
                   chanType: 'chan int',
                   buffered: false,
-                  capacity: 0
+                  capacity: { tag: 'lit', val: 0 }
                 }
               ]
             },
@@ -1008,7 +1008,7 @@ describe('Basic compiler test', () => {
                   tag: 'make',
                   chanType: 'chan int',
                   buffered: false,
-                  capacity: 0
+                  capacity: { tag: 'lit', val: 0 }
                 }
               ]
             },
