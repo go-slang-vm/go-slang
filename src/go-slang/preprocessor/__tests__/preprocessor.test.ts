@@ -1045,4 +1045,21 @@ describe('Basic compiler test', () => {
     expect(() => preprocess(inputAst)).not.toThrow('initialization cycle present')
     expect(outputAst).toStrictEqual(expectedAst)
   })
+
+  test("test no main function defined", async()=> {
+    const program = `
+    func inc() {
+      x int := y+7
+      x = x * 2
+      Println(x)
+    }
+    var y int = 4
+    `
+
+    const inputAst: ASTNode | null = parse(program)
+    if (!inputAst) {
+      throw new Error('Parsing failed')
+    }
+    expect(() => preprocess(inputAst)).toThrow('main function must be declared!')
+  })
 })

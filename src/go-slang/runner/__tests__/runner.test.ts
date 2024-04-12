@@ -868,7 +868,7 @@ describe('Runner tests', () => {
     var y int = 4
     `
 
-    boilerplateTest(code, "unbound name: main", true, 200000)
+    boilerplateTest(code, "main function must be declared!", true, 200000)
   })
 
   // should print 6
