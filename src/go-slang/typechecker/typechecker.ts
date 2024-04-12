@@ -87,6 +87,13 @@ const type_comp = {
     // for const/var declaration we also need to check that the aritys match up
     fun:
         (comp: FuncDeclNode, te: any) => {
+
+            if (comp.sym === "main") {
+                if (comp.type.paramTypes.length > 0) {
+                    throw new Error("type error in main function declaration; main should take no parameters!")
+                }
+            }
+
             const extended_te = extend_type_environment(
                 comp.prms,
                 comp.type.paramTypes,

@@ -1922,4 +1922,23 @@ describe('Basic typecheck test', () => {
     }
     expect(() => typecheck(outputAst)).toThrow("type error in make expression; expected return type: int, actual return type: int, int")
   })
+
+  test('basic main function with parameters', async () => {
+    const program = `
+        var x, y, z int = 1, 2, 3
+        var a chan int = make(chan int)
+        var b bool = true
+        func main(x, y int) {
+        }
+
+        func inc() (int, int) {
+          return 1, 2
+        }
+          `
+    const outputAst: ASTNode | null = parse(program)
+    if (!outputAst) {
+      throw new Error('Parsing failed')
+    }
+    expect(() => typecheck(outputAst)).toThrow("type error in main function declaration; main should take no parameters!")
+  })
 })
