@@ -960,4 +960,20 @@ describe('Runner tests', () => {
 
     boilerplateTest(code, "Cannot run builtin functions in seperate Go Call!", true)
   })
+
+  test('basic main function with parameters should throw error', async () => {
+    const code = `
+        var x, y, z int = 1, 2, 3
+        var a chan int = make(chan int)
+        var b bool = true
+        func main(x, y int) {
+        }
+
+        func inc() (int, int) {
+          return 1, 2
+        }
+          `
+
+    boilerplateTest(code, "type error in main function declaration; main should take no parameters!", true) 
+  })
 })
