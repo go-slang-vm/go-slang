@@ -93,7 +93,7 @@ const type_comp = {
                     throw new Error("type error in main function declaration; main should take no parameters and return no values!")
                 }
             }
-            
+
             const extended_te = extend_type_environment(
                 comp.prms,
                 comp.type.paramTypes,
