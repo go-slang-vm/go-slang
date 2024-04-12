@@ -517,7 +517,7 @@ export class Heap {
       if (this.is_unmarked(v)) {
         // clear JS runtime resources related to this channel
         if (this.heap_get_tag(v) === Channel_tag) {
-          console.log("should have reached here")
+          // console.log("should have reached here")
           const idx = this.heap_get_channel_idx(v)
           // const capacity = this.heap_get_channel_capacity(v)
           // console.log("old channel heap size: " + this.channel_heap_size)

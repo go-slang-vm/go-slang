@@ -275,6 +275,16 @@ const dfs = (visited: boolean[], node: number) => {
   }
 }
 
+const verifyThatMainIsDeclared = () => {
+  if (!varNameToStmtNumber.has("main")) {
+    throw new Error("main function must be declared!")
+  } else {
+    if (varNameToStmtNumber.get("main")![1] !== "fun") {
+      throw new Error("main function must be declared!")
+    }
+  }
+}
+
 export const preprocess = (program: ASTNode): ASTNode => {
   // invariant that the program passed in should be the global blk node
   varNameToStmtNumber.clear();
@@ -289,6 +299,8 @@ export const preprocess = (program: ASTNode): ASTNode => {
     
     // fill map with stmt num information
     populateMap(stmts);
+
+    verifyThatMainIsDeclared()
 
     // create graph for this program
     populateAdjList(seq as SequenceNode);
