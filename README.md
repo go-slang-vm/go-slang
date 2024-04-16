@@ -4,17 +4,19 @@ Open-source implementations of the programming language _Source_. Source is a se
 
 ## Table of Contents
 
-- [Prerequisites](#prerequisites)
-- [Usage](#usage)
-- [Documentation](#documentation)
-- [Requirements](#requirements)
-- [Testing](#testing)
-- [Error messages](#error-messages)
-- [Using your js-slang in Source Academy](#using-your-js-slang-in-source-academy)
-- [Using your js-slang in your local Source Academy](#using-your-js-slang-in-your-local-source-academy)
-- [Building and publishing SICP package](#building-and-publishing-sicp-package)
-- [Talks and Presentations](#talks-and-presentations)
-- [License](#license)
+- [js-slang](#js-slang)
+  - [Table of Contents](#table-of-contents)
+  - [Prerequisites](#prerequisites)
+  - [Usage](#usage)
+  - [Documentation](#documentation)
+    - [Requirements](#requirements)
+  - [Testing](#testing)
+  - [Error messages](#error-messages)
+  - [Using your js-slang in Source Academy](#using-your-js-slang-in-source-academy)
+  - [Using your js-slang in your local Source Academy](#using-your-js-slang-in-your-local-source-academy)
+  - [Building and publishing SICP package](#building-and-publishing-sicp-package)
+  - [Talks and Presentations](#talks-and-presentations)
+  - [License](#license)
 
 ## Prerequisites
 
@@ -26,7 +28,7 @@ Open-source implementations of the programming language _Source_. Source is a se
 To build,
 
 ```bash
-$ git clone --recurse-submodules https://github.com/source-academy/js-slang.git
+$ git clone --recurse-submodules https://github.com/go-slang-vm/go-slang.git
 $ cd js-slang
 $ yarn
 $ yarn build
@@ -109,7 +111,7 @@ Source is documented here: <https://docs.sourceacademy.org/>
 To build the documentation, run
 
 ```bash
-$ git clone https://github.com/source-academy/js-slang.git
+$ git clone https://github.com/go-slang-vm/go-slang.git
 $ cd js-slang
 $ yarn
 $ yarn install
@@ -118,7 +120,7 @@ $ cd docs/specs
 $ make        # to make the PDF documents using LaTeX
 ```
 
-**Note:** The documentation may not build on Windows, depending on your bash setup, [see above](https://github.com/source-academy/js-slang#requirements).
+**Note:** The documentation may not build on Windows, depending on your bash setup, [see above](https://github.com/go-slang-vm/go-slang#requirements).
 
 Documentation on the Source libraries are generated from inline documentation in the library sources, a copy of which are kept in `docs/lib/*.js`. The command `yarn jsdoc` generates the documentation and places it in the folder `docs/source`. You can test the documentation using a local server:
 
