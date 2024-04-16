@@ -343,6 +343,7 @@ export class VM {
       for (let i = arity - 1; i >= 0; i--) {
         this.heapInstance.heap_set_child(new_frame, i, pop(globalState.OS))
       }
+      globalState.GOALLOCATING.push(new_frame)
       push(
         globalState.RTS,
         this.heapInstance.heap_allocate_Callframe(globalState.E, this.curThread.PC)
@@ -353,6 +354,7 @@ export class VM {
         this.heapInstance.heap_get_Closure_environment(fun)
       )
       this.curThread.PC = new_PC
+      globalState.GOALLOCATING = []
     },
     TAIL_CALL: instr => {
       const arity = instr.arity
