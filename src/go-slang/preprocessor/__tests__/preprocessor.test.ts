@@ -1041,7 +1041,6 @@ describe('Basic compiler test', () => {
       throw new Error('Parsing failed')
     }
     const outputAst: ASTNode = preprocess(inputAst)
-    console.dir(outputAst, { depth: 100 })
     expect(() => preprocess(inputAst)).not.toThrow('initialization cycle present')
     expect(outputAst).toStrictEqual(expectedAst)
   })

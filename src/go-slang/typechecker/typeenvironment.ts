@@ -131,7 +131,5 @@ export const equal_types = (ts1: any, ts2: any) =>
    unparse_types(ts1) === unparse_types(ts2)
    
 export const equal_type = (t1: any, t2:any) => {
-    console.dir(t1, {depth: 100})
-    console.dir(t2, {depth: 100})
    return unparse_type(t1) === unparse_type(t2)
 }

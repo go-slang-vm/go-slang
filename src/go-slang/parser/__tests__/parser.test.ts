@@ -918,7 +918,7 @@ describe('Basic parser test', () => {
       }
     }
     const outputAst: ASTNode | null = parse(program, createContext(), true)
-    console.dir(outputAst, { depth: 100 })
+    // console.dir(outputAst, { depth: 100 })
     expect(outputAst).toStrictEqual(expectedAst)
   })
 

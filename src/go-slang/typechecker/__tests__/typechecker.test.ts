@@ -508,7 +508,7 @@ describe('Basic typecheck test', () => {
     if (!outputAst) {
       throw new Error('Parsing failed')
     }
-    console.dir(outputAst, { depth: 100 })
+    // console.dir(outputAst, { depth: 100 })
     expect(() => typecheck(outputAst)).not.toThrow(
       'expected predicate type: bool, actual predicate type: undefined'
     )
@@ -527,7 +527,7 @@ describe('Basic typecheck test', () => {
     if (!outputAst) {
       throw new Error('Parsing failed')
     }
-    console.dir(outputAst, { depth: 100 })
+    // console.dir(outputAst, { depth: 100 })
     expect(() => typecheck(outputAst)).not.toThrow(
       'expected predicate type: bool, actual predicate type: undefined'
     )
@@ -546,7 +546,7 @@ describe('Basic typecheck test', () => {
     if (!outputAst) {
       throw new Error('Parsing failed')
     }
-    console.dir(outputAst, { depth: 100 })
+    // console.dir(outputAst, { depth: 100 })
     expect(() => typecheck(outputAst)).toThrow(
       'expected predicate type: bool, actual predicate type: int'
     )
