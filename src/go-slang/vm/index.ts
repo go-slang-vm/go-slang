@@ -16,6 +16,7 @@ import { Thread } from './thread'
 import { ChannelHeapSize, Channel_tag, numInstructions, word_size } from './constants'
 import { Channel } from './channel'
 import { BuddyAllocator } from './buddyallocator'
+import { cloneDeep } from 'lodash'
 
 export class VM {
   heapInstance: Heap
@@ -59,7 +60,7 @@ export class VM {
       const address = pop(globalState.OS)
       const value = this.address_to_TS_value(address)
       console.log(value)
-      return address;
+      return address
     },
     sleep: () => {
       const address = pop(globalState.OS)
@@ -157,7 +158,9 @@ export class VM {
     this.heapInstance.heap = this.heapInstance.heap_make(heapsize_words)
     this.heapInstance.heap_size = heapsize_words
     this.heapInstance.channel_heap_size = ChannelHeapSize * word_size
-    this.heapInstance.buddy_alloc = new BuddyAllocator(Math.ceil(Math.log2(this.heapInstance.channel_heap_size)))
+    this.heapInstance.buddy_alloc = new BuddyAllocator(
+      Math.ceil(Math.log2(this.heapInstance.channel_heap_size))
+    )
 
     // initialize free list:
     // every free node carries the address
@@ -241,9 +244,9 @@ export class VM {
     // todo: add error handling to JS for the following, too
     '*': (x, y) => (x as number) * (y as number),
     '-': (x, y) => (x as number) - (y as number),
-    '/': (x, y) =>  {
+    '/': (x, y) => {
       if (y === 0) {
-        throw new Error("Error! division by zero")
+        throw new Error('Error! division by zero')
       }
       return Math.floor((x as number) / (y as number))
     },
@@ -295,9 +298,8 @@ export class VM {
       push(globalState.OS, this.apply_binop(instr.sym, pop(globalState.OS), pop(globalState.OS))),
     POP: _ => pop(globalState.OS),
     JOF: instr =>
-      (this.curThread.PC = pop(globalState.OS) == this.heapInstance.True
-        ? this.curThread.PC
-        : instr.addr),
+      (this.curThread.PC =
+        pop(globalState.OS) == this.heapInstance.True ? this.curThread.PC : instr.addr),
     GOTO: instr => (this.curThread.PC = instr.addr),
     ENTER_SCOPE: instr => {
       push(globalState.RTS, this.heapInstance.heap_allocate_Blockframe(globalState.E))
@@ -394,7 +396,7 @@ export class VM {
       // TODO: still need to handle this
       // we default to not allowing this for now
       if (this.heapInstance.is_Builtin(fun)) {
-        throw new Error("Cannot run builtin functions in seperate Go Call!")
+        throw new Error('Cannot run builtin functions in seperate Go Call!')
         // return this.apply_builtin(this.heapInstance.heap_get_Builtin_id(fun))
       }
 
@@ -410,12 +412,12 @@ export class VM {
         const newPC = this.heapInstance.heap_get_Closure_pc(fun)
 
         const newRTS: any[] = []
-        const newRTSFrame = this.heapInstance.heap_allocate_Callframe(globalState.E, this.lastInstructionIndex)
-        globalState.GOALLOCATING.push(newRTSFrame)
-        push(
-          newRTS,
-          newRTSFrame
+        const newRTSFrame = this.heapInstance.heap_allocate_Callframe(
+          globalState.E,
+          this.lastInstructionIndex
         )
+        globalState.GOALLOCATING.push(newRTSFrame)
+        push(newRTS, newRTSFrame)
 
         const newThread: Thread = new Thread(
           [],
@@ -565,12 +567,7 @@ export class VM {
         // decrease PC by 1 to retry this instruction again later
         this.curThread.PC--
 
-        this.saveThread()
-        // after saveThread is called, the current thread context is at the back of the threadQueue
-        // pop off this thread from the threadQueue and add it to the back of the sem queue
-        // check if pop removes the last or first element
-        // should be safe cast since we just called saveThread
-        const thread = globalState.THREADQUEUE.pop() as Thread
+        const thread = cloneDeep(this.curThread)
 
         // add current thread to the blocked queue of the current waitgroup
         globalState.BLOCKEDQUEUE[wg_index].add(thread)
@@ -629,12 +626,7 @@ export class VM {
   }
 
   addCurrentGoRoutineToBlockedQueue(queue: string, idx: number) {
-    this.saveThread()
-    // after saveThread is called, the current thread context is at the back of the threadQueue
-    // pop off this thread from the threadQueue and add it to the back of the sem queue
-    // check if pop removes the last or first element
-    // should be safe cast since we just called saveThread
-    const thread = globalState.THREADQUEUE.pop() as Thread
+    const thread = cloneDeep(this.curThread)
 
     // add to the respective queues
     if (queue == 'send') {
