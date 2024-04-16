@@ -18,7 +18,7 @@ import {
   Channel_tag,
   Waitgroup_tag,
   channel_buffer,
-  word_size,
+  word_size
 } from './constants'
 import { BuddyAllocator } from './buddyallocator'
 
@@ -271,19 +271,16 @@ export class Heap {
     elemType: string,
     idx: number
   ): [number, DataView] => {
-
     let buffer = this.heap_allocate_array_buffer(capacity)
-    if(buffer === null) {
+    if (buffer === null) {
       // trigger mark sweep to potentially clean up heap space
       this.mark_sweep()
 
       buffer = this.heap_allocate_array_buffer(capacity)
       if (buffer === null) {
-        throw new Error("Ran out of heap space for buffered channels!")
+        throw new Error('Ran out of heap space for buffered channels!')
       }
     }
-
-    console.log("allocating channel with capacity: " + capacity)
 
     const address = this.heap_allocate(Channel_tag, 3)
     this.heap_set_4_bytes_at_offset(address, 1, idx)
@@ -436,7 +433,13 @@ export class Heap {
     // mark r for r in roots
 
     // current thread
-    let roots = [...globalState.OS, globalState.E, ...globalState.RTS, ...globalState.ALLOCATING, ...globalState.GOALLOCATING]
+    let roots = [
+      ...globalState.OS,
+      globalState.E,
+      ...globalState.RTS,
+      ...globalState.ALLOCATING,
+      ...globalState.GOALLOCATING
+    ]
     for (let i = 0; i < roots.length; i++) {
       this.mark(roots[i])
     }
@@ -485,7 +488,7 @@ export class Heap {
           this.mark(roots[i])
         }
       }
-      
+
       // items in the channel item queues should be marked in case
       const itemQ = channel.items
       for (const item of itemQ.getAllItems()) {
@@ -521,13 +524,13 @@ export class Heap {
           const idx = this.heap_get_channel_idx(v)
           // const capacity = this.heap_get_channel_capacity(v)
           // console.log("old channel heap size: " + this.channel_heap_size)
-          this.buddy_alloc.free(globalState.CHANNELARRAY[idx].items.getDataView()) 
+          this.buddy_alloc.free(globalState.CHANNELARRAY[idx].items.getDataView())
           globalState.CHANNELARRAY[idx].clear()
 
           //this.channel_heap_size += capacity
           //console.log("new channel heap size: " + this.channel_heap_size)
         }
-        
+
         this.free_node(v)
       } else {
         this.heap_set_byte_at_offset(v, this.mark_bit, this.UNMARKED)
