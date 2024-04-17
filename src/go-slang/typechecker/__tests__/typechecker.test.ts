@@ -1941,4 +1941,24 @@ describe('Basic typecheck test', () => {
     }
     expect(() => typecheck(outputAst)).toThrow("type error in main function declaration; main should take no parameters!")
   })
+
+  test('test func app multiple return exp', async () => {
+    const program = `
+    func return2Ints() (int, int) {
+      return 1, 2
+    }
+    func take2IntsAndString(x, y int, s string) int {
+      Println(s)
+      return x + y
+    }
+    func main() {
+      Println(take2IntsAndString(return2Ints(), "hi"))
+    }
+          `
+    const outputAst: ASTNode | null = parse(program)
+    if (!outputAst) {
+      throw new Error('Parsing failed')
+    }
+    expect(() => typecheck(outputAst)).toThrow("type error in application; expected argument types: int, int, string, actual argument types: int, int, string")
+  })
 })

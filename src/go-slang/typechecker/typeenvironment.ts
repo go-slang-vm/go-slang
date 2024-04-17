@@ -2,6 +2,7 @@
  * type environments
  * *****************/
 
+import { isArray } from "lodash"
 import { head, is_null, pair, tail } from "../../stdlib/list"
 import { FuncType } from "../ast/AST"
 import { is_string } from "../vm/utils"
@@ -101,12 +102,20 @@ export const extend_type_environment = (xs: any, ts: any, e: any) => {
     return pair(new_frame, e)
 }
 
+const unparse_if_array = (ts: any) : any => {
+    if(isArray(ts)) {
+        return unparse_types(ts)
+    } else {
+        return unparse_type(ts)
+    }
+}
+
 export const unparse_types = (ts: any): any =>
    ts.length === 0 
    ? "null"
    : ts.reduce((s: string, t: any) => s === "" 
-                         ? unparse_type(t) 
-                         : s + ", " + unparse_type(t), "")
+                         ? unparse_if_array(t) 
+                         : s + ", " + unparse_if_array(t), "")
 
 export const unparse_type = (t: any): any =>
    is_string(t) 
