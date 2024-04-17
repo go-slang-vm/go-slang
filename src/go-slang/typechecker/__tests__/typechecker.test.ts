@@ -1959,6 +1959,6 @@ describe('Basic typecheck test', () => {
     if (!outputAst) {
       throw new Error('Parsing failed')
     }
-    expect(() => typecheck(outputAst)).toThrow("type error in application; expected argument types: int, int, string, actual argument types: int, int, string")
+    expect(() => typecheck(outputAst)).toThrow("type error in application; expected argument types: int, int, string, actual argument types: (int, int), string")
   })
 })

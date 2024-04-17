@@ -104,7 +104,7 @@ export const extend_type_environment = (xs: any, ts: any, e: any) => {
 
 const unparse_if_array = (ts: any) : any => {
     if(isArray(ts)) {
-        return unparse_types(ts)
+        return "(" + unparse_types(ts) + ")"
     } else {
         return unparse_type(ts)
     }
