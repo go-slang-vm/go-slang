@@ -89,8 +89,8 @@ const type_comp = {
         (comp: FuncDeclNode, te: any) => {
 
             if (comp.sym === "main") {
-                if (comp.type.paramTypes.length > 0) {
-                    throw new Error("type error in main function declaration; main should take no parameters!")
+                if (comp.type.paramTypes.length > 0 || comp.type.returnTypes.length > 0) {
+                    throw new Error("type error in main function declaration; main should take no parameters and return no values!")
                 }
             }
 
